@@ -1,4 +1,4 @@
-package com.example.risk
+package com.CS309Y2.Test
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
