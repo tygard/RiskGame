@@ -20,8 +20,8 @@ class Risk extends StatelessWidget {
         primaryColor: const Color(0xFF0E1E1E),
         accentColor: const Color(0xFFFFC454),
       ),
-      initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,
+      initialRoute: '/',
     );
   }
 }
