@@ -1,32 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/animation.dart';
 
-void main() {
-  // debugPaintSizeEnabled = true;
-  runApp(MyApp());
+void main() => runApp(LogoApp());
+
+class LogoApp extends StatefulWidget {
+  _LogoAppState createState() => _LogoAppState();
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyApp createState() => _MyApp();
-}
+class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin{
+  Animation<double> animation;
+  AnimationController controller;
 
-class _MyApp extends State<MyApp> {
-  bool pressed = true;
   @override
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    animation = Tween<double>(begin: 0, end: 300).animate(controller)
+      ..addListener(() {
+        setState(() {
+          // The state that has changed here is the animation object’s value.
+        });
+      });
+    controller.forward();
+  }
+
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Button Presser"),
-        ),
-        body: Center(
-          child: FlatButton(
-            onPressed: () => setState(() => pressed = !pressed),
-            child: Text('Click me'),
-            color: pressed ? Colors.red : Colors.blue
-          )
-        )
+    return Center(
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        height: animation.value,
+        width: animation.value,
+        child: FlutterLogo(),
       ),
     );
+  }
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
