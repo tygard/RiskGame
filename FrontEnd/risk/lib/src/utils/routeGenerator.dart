@@ -10,8 +10,6 @@ class RouteGenerator {
         return NoAnimationMaterialPageRoute(builder: (_) => LoadScreen());
       case "/login":
         return NoAnimationMaterialPageRoute(builder: (_) => LoginScreen());
-      case "/game":
-        return NoAnimationMaterialPageRoute(builder: (_) => LoginScreen());
       default:
         throw ErrorDescription("route is unknown.");
     }
