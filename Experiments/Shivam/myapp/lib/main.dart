@@ -15,7 +15,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin{
   void initState() {
     super.initState();
     controller =
-        AnimationController(duration: const Duration(seconds: 2), vsync: this);
+        AnimationController(duration: const Duration(seconds: 5), vsync: this);
     animation = Tween<double>(begin: 0, end: 300).animate(controller)
       ..addListener(() {
         setState(() {
@@ -33,6 +33,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin{
         width: animation.value,
         child: FlutterLogo(),
       ),
+
     );
   }
   @override
