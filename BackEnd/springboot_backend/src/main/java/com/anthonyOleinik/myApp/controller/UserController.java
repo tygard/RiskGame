@@ -5,6 +5,8 @@ import com.anthonyOleinik.myApp.entities.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 public class UserController {
     //get, post, put, delete & patch lol
@@ -14,7 +16,7 @@ public class UserController {
 
     @GetMapping("/user")
     public User user() {
-        User user = new User(1, "Test", "O", "aoleinik@iastate.edu");
+        User user = new User(UUID.randomUUID(), "Test", "O", 4);
         return user;
     }
 
@@ -22,8 +24,10 @@ public class UserController {
     public User[] users(){
         User[] usersArr = new User[4];
         for (int i = 0; i < 4; i++){
-            usersArr[i] = new User(i, "James", "O", "fakeMail.edu");
+            usersArr[i] = new User(UUID.randomUUID(), "James", "O", 2);
         }
         return usersArr;
     }
+
+
 }
