@@ -30,13 +30,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           textAlign: TextAlign.center,
                         ),
                         background: Colors.white),
+                        _buildLoginButton(
+                        image: Image.asset("assets/logos/google.png"),
+                        text: Text(
+                          "Go to chatroom",
+                          style: TextStyle(color: Colors.black87, fontSize: 20),
+                          textAlign: TextAlign.center,
+                        ),
+                        function: (){Navigator.of(context).pushReplacementNamed("/chat");},
+                        background: Colors.white),
                   ],
                 )
       ),
     );
   }
 
-  Widget _buildLoginButton({Image image, Text text, Color background}) {
+  Widget _buildLoginButton({Image image, Text text, Color background, Function function}) {
     const ICON_SIZE = 50.0;
 
     return Padding(
@@ -50,9 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Material(
               color: background,
               child: InkWell(
-                onTap: () {
-                  print("PUT LOGIN FUNCTION HERE");
-                },
+                onTap: function,
                 child: Row(
                   children: <Widget>[
                     Padding(
