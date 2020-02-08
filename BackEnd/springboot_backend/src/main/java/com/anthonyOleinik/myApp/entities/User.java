@@ -1,12 +1,39 @@
 package com.anthonyOleinik.myApp.entities;
 
-import java.net.IDN;
 import java.util.UUID;
+import java.io.Serializable;
 
-public class User {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.OptimisticLockType;
+import org.hibernate.annotations.OptimisticLocking;
+
+@Entity
+@OptimisticLocking(type = OptimisticLockType.ALL)
+@Table(name = "User", uniqueConstraints = { @UniqueConstraint(columnNames = "ID"),
+                                            @UniqueConstraint(columnNames = "Username")})
+@DynamicUpdate
+public class User implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID", unique = true, nullable = false)
     private UUID id;
+
+    @Column(name = "Username", unique = true, nullable = false)
     private String username;
+
+    @Column(name = "Email", unique = false, nullable = false)
     private String email;
+
+    @Column(name = "RoleId", unique = false, nullable = false)
     private int roleId;
 
     public User(){} //necessary default constructor for JPA (SQL lib)
