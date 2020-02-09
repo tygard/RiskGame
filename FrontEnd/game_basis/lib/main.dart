@@ -36,14 +36,68 @@ class GameState
   bool isGreen = false;
   int yellowArmy = 20;
   bool isYellow = false;
-  int grayArmy = 5;
-  bool isGray = false;
+  static NeutralArmy n1 = new NeutralArmy();
+  static NeutralArmy n2 = new NeutralArmy();
+  static NeutralArmy n3 = new NeutralArmy();
+  static NeutralArmy n4 = new NeutralArmy();
+  static NeutralArmy n5 = new NeutralArmy();
+  static NeutralArmy n6 = new NeutralArmy();
+  static NeutralArmy n7 = new NeutralArmy();
+  static NeutralArmy n8 = new NeutralArmy();
+  static List<NeutralArmy> arr = [n1, n2, n3, n4, n5, n6, n7, n8];
+
+  List<NeutralArmy> returnArr()
+  {
+    return arr;
+  }
+
+  NeutralArmy getArmyNum(int n)
+  {
+    if (n == 1)
+      return n1;
+    if (n == 2)
+      return n2;
+    if (n == 3)
+      return n3;
+    if (n == 4)
+      return n4;
+    if (n == 5)
+      return n5;
+    if (n == 6)
+      return n6;
+    if (n == 7)
+      return n7;
+    if (n == 8)
+      return n8;
+    return null;
+  }
+
 }
 
 class NeutralArmy
 {
   int grayArmy = 5;
   bool isGray = false;
+
+  int getArmy()
+  {
+    return grayArmy;
+  }
+
+  void setArmy(int n)
+  {
+    grayArmy = n;
+  }
+
+  bool getGray()
+  {
+      return isGray;
+  }
+
+  void setGray(bool b)
+  {
+    isGray = b;
+  }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -71,9 +125,12 @@ class _MyHomePageState extends State<MyHomePage> {
       {
         attack(game, "Red", "Yellow");
       }
-      if (game.isRed && game.isGray)
+      for (NeutralArmy n in game.returnArr())
       {
-        attack(game, "Red", "Gray");
+        if (game.isRed && n.isGray)
+          {
+            attack(game, "Red", "Gray", n);
+          }
       }
     });
   }
@@ -99,9 +156,12 @@ class _MyHomePageState extends State<MyHomePage> {
       {
         attack(game, "Blue", "Yellow");
       }
-      if (game.isBlue && game.isGray)
+      for (NeutralArmy n in game.returnArr())
       {
-        attack(game, "Blue", "Gray");
+        if (game.isBlue && n.isGray)
+        {
+          attack(game, "Blue", "Gray", n);
+        }
       }
     });
   }
@@ -126,9 +186,12 @@ class _MyHomePageState extends State<MyHomePage> {
       {
         attack(game, "Green", "Yellow");
       }
-      if (game.isGreen && game.isGray)
+      for (NeutralArmy n in game.returnArr())
       {
-        attack(game, "Green", "Gray");
+        if (game.isGreen && n.isGray)
+        {
+          attack(game, "Green", "Gray", n);
+        }
       }
     });
   }
@@ -153,41 +216,44 @@ class _MyHomePageState extends State<MyHomePage> {
       {
         attack(game, "Yellow", "Green");
       }
-      if (game.isYellow && game.isGray)
+      for (NeutralArmy n in game.returnArr())
       {
-        attack(game, "Yellow", "Gray");
+        if (game.isYellow && n.isGray)
+        {
+          attack(game, "Yellow", "Gray", n);
+        }
       }
     });
   }
-  void graySelect() {
+  void graySelect(NeutralArmy n) {
     setState(() {
-      if (game.isGray){
-        game.isGray = false;
+      if (n.isGray){
+        n.isGray = false;
       }
-      else if (!game.isGray)
+      else if (!n.isGray)
       {
-        game.isGray = true;
+        n.isGray = true;
       }
-      if (game.isGray && game.isRed)
+      if (n.isGray && game.isRed)
       {
-        attack(game, "Gray", "Red");
+        attack(game, "Gray", "Red", n);
       }
-      if (game.isGray && game.isBlue)
+      if (n.isGray && game.isBlue)
       {
-        attack(game, "Gray", "Blue");
+        attack(game, "Gray", "Blue", n);
       }
-      if (game.isGray && game.isGreen)
+      if (n.isGray && game.isGreen)
       {
-        attack(game, "Gray", "Green");
+        attack(game, "Gray", "Green", n);
       }
-      if (game.isGray && game.isYellow)
+      if (n.isGray && game.isYellow)
       {
-        attack(game, "Gray", "Yellow");
+        attack(game, "Gray", "Yellow", n);
       }
     });
   }
 
-  void attack(GameState game, String army1, String army2)
+  void attack(GameState game, String army1, String army2, [NeutralArmy n])
   {
     if (army1 == "Red" && army2 == "Blue" || army1 == "Blue" && army2 == "Red") {
         (game.blueArmy > game.redArmy) ? game.redArmy = game.redArmy - 5 : game.blueArmy = game.blueArmy - 5;
@@ -220,23 +286,23 @@ class _MyHomePageState extends State<MyHomePage> {
       game.isBlue = !game.isBlue;
     }
     if (army1 == "Gray" && army2 == "Red" || army1 == "Red" && army2 == "Gray") {
-      (game.grayArmy > game.redArmy) ? game.redArmy = game.redArmy - 5 : game.grayArmy = game.grayArmy - 5;
-      game.isGray = !game.isGray;
+      (n.getArmy() > game.redArmy) ? game.redArmy = game.redArmy - 5 : n.setArmy(n.getArmy() - 5);
+      n.setGray(!n.getGray());
       game.isRed = !game.isRed;
     }
     if (army1 == "Gray" && army2 == "Blue" || army1 == "Blue" && army2 == "Gray") {
-      (game.grayArmy > game.blueArmy) ? game.blueArmy = game.blueArmy - 5 : game.grayArmy = game.grayArmy - 5;
-      game.isGray = !game.isGray;
+      (n.getArmy() > game.blueArmy) ? game.blueArmy = game.blueArmy - 5 : n.setArmy(n.getArmy() - 5);
+      n.setGray(!n.getGray());
       game.isBlue = !game.isBlue;
     }
-    if (army1 == "Gray" && army2 == "Yellow" || army1 == "Blue" && army2 == "Yellow") {
-      (game.grayArmy > game.yellowArmy) ? game.yellowArmy = game.yellowArmy - 5 : game.grayArmy = game.grayArmy - 5;
-      game.isGray = !game.isGray;
+    if (army1 == "Gray" && army2 == "Yellow" || army1 == "Yellow" && army2 == "Gray") {
+      (n.getArmy() > game.yellowArmy) ? game.yellowArmy = game.yellowArmy - 5 : n.setArmy(n.getArmy() - 5);
+      n.setGray(!n.getGray());
       game.isYellow = !game.isYellow;
     }
-    if (army1 == "Gray" && army2 == "Green" || army1 == "Green" && army2 == "Yellow") {
-      (game.grayArmy > game.greenArmy) ? game.greenArmy = game.greenArmy - 5 : game.grayArmy = game.grayArmy - 5;
-      game.isGray = !game.isGray;
+    if (army1 == "Gray" && army2 == "Green" || army1 == "Green" && army2 == "Gray") {
+      (n.getArmy() > game.greenArmy) ? game.greenArmy = game.greenArmy - 5 : n.setArmy(n.getArmy() - 5);
+      n.setGray(!n.getGray());
       game.isGreen = !game.isGreen;
     }
   }
@@ -269,18 +335,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
                   ),
                   new MaterialButton(
-                    onPressed: graySelect,
-                    child: new Text(game.grayArmy.toString(), style: TextStyle(fontSize: 30)),
-                    shape: Border.all(color: game.isGray ? Colors.white : Colors.black, width: 5),
+                    onPressed: () => graySelect(game.getArmyNum(1)),
+                    child: new Text(game.getArmyNum(1).getArmy().toString(), style: TextStyle(fontSize: 30)),
+                    shape: Border.all(color: game.getArmyNum(1).getGray() ? Colors.white : Colors.black, width: 5),
                     color: Colors.grey,
                     height: 100,
                     minWidth: 100,
-
                   ),
                   new MaterialButton(
-                    onPressed: graySelect,
-                    child: new Text(game.grayArmy.toString(), style: TextStyle(fontSize: 30)),
-                    shape: Border.all(color: game.isGray ? Colors.white : Colors.black, width: 5),
+                    onPressed: () => graySelect(game.getArmyNum(2)),
+                    child: new Text(game.getArmyNum(2).getArmy().toString(), style: TextStyle(fontSize: 30)),
+                    shape: Border.all(color: game.getArmyNum(2).getGray() ? Colors.white : Colors.black, width: 5),
                     color: Colors.grey,
                     height: 100,
                     minWidth: 100,
@@ -300,36 +365,36 @@ class _MyHomePageState extends State<MyHomePage> {
               alignment: MainAxisAlignment.center,
               children: <Widget>[
                 new MaterialButton(
-                  onPressed: graySelect,
-                  child: new Text(game.grayArmy.toString(), style: TextStyle(fontSize: 30)),
-                  shape: Border.all(color: game.isGray ? Colors.white : Colors.black, width: 5),
+                  onPressed: () => graySelect(game.getArmyNum(3)),
+                  child: new Text(game.getArmyNum(3).getArmy().toString(), style: TextStyle(fontSize: 30)),
+                  shape: Border.all(color: game.getArmyNum(3).getGray() ? Colors.white : Colors.black, width: 5),
                   color: Colors.grey,
                   height: 100,
                   minWidth: 100,
 
                 ),
                 new MaterialButton(
-                  onPressed: graySelect,
-                  child: new Text(game.grayArmy.toString(), style: TextStyle(fontSize: 30)),
-                  shape: Border.all(color: game.isGray ? Colors.white : Colors.black, width: 5),
+                  onPressed: () => graySelect(game.getArmyNum(4)),
+                  child: new Text(game.getArmyNum(4).getArmy().toString(), style: TextStyle(fontSize: 30)),
+                  shape: Border.all(color: game.getArmyNum(4).getGray() ? Colors.white : Colors.black, width: 5),
                   color: Colors.grey,
                   height: 100,
                   minWidth: 100,
 
                 ),
                 new MaterialButton(
-                  onPressed: graySelect,
-                  child: new Text(game.grayArmy.toString(), style: TextStyle(fontSize: 30)),
-                  shape: Border.all(color: game.isGray ? Colors.white : Colors.black, width: 5),
+                  onPressed: () => graySelect(game.getArmyNum(5)),
+                  child: new Text(game.getArmyNum(5).getArmy().toString(), style: TextStyle(fontSize: 30)),
+                  shape: Border.all(color: game.getArmyNum(5).getGray() ? Colors.white : Colors.black, width: 5),
                   color: Colors.grey,
                   height: 100,
                   minWidth: 100,
 
                 ),
                 new MaterialButton(
-                  onPressed: graySelect,
-                  child: new Text(game.grayArmy.toString(), style: TextStyle(fontSize: 30)),
-                  shape: Border.all(color: game.isGray ? Colors.white : Colors.black, width: 5),
+                  onPressed: () => graySelect(game.getArmyNum(6)),
+                  child: new Text(game.getArmyNum(6).getArmy().toString(), style: TextStyle(fontSize: 30)),
+                  shape: Border.all(color: game.getArmyNum(6).getGray() ? Colors.white : Colors.black, width: 5),
                   color: Colors.grey,
                   height: 100,
                   minWidth: 100,
@@ -349,18 +414,18 @@ class _MyHomePageState extends State<MyHomePage> {
                    minWidth: 100,
                   ),
                  new MaterialButton(
-                   onPressed: graySelect,
-                   child: new Text(game.grayArmy.toString(), style: TextStyle(fontSize: 30)),
-                   shape: Border.all(color: game.isGray ? Colors.white : Colors.black, width: 5),
+                   onPressed: () => graySelect(game.getArmyNum(7)),
+                   child: new Text(game.getArmyNum(7).getArmy().toString(), style: TextStyle(fontSize: 30)),
+                   shape: Border.all(color: game.getArmyNum(7).getGray() ? Colors.white : Colors.black, width: 5),
                    color: Colors.grey,
                    height: 100,
                    minWidth: 100,
 
                  ),
                  new MaterialButton(
-                   onPressed: graySelect,
-                   child: new Text(game.grayArmy.toString(), style: TextStyle(fontSize: 30)),
-                   shape: Border.all(color: game.isGray ? Colors.white : Colors.black, width: 5),
+                   onPressed: () => graySelect(game.getArmyNum(8)),
+                   child: new Text(game.getArmyNum(8).getArmy().toString(), style: TextStyle(fontSize: 30)),
+                   shape: Border.all(color: game.getArmyNum(8).getGray() ? Colors.white : Colors.black, width: 5),
                    color: Colors.grey,
                    height: 100,
                    minWidth: 100,
