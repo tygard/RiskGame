@@ -1,4 +1,4 @@
-package com.example.map_grid_test
+package com.example.chat_screen
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
