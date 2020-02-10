@@ -1,17 +1,17 @@
 package com.anthonyOleinik.myApp.controller;
 
 
-import com.anthonyOleinik.myApp.HibernateUtil;
-import com.anthonyOleinik.myApp.entities.User;
+import com.anthonyOleinik.myApp.Repositories.UserRepository;
+import com.anthonyOleinik.myApp.entities.UserEntity;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import org.hibernate.Session;
+import jdk.management.resource.ResourceRequestDeniedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.Console;
 import java.util.UUID;
 
 @RestController
@@ -21,28 +21,35 @@ public class UserController {
     //like flask's jsonify(obj)
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @GetMapping("/user")
-    public User user() {
-        User user = new User(UUID.randomUUID(), "Test", "O", 4);
-        return user;
+    @Autowired
+    UserRepository userRepo;
+
+
+    @GetMapping("/users/{id}")
+    public UserEntity user(@PathVariable String id) {
+        return userRepo.findById(id)
+                .orElseThrow(() -> new ResourceRequestDeniedException());
     }
 
-    @GetMapping("/CreateUser")
-    public boolean CreateUser(JsonObject Data) {
-        Gson gson = new Gson();
-        User user;
-        try{
-            user = gson.fromJson(Data, User.class);
-        }catch (Throwable e){
-            logger.error("Data passed to controller is invalid", e);
+    @GetMapping("/TestUser/{username}")
+    public boolean TestUser(@PathVariable String username) {
+        UserEntity user = new UserEntity();
+        if(username != null) {
+            try {
+                user.setEmail("test@email.net");
+                user.setRoleId(2);
+                user.setUsername(username);
+            } catch (Throwable e) {
+                logger.error("Data passed to controller is invalid", e);
+                return false;
+            }
+        }else{
+            logger.error("Data passed to controller is null");
             return false;
         }
 
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-
         try{
-            session.save(user);
+            userRepo.save(user);
             return true;
         }catch (Throwable e){
             logger.error("Failed to create user", e);
@@ -50,14 +57,31 @@ public class UserController {
         }
     }
 
-    @GetMapping("/users")
-    public User[] users(){
-        User[] usersArr = new User[4];
-        for (int i = 0; i < 4; i++){
-            usersArr[i] = new User(UUID.randomUUID(), "James", "O", 2);
+    @PostMapping(path = "/CreateUser", produces = MediaType.APPLICATION_JSON_VALUE)
+    public boolean CreateUser(@RequestBody JsonObject Data) {
+        Gson gson = new Gson();
+        UserEntity user;
+        if(Data != null) {
+            try {
+                user = gson.fromJson(Data, UserEntity.class);
+            } catch (Throwable e) {
+                logger.error("Data passed to controller is invalid", e);
+                return false;
+            }
+        }else{
+            logger.error("Data passed to controller is null");
+            return false;
         }
-        return usersArr;
+
+        try{
+            userRepo.save(user);
+            return true;
+        }catch (Throwable e){
+            logger.error("Failed to create user", e);
+            return false;
+        }
     }
+
 
 
 }
