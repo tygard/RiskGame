@@ -1,9 +1,8 @@
 package com.anthonyOleinik.myApp.entities;
 
-import javax.persistence.Column;
+import javax.persistence.*;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.*;
@@ -31,20 +30,20 @@ public class UserEntity implements Serializable {
     }
 
     @Column(nullable = false)
-    private String email = "none";
+    private FactionEntity faction;
 
     @Column(unique = true, nullable = false)
     private String username;
 
-    @Column(nullable = false)
-    private int roleId = 0;
+
+    private RolesEntity role;
 
     public UserEntity(){} //necessary default constructor for JPA (SQL lib)
 
-    public UserEntity(String email, String username, int roleId){
+    public UserEntity(String username, RolesEntity role, FactionEntity faction){
         this.username = username;
-        this.email = email;
-        this.roleId = roleId;
+        this.role = role;
+        this.faction = faction;
     }
 
 
@@ -52,25 +51,35 @@ public class UserEntity implements Serializable {
         this.username = username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setRole(RolesEntity role) {
+        this.role = role;
     }
 
-    public void setRoleId(int roleId) {
-        this.roleId = roleId;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    public RolesEntity getRole() {
+        return role;
     }
 
-    public int getRoleId() {
-        return roleId;
+    public void setFaction(FactionEntity faction) {
+        this.faction = faction;
     }
 
-    public String getEmail() {
-        return email;
+    @ManyToOne
+    @JoinColumn(name = "faction_id")
+    public FactionEntity getFaction() {
+        return faction;
     }
-
 
     public String getUsername() {
         return username;
+    }
+
+    public String toString(){
+        return ("User ID: "+ id +
+                "\n | Username: " + username +
+                "\n | Faction: " + faction.toString() +
+                "\n | Role: " + role.toString());
     }
 
 }

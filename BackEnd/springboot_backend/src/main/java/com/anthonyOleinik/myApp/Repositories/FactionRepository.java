@@ -1,5 +1,6 @@
 package com.anthonyOleinik.myApp.Repositories;
 
+import com.anthonyOleinik.myApp.entities.FactionEntity;
 import com.anthonyOleinik.myApp.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,9 +10,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, String> {
-
-    @Query(value = "select * from account where username = :user", nativeQuery = true)
-    Optional<UserEntity> FindByUsername(@Param("user") String username);
+public interface FactionRepository extends JpaRepository<FactionEntity, Integer> {
+    @Query(value = "select * from factions where team = :team or faction_id= :id", nativeQuery = true)
+    Optional<FactionEntity> FindTeam(@Param("team") String team, @Param("id") int id);
 
 }
