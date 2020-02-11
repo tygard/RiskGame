@@ -16,12 +16,12 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         primaryColor: Colors.red,
       ),
-      home: selectTeam(),
+      home: SelectTeam(),
     );
   }
 }
 
-class selectTeam extends StatelessWidget {
+class SelectTeam extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,6 +137,7 @@ class NeutralArmy
   //If a neutral territory is captured it should count as a colored one, add implementation
   int grayArmy = 5;
   bool isGray = false;
+  String color = 'gray';
 
   int getArmy()
   {
@@ -156,6 +157,16 @@ class NeutralArmy
   void setGray(bool b)
   {
     isGray = b;
+  }
+
+  String getColor()
+  {
+    return color;
+  }
+
+  void setColor(String c)
+  {
+    color = c;
   }
 }
 
@@ -346,25 +357,47 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     if (army1 == "Gray" && army2 == "Red" || army1 == "Red" && army2 == "Gray") {
       (n.getArmy() > game.redArmy) ? game.redArmy = game.redArmy - 5 : n.setArmy(n.getArmy() - 5);
+      if (n.getArmy() == 0)
+      {
+          n.setColor("Red");
+          n.setArmy(5);
+      }
       n.setGray(!n.getGray());
       game.isRed = !game.isRed;
     }
     if (army1 == "Gray" && army2 == "Blue" || army1 == "Blue" && army2 == "Gray") {
       (n.getArmy() > game.blueArmy) ? game.blueArmy = game.blueArmy - 5 : n.setArmy(n.getArmy() - 5);
+      if (n.getArmy() == 0)
+      {
+        n.setColor("Blue");
+        n.setArmy(5);
+      }
       n.setGray(!n.getGray());
       game.isBlue = !game.isBlue;
     }
     if (army1 == "Gray" && army2 == "Yellow" || army1 == "Yellow" && army2 == "Gray") {
       (n.getArmy() > game.yellowArmy) ? game.yellowArmy = game.yellowArmy - 5 : n.setArmy(n.getArmy() - 5);
+      if (n.getArmy() == 0)
+      {
+        n.setColor("Yellow");
+        n.setArmy(5);
+      }
       n.setGray(!n.getGray());
       game.isYellow = !game.isYellow;
     }
     if (army1 == "Gray" && army2 == "Green" || army1 == "Green" && army2 == "Gray") {
       (n.getArmy() > game.greenArmy) ? game.greenArmy = game.greenArmy - 5 : n.setArmy(n.getArmy() - 5);
+      if (n.getArmy() == 0)
+      {
+        n.setColor("Green");
+        n.setArmy(5);
+      }
       n.setGray(!n.getGray());
       game.isGreen = !game.isGreen;
     }
   }
+
+
 
 
   @override
@@ -397,7 +430,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () => graySelect(game.getArmyNum(1)),
                     child: new Text(game.getArmyNum(1).getArmy().toString(), style: TextStyle(fontSize: 30)),
                     shape: Border.all(color: game.getArmyNum(1).getGray() ? Colors.white : Colors.black, width: 5),
-                    color: Colors.grey,
+                    color: game.getArmyNum(1).getColor() == "Red" ? Colors.red : game.getArmyNum(1).getColor() == "Blue" ? Colors.blue : game.getArmyNum(1).getColor() == "Green" ? Colors.green : game.getArmyNum(1).getColor() == "Yellow" ? Colors.yellow : Colors.grey,
                     height: 100,
                     minWidth: 100,
                   ),
@@ -405,7 +438,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () => graySelect(game.getArmyNum(2)),
                     child: new Text(game.getArmyNum(2).getArmy().toString(), style: TextStyle(fontSize: 30)),
                     shape: Border.all(color: game.getArmyNum(2).getGray() ? Colors.white : Colors.black, width: 5),
-                    color: Colors.grey,
+                    color: game.getArmyNum(2).getColor() == "Red" ? Colors.red : game.getArmyNum(2).getColor() == "Blue" ? Colors.blue : game.getArmyNum(2).getColor() == "Green" ? Colors.green : game.getArmyNum(2).getColor() == "Yellow" ? Colors.yellow : Colors.grey,
                     height: 100,
                     minWidth: 100,
 
@@ -427,7 +460,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () => graySelect(game.getArmyNum(3)),
                   child: new Text(game.getArmyNum(3).getArmy().toString(), style: TextStyle(fontSize: 30)),
                   shape: Border.all(color: game.getArmyNum(3).getGray() ? Colors.white : Colors.black, width: 5),
-                  color: Colors.grey,
+                  color: game.getArmyNum(3).getColor() == "Red" ? Colors.red : game.getArmyNum(3).getColor() == "Blue" ? Colors.blue : game.getArmyNum(3).getColor() == "Green" ? Colors.green : game.getArmyNum(3).getColor() == "Yellow" ? Colors.yellow : Colors.grey,
                   height: 100,
                   minWidth: 100,
 
@@ -436,7 +469,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () => graySelect(game.getArmyNum(4)),
                   child: new Text(game.getArmyNum(4).getArmy().toString(), style: TextStyle(fontSize: 30)),
                   shape: Border.all(color: game.getArmyNum(4).getGray() ? Colors.white : Colors.black, width: 5),
-                  color: Colors.grey,
+                  color: game.getArmyNum(4).getColor() == "Red" ? Colors.red : game.getArmyNum(4).getColor() == "Blue" ? Colors.blue : game.getArmyNum(4).getColor() == "Green" ? Colors.green : game.getArmyNum(4).getColor() == "Yellow" ? Colors.yellow : Colors.grey,
                   height: 100,
                   minWidth: 100,
 
@@ -445,7 +478,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () => graySelect(game.getArmyNum(5)),
                   child: new Text(game.getArmyNum(5).getArmy().toString(), style: TextStyle(fontSize: 30)),
                   shape: Border.all(color: game.getArmyNum(5).getGray() ? Colors.white : Colors.black, width: 5),
-                  color: Colors.grey,
+                  color: game.getArmyNum(5).getColor() == "Red" ? Colors.red : game.getArmyNum(5).getColor() == "Blue" ? Colors.blue : game.getArmyNum(5).getColor() == "Green" ? Colors.green : game.getArmyNum(5).getColor() == "Yellow" ? Colors.yellow : Colors.grey,
                   height: 100,
                   minWidth: 100,
 
@@ -454,7 +487,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () => graySelect(game.getArmyNum(6)),
                   child: new Text(game.getArmyNum(6).getArmy().toString(), style: TextStyle(fontSize: 30)),
                   shape: Border.all(color: game.getArmyNum(6).getGray() ? Colors.white : Colors.black, width: 5),
-                  color: Colors.grey,
+                  color: game.getArmyNum(6).getColor() == "Red" ? Colors.red : game.getArmyNum(6).getColor() == "Blue" ? Colors.blue : game.getArmyNum(6).getColor() == "Green" ? Colors.green : game.getArmyNum(6).getColor() == "Yellow" ? Colors.yellow : Colors.grey,
                   height: 100,
                   minWidth: 100,
 
@@ -476,7 +509,7 @@ class _MyHomePageState extends State<MyHomePage> {
                    onPressed: () => graySelect(game.getArmyNum(7)),
                    child: new Text(game.getArmyNum(7).getArmy().toString(), style: TextStyle(fontSize: 30)),
                    shape: Border.all(color: game.getArmyNum(7).getGray() ? Colors.white : Colors.black, width: 5),
-                   color: Colors.grey,
+                   color: game.getArmyNum(7).getColor() == "Red" ? Colors.red : game.getArmyNum(7).getColor() == "Blue" ? Colors.blue : game.getArmyNum(7).getColor() == "Green" ? Colors.green : game.getArmyNum(7).getColor() == "Yellow" ? Colors.yellow : Colors.grey,
                    height: 100,
                    minWidth: 100,
 
@@ -485,7 +518,7 @@ class _MyHomePageState extends State<MyHomePage> {
                    onPressed: () => graySelect(game.getArmyNum(8)),
                    child: new Text(game.getArmyNum(8).getArmy().toString(), style: TextStyle(fontSize: 30)),
                    shape: Border.all(color: game.getArmyNum(8).getGray() ? Colors.white : Colors.black, width: 5),
-                   color: Colors.grey,
+                   color: game.getArmyNum(8).getColor() == "Red" ? Colors.red : game.getArmyNum(8).getColor() == "Blue" ? Colors.blue : game.getArmyNum(8).getColor() == "Green" ? Colors.green : game.getArmyNum(8).getColor() == "Yellow" ? Colors.yellow : Colors.grey,
                    height: 100,
                    minWidth: 100,
 
