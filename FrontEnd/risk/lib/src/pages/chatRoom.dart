@@ -1,8 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:risk/dataLayer/webSockets/chatSubscription.dart';
-import 'package:risk/src/freezedClasses/chat.dart';
+import 'package:risk/models/freezedClasses/chat.dart';
+import 'package:web_socket_channel/io.dart';
 
 class ChatRoom extends StatefulWidget {
   @override
@@ -14,6 +16,7 @@ class _ChatRoomState extends State<ChatRoom> {
   TextEditingController _textController;
   ScrollController _scrollController;
   List<Chat> chats;
+  final channel = IOWebSocketChannel.connect('ws://localhost:8080/chat/global');
 
   @override
   void initState() {
@@ -27,6 +30,7 @@ class _ChatRoomState extends State<ChatRoom> {
   @override
   void dispose() {
     _textController.dispose();
+    this.channel.sink.close();
     super.dispose();
   }
 
@@ -86,9 +90,7 @@ class _ChatRoomState extends State<ChatRoom> {
                   child: TextField(
                 decoration: InputDecoration(hintText: "chat"),
                 controller: _textController,
-                onSubmitted: (chat) {
-                  _addItem(new Chat("You", chat));
-                },
+                onSubmitted: _selfChat,
               )),
             )
           ],
@@ -124,8 +126,16 @@ class _ChatRoomState extends State<ChatRoom> {
     );
   }
 
-  void _addItem(Chat chat) async {
+  void _selfChat(String message) {
     _textController.clear();
+    Map<String, String> jsonMsg  = new Map<String, String>();
+    jsonMsg["username"] = "Anthony";
+    jsonMsg["message"] = message;
+    channel.sink.add(json.encode(jsonMsg));
+    _addItem(Chat("You", message));
+  }
+
+  void _addItem(Chat chat) async {
     setState(() {
       this.numChats += 1;
       this.chats.add(chat);
@@ -142,8 +152,11 @@ class _ChatRoomState extends State<ChatRoom> {
   }
 
   void _beginListeningToGlobal() {
-    listenToChatGlobal().listen((chat) {
-      _addItem(chat);
+    this.channel.stream.listen((chat) {
+      Map<String, dynamic> map = json.decode(chat);
+      if (map["username"] == "Anthony"){
+      _addItem(Chat(map["username"], map["message"]));
+      }
     });
   }
 }
