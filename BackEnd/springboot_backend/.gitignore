@@ -29,7 +29,6 @@ build/
 
 ### VS Code ###
 .vscode/
-/src/main/resources/application-dev.properties
 
-### USER ADDED ###
-src/main/resources/*
+### app dev properties ###
+/src/main/resources/application-dev.properties
