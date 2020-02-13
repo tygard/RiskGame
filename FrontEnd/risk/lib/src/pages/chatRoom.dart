@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:risk/models/freezedClasses/chat.dart';
+import 'package:risk/src/utils/providers/globalsProvider.dart';
 import 'package:web_socket_channel/io.dart';
 
 class ChatRoom extends StatefulWidget {
@@ -16,7 +17,7 @@ class _ChatRoomState extends State<ChatRoom> {
   TextEditingController _textController;
   ScrollController _scrollController;
   List<Chat> chats;
-  final channel = IOWebSocketChannel.connect('ws://localhost:8080/chat/global');
+  final channel = IOWebSocketChannel.connect('ws://localhost:8080/chat');
 
   @override
   void initState() {
@@ -90,7 +91,7 @@ class _ChatRoomState extends State<ChatRoom> {
                   child: TextField(
                 decoration: InputDecoration(hintText: "chat"),
                 controller: _textController,
-                onSubmitted: _selfChat,
+                onSubmitted: (val){_selfChat(val, context);},
               )),
             )
           ],
@@ -126,13 +127,12 @@ class _ChatRoomState extends State<ChatRoom> {
     );
   }
 
-  void _selfChat(String message) {
+  void _selfChat(String message, BuildContext context) {
     _textController.clear();
     Map<String, String> jsonMsg  = new Map<String, String>();
-    jsonMsg["username"] = "Anthony";
+    jsonMsg["username"] = GlobalsProvider.of(context).user.name;
     jsonMsg["message"] = message;
     channel.sink.add(json.encode(jsonMsg));
-    _addItem(Chat("You", message));
   }
 
   void _addItem(Chat chat) async {
@@ -153,9 +153,12 @@ class _ChatRoomState extends State<ChatRoom> {
 
   void _beginListeningToGlobal() {
     this.channel.stream.listen((chat) {
+      print(chat);
       Map<String, dynamic> map = json.decode(chat);
-      if (map["username"] == "Anthony"){
-      _addItem(Chat(map["username"], map["message"]));
+      if (map["username"] == GlobalsProvider.of(context).user.name){
+        _addItem(Chat("You", map["message"]));
+      } else {
+        _addItem(Chat(map["username"], map["message"]));      
       }
     });
   }

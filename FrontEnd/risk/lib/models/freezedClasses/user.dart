@@ -1,8 +1,5 @@
-import 'package:meta/meta.dart';
+class User{
+  String name;
 
-part 'user.freezed.dart';
-
-@immutable
-abstract class User with _$User {
-  const factory User(String name, String message) = _User;
+  User(this.name);
 }
