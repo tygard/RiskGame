@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:risk/models/freezedClasses/chat.dart';
+import 'package:risk/src/utils/config/config.dart';
 import 'package:risk/src/utils/providers/globalsProvider.dart';
+import 'package:risk/src/utils/serviceProviders.dart';
 import 'package:web_socket_channel/io.dart';
 
 class ChatRoom extends StatefulWidget {
@@ -17,7 +19,7 @@ class _ChatRoomState extends State<ChatRoom> {
   TextEditingController _textController;
   ScrollController _scrollController;
   List<Chat> chats;
-  final channel = IOWebSocketChannel.connect('ws://localhost:8080/chat');
+  final channel = IOWebSocketChannel.connect('ws://${locator<Config>().getEndpoint()}/chat');
 
   @override
   void initState() {

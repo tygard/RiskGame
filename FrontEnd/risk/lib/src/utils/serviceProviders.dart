@@ -1,7 +1,10 @@
 import 'package:get_it/get_it.dart';
+import 'package:risk/src/utils/config/debugConfig.dart';
 
-GetIt getIt = GetIt.I;
+import 'config/config.dart';
+
+GetIt locator = GetIt.I;
 
 void registerServices(){
-  //here, we can register configs
+  locator.registerLazySingleton<Config>(() => new DebugConfig());
 }

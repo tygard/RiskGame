@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:risk/src/utils/providers/globalsProvider.dart';
 import 'package:risk/src/utils/routeGenerator.dart';
+import 'package:risk/src/utils/serviceProviders.dart';
 
 import 'models/freezedClasses/user.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  registerServices();
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
       .then((_) {
