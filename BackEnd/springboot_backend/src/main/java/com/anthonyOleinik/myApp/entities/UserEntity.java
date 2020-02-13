@@ -10,7 +10,7 @@ import org.hibernate.annotations.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "Account")
+@Table(name = "Account", uniqueConstraints={@UniqueConstraint(columnNames={"username", "id"})})
 public class UserEntity implements Serializable {
 
 
@@ -35,6 +35,7 @@ public class UserEntity implements Serializable {
     @Column(unique = true, nullable = false)
     private String username;
 
+    private UserConnections connections;
 
     private RolesEntity role;
 
@@ -69,6 +70,15 @@ public class UserEntity implements Serializable {
     @JoinColumn(name = "faction_id")
     public FactionEntity getFaction() {
         return faction;
+    }
+
+    public void setConnections(UserConnections connections){
+        this.connections = connections;
+    }
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    public UserConnections getConnections(){
+        return this.connections;
     }
 
     public String getUsername() {
