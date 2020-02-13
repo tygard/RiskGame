@@ -1,9 +1,11 @@
 package com.anthonyOleinik.myApp.controller;
 
 
+import com.anthonyOleinik.myApp.Repositories.ConnectionsRepository;
 import com.anthonyOleinik.myApp.Repositories.FactionRepository;
 import com.anthonyOleinik.myApp.Repositories.RolesRepository;
 import com.anthonyOleinik.myApp.Repositories.UserRepository;
+import com.anthonyOleinik.myApp.entities.UserConnections;
 import com.anthonyOleinik.myApp.entities.UserEntity;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -30,6 +32,9 @@ public class UserController {
 
     @Autowired
     FactionRepository factionRepo;
+
+    @Autowired
+    ConnectionsRepository connectionsRepo;
 
     @GetMapping("/users/{id}/")
     public UserEntity user(@PathVariable String id) {
@@ -76,6 +81,7 @@ public class UserController {
 
         try{
             userRepo.save(user);
+            connectionsRepo.save(new UserConnections(user, "",""));
             logger.info("Created user "+ user.getId() + " with role "+ user.getRole().toString());
             return true;
         }catch (Throwable e){
@@ -84,8 +90,9 @@ public class UserController {
         }
     }
 
+
     @PostMapping(path = "/CreateUser", produces = MediaType.APPLICATION_JSON_VALUE)
-    public boolean CreateUser(@RequestBody JsonObject Data) {
+    public String CreateUser(@RequestBody JsonObject Data) {
         Gson gson = new Gson();
         UserEntity user;
         if(Data != null) {
@@ -93,19 +100,19 @@ public class UserController {
                 user = gson.fromJson(Data, UserEntity.class);
             } catch (Throwable e) {
                 logger.error("Data passed to controller is invalid", e);
-                return false;
+                return "Invalid data passed to server.";
             }
         }else{
             logger.error("Data passed to controller is null");
-            return false;
+            return "Data passed to controller is null.";
         }
 
         try{
             userRepo.save(user);
-            return true;
+            return user.getId();
         }catch (Throwable e){
             logger.error("Failed to create user", e);
-            return false;
+            return "empty";
         }
     }
     
