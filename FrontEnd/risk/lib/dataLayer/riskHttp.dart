@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:risk/src/utils/config/config.dart';
+import 'package:risk/src/utils/serviceProviders.dart';
 
 //gives base HTTP request
 abstract class RiskHttp {
@@ -11,7 +13,7 @@ abstract class RiskHttp {
     String url = endpoint;
     if (url[0] != "/") url = "/" + url;
     if (url[endpoint.length - 1] != "/") url = url + "/";
-    url = "http://localhost:8080/REST$url";
+    url = "http://${locator<Config>().getEndpoint()}/REST$url";
 
     Response response;
     if (params != null){
