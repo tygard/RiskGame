@@ -122,7 +122,7 @@ class _RiskOverlayState extends State<RiskOverlay> {
           Text(
             this.chats[index].message,
           ),
-          Text(DateFormat('EEE, h:mm a').format(DateTime.now()),
+          Text(this.chats[index].whenSent,
               style: TextStyle(
                 color: Colors.grey,
               )),
@@ -163,9 +163,9 @@ class _RiskOverlayState extends State<RiskOverlay> {
       print(chat);
       Map<String, dynamic> map = json.decode(chat);
       if (map["username"] == GlobalsProvider.of(context).user.name){
-        _addItem(Chat("You", map["message"]));
+        _addItem(Chat("You", map["message"], DateFormat('EEE, h:mm a').format(DateTime.now())));
       } else {
-        _addItem(Chat(map["username"], map["message"]));      
+        _addItem(Chat(map["username"], map["message"], DateFormat('EEE, h:mm a').format(DateTime.now())));      
       }
     });
   }

@@ -1,6 +1,7 @@
 class Chat {
   String name;
   String message;
-  
-  Chat(this.name, this.message);
+  String whenSent;
+
+  Chat(this.name, this.message, this.whenSent);
 }
