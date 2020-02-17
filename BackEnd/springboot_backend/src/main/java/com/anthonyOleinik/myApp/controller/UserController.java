@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -39,32 +40,11 @@ public class UserController {
     @Autowired
     ConnectionsRepository connectionsRepo;
 
-    @GetMapping("/users/{id}/")
-    public UserEntity user(@PathVariable String id) {
-        try{
-            UUID tester = UUID.fromString(id);
-            return userRepo.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException());
-        }catch(Exception e){
-            return userRepo.FindByUsername(id)
-                    .orElseThrow(() -> new IllegalArgumentException());
-        }
-    }
 
-    @GetMapping("/users/{id}/details")
-    public String userDetails(@PathVariable("id") String id) {
-        UserEntity user;
-        try{
-            UUID tester = UUID.fromString(id);
-            user = userRepo.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException());
-        }catch(Exception e){
-            user = userRepo.FindByUsername(id)
-                    .orElseThrow(() -> new IllegalArgumentException());
-        }
-        return user.toString();
-    }
+    //region User Creation
 
+    //For testing purposes, uses a get input to read paramaters in url
+    //uses that as username and posts to database with placeholder data
     @GetMapping("/TestUser/{username}")
     public boolean TestUser(@PathVariable String username) {
         UserEntity user = new UserEntity();
@@ -94,6 +74,9 @@ public class UserController {
     }
 
 
+    //Takes form data as key:pair values, then gets that data as input for a
+    //new user, default role of 1(User) and saves it to db, also saves a new
+    //connections entry in account_connections table with a foreign key(user ID) linking the two
     @PostMapping(path = "/users",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String CreateUser(@RequestBody MultiValueMap<String, String> formData) {
@@ -126,5 +109,65 @@ public class UserController {
             return "empty";
         }
     }
-    
+    //endregion
+
+
+    //region Get User Data
+
+    //Probably a better way to get google/fb token, unsure at the moment.
+    //Queries the connections repo for the gogole id, uses that to query user repo for
+    //the user, other wise return null
+    @GetMapping(path = "/users/goog/{token}")
+    public Optional<UserEntity> queryGoogleId(@PathVariable("token") String id) {
+        try{
+            return userRepo.findById(connectionsRepo.FindByGID(id).
+                    orElseThrow(() -> new IllegalArgumentException()).getUserId());
+        }catch(Exception e){
+            logger.info("User doesn't exist.");
+            return null;
+        }
+    }
+
+    //Queries the connections repo for the fb id, uses that to query user repo for
+    //the user, other wise return null
+    @GetMapping(path = "/users/fb/{token}")
+    public Optional<UserEntity> queryFbId(@PathVariable("token") String id) {
+        try{
+            return userRepo.findById(connectionsRepo.FindByFBID(id).
+                    orElseThrow(() -> new IllegalArgumentException()).getUserId());
+        }catch(Exception e){
+            logger.info("User doesn't exist.");
+            return null;
+        }
+    }
+
+    //returns user based on user ID or their username, otherwise
+    //throw an IllegalArgumentexception
+    @GetMapping("/users/{id}/")
+    public UserEntity user(@PathVariable String id) {
+        try{
+            UUID tester = UUID.fromString(id);
+            return userRepo.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException());
+        }catch(Exception e){
+            return userRepo.FindByUsername(id)
+                    .orElseThrow(() -> new IllegalArgumentException());
+        }
+    }
+
+    //this is for testing purposes, returns user data as a string.
+    @GetMapping("/users/{id}/details")
+    public String userDetails(@PathVariable("id") String id) {
+        UserEntity user;
+        try{
+            UUID tester = UUID.fromString(id);
+            user = userRepo.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException());
+        }catch(Exception e){
+            user = userRepo.FindByUsername(id)
+                    .orElseThrow(() -> new IllegalArgumentException());
+        }
+        return user.toString();
+    }
+    //endregion
 }

@@ -38,6 +38,7 @@ public class UserConnections implements Serializable {
     public String getGoogleToken(){ return googleToken; }
     public String getFacebookToken(){ return facebookToken; }
     public String getRefreshJWT(){ return refreshJWT; }
+    public String getUserId(){ return userId; }
 
     //Setters
     public void setGoogleToken(String token){ this.googleToken = token; }
