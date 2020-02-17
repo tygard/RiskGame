@@ -5,6 +5,8 @@ import com.anthonyOleinik.myApp.Repositories.ConnectionsRepository;
 import com.anthonyOleinik.myApp.Repositories.FactionRepository;
 import com.anthonyOleinik.myApp.Repositories.RolesRepository;
 import com.anthonyOleinik.myApp.Repositories.UserRepository;
+import com.anthonyOleinik.myApp.entities.FactionEntity;
+import com.anthonyOleinik.myApp.entities.RolesEntity;
 import com.anthonyOleinik.myApp.entities.UserConnections;
 import com.anthonyOleinik.myApp.entities.UserEntity;
 import com.google.gson.Gson;
@@ -13,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -91,13 +94,20 @@ public class UserController {
     }
 
 
-    @PostMapping(path = "/CreateUser", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String CreateUser(@RequestBody JsonObject Data) {
-        Gson gson = new Gson();
+    @PostMapping(path = "/users",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String CreateUser(@RequestBody MultiValueMap<String, String> formData) {
         UserEntity user;
-        if(Data != null) {
+        UserConnections conns;
+        if(formData != null) {
             try {
-                user = gson.fromJson(Data, UserEntity.class);
+                user = new UserEntity(formData.get("Username").get(0),
+                        new RolesEntity(1),
+                        new FactionEntity(Integer.parseInt(formData.get("Faction").get(0))));
+                conns = new UserConnections(user,
+                        formData.get("googToken").get(0),
+                        formData.get("fbToken").get(0));
+                user.setConnections(conns);
             } catch (Throwable e) {
                 logger.error("Data passed to controller is invalid", e);
                 return "Invalid data passed to server.";
@@ -109,7 +119,8 @@ public class UserController {
 
         try{
             userRepo.save(user);
-            return user.getId();
+            connectionsRepo.save(conns);
+            return "users/"+ user.getUsername()+"/details";
         }catch (Throwable e){
             logger.error("Failed to create user", e);
             return "empty";

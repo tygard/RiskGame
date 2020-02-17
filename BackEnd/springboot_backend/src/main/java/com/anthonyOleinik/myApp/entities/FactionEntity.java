@@ -20,18 +20,18 @@ public class FactionEntity implements Serializable {
 
     public FactionEntity(){}
 
-    public FactionEntity(int roleId){
-        this.Id = roleId;
+    public FactionEntity(int factionId){
+        this.Id = factionId;
     }
 
     public int getId() {
         return Id;
     }
 
-    public String getRoleName() {
+    public String getFactionName() {
         return factionName;
     }
-    public void setRoleName(String val) {
+    public void setFactionName(String val) {
         this.factionName = val;
     }
 
