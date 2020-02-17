@@ -5,7 +5,7 @@ import 'package:risk/src/utils/serviceProviders.dart';
 
 GoogleSignIn _googleSignIn = new GoogleSignIn(
   scopes: [
-    'email',
+    'email', "profile"
   ],
 );
 
