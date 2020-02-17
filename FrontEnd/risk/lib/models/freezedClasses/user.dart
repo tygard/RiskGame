@@ -1,5 +1,5 @@
 class User{
   String name;
-
-  User(this.name);
+  String color;
+  String googleID;
 }

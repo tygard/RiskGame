@@ -20,15 +20,16 @@ class Risk extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlobalsProvider(
-          user: new User("Freddy"),
+          user: locator<User>(),
           child: MaterialApp(
         title: 'Risk',
         theme: ThemeData(
           primaryColor: const Color(0xFF0E1E1E),
           accentColor: const Color(0xFFFFC454),
         ),
-        onGenerateRoute: RouteGenerator.generateRoute,
+        onGenerateRoute: locator<RouteGenerator>().generateRoute,
         initialRoute: '/',
+        navigatorKey: locator<RouteGenerator>().key,
       ),
     );
   }

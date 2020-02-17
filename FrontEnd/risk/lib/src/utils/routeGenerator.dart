@@ -1,20 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:risk/src/pages/chatRoom.dart';
-import 'package:risk/src/pages/homeScreen/loginScreen.dart';
+import 'package:risk/gameLayer/game.dart';
+import 'package:risk/src/pages/gameScreens/selectTeam.dart';
+import 'package:risk/src/pages/homeScreens/homeScreen.dart';
+import 'package:risk/src/pages/homeScreens/loginScreen.dart';
 import 'package:risk/src/pages/loadScreen.dart';
+import 'package:risk/src/pages/overlay.dart';
 import 'noAnimationMaterialPageRoute.dart';
 
 class RouteGenerator {
-  static Route<dynamic> generateRoute(RouteSettings settings) {
+  final GlobalKey<NavigatorState> key =
+      new GlobalKey<NavigatorState>();
+
+  Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case "/":
         return NoAnimationMaterialPageRoute(builder: (_) => LoadScreen());
       case "/login":
         return NoAnimationMaterialPageRoute(builder: (_) => LoginScreen());
-      case "/chat":
-        return NoAnimationMaterialPageRoute(builder: (_) => ChatRoom());
+      case "/home":
+        return NoAnimationMaterialPageRoute(builder: (_) => HomeScreen());
+      case "/onboard/selectTeam/":
+        return NoAnimationMaterialPageRoute(builder: (_) => SelectTeam());
+      case "/game": //TODO this is horrible presentation, just want to go to sleep though
+        return NoAnimationMaterialPageRoute(builder: (_) => RiskOverlay(child: MyHomePage(title: "Filler")));
       default:
         throw ErrorDescription("route is unknown.");
     }
+  }
+
+  void generateRouteNamed(String name){
+     key.currentState.pushReplacementNamed(name);
   }
 }

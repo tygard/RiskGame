@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:gradient_text/gradient_text.dart';
+import 'package:risk/dataLayer/googleSignIn/googleSignIn.dart';
+import 'package:risk/src/utils/routeGenerator.dart';
+import 'package:risk/src/utils/serviceProviders.dart';
 
 class LoadScreen extends StatefulWidget {
   @override
@@ -34,11 +37,9 @@ class _LoadScreenState extends State<LoadScreen> {
   }
 
   void _loadApp() async {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(Duration(seconds: 3)).then((_){
-        Navigator.of(context).pushReplacementNamed("/login");
-        }
-        );
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      initLogin();
+      locator<RouteGenerator>().key.currentState.pushReplacementNamed("/login");
     });
   }
 }

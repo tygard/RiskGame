@@ -1,7 +1,7 @@
 import 'config.dart';
 
 class ProductionConfig extends Config{
-  String _endpoint = "PRODUCTION ENDPOINT";
+  String _endpoint = "coms-309-yt-2.cs.iastate.edu:8080";
 
   @override
   String getEndpoint() {

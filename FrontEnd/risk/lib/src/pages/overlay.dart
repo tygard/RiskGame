@@ -9,12 +9,16 @@ import 'package:risk/src/utils/providers/globalsProvider.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
 import 'package:web_socket_channel/io.dart';
 
-class ChatRoom extends StatefulWidget {
+class RiskOverlay extends StatefulWidget {
+  final Widget child;
+
+  RiskOverlay({Key key, @required this.child}) : super(key: key);
+
   @override
-  _ChatRoomState createState() => _ChatRoomState();
+  _RiskOverlayState createState() => _RiskOverlayState();
 }
 
-class _ChatRoomState extends State<ChatRoom> {
+class _RiskOverlayState extends State<RiskOverlay> {
   int numChats = 0;
   TextEditingController _textController;
   ScrollController _scrollController;
@@ -49,6 +53,7 @@ class _ChatRoomState extends State<ChatRoom> {
       ),
       body: Stack(
         children: <Widget>[
+          widget.child,
           SafeArea(
             child: Align(
                 alignment: Alignment.topRight,

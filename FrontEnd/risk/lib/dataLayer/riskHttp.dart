@@ -6,25 +6,25 @@ import 'package:risk/src/utils/serviceProviders.dart';
 abstract class RiskHttp {
   static Dio _dio = new Dio();
 
-  static Future<Map<String, Object>> makePostRequest(String endpoint,
-      {Map<String, String> params}) async {
+  static Future<Response> makePostRequest(String endpoint,
+      {Map<String, dynamic> params}) async {
 
     //creates url string 
     String url = endpoint;
     if (url[0] != "/") url = "/" + url;
     if (url[endpoint.length - 1] != "/") url = url + "/";
-    url = "http://${locator<Config>().getEndpoint()}/REST$url";
+    url = "http://${locator<Config>().getEndpoint()}$url";
 
     Response response;
     if (params != null){
            response = await _dio.post(url,
         data: params,
         options: new Options(contentType: 'application/x-www-form-urlencoded'));
-    return response.data;
+    return response;
     } else {
           response = await _dio.get(url,
         options: new Options(contentType: 'application/x-www-form-urlencoded'));
-    return response.data;
+    return response;
     }
   }
 }

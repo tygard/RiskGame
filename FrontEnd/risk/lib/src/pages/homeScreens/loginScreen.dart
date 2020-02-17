@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:risk/src/pages/homeScreen/homeScreenBoiler.dart';
+import 'package:risk/dataLayer/googleSignIn/googleSignIn.dart';
+import 'package:risk/src/pages/homeScreens/homeScreenBoiler.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -24,20 +25,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         background: Color(0xFF3B5998)),
                     _buildLoginButton(
                         image: Image.asset("assets/logos/google.png"),
+                        function: doLogin,
                         text: Text(
                           "Login with Google",
                           style: TextStyle(color: Colors.black87, fontSize: 20),
                           textAlign: TextAlign.center,
                         ),
-                        background: Colors.white),
-                        _buildLoginButton(
-                        image: Image.asset("assets/logos/google.png"),
-                        text: Text(
-                          "Go to chatroom",
-                          style: TextStyle(color: Colors.black87, fontSize: 20),
-                          textAlign: TextAlign.center,
-                        ),
-                        function: (){Navigator.of(context).pushReplacementNamed("/chat");},
                         background: Colors.white),
                   ],
                 )
