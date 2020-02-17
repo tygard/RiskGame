@@ -1,33 +1,111 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(PassiveScreen());
+  runApp(StartScreen());
+}
+
+class StartScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("home"),
+        ),
+        body: Center(
+          child: FloatingActionButton(onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => PassiveScreen(title: 'Passive')));
+          }),
+        ),
+      ),
+    );
+  }
 }
 
 class PassiveScreen extends StatefulWidget {
+  PassiveScreen({Key key, this.title}) : super(key: key);
+  final String title;
   @override
   _PassiveScreenState createState() => _PassiveScreenState();
 }
 
-enum teamColor {
-  red, yellow, blue, green
-}
 /**
- * a passive is an object that modifies the game state,
- * it has a cost, duration and one or more attributes (helpful only)
+ * a passive is an object that a user can purchase
+ * it has a cost, duration, active status and one or more attributes (helpful only)
  */
 class Passive {
-  String description = "default description";
+  String description = "passive name:\n passive attributes";
   int cost = 0;
   int duration = 0;
   bool isActive = false;
-  var teamColor;
+  String teamColor;
+
+  void assign(String team) {
+    this.teamColor = team;
+    this.isActive = true;
+  }
+
+  void unassign() {
+    this.teamColor = null;
+    this.isActive = false;
+  }
+
+  void setActive() {
+    isActive = true;
+  }
+
+  bool getStatus() {
+    return this.isActive;
+  }
+
+  int getCost() {
+    return this.cost;
+  }
+
+  int getDuration() {
+    return this.duration;
+  }
+
+  void simTurn() {
+    if (this.duration > 0) {
+      this.duration--;
+    }
+    if (this.duration == 0) {
+      unassign();
+    }
+  }
+
+  void setTeam(String s) {
+    this.teamColor = s;
+  }
+}
+
+/**
+ * holds information about the state of the passive objects
+ */
+class PassiveState {
+  static Passive p1 = new Passive();
+  static Passive p2 = new Passive();
+  static Passive p3 = new Passive();
+  static Passive p4 = new Passive();
+  static Passive p5 = new Passive();
+  static Passive p6 = new Passive();
+  List<Passive> passiveArr = [p1, p2, p3, p4, p5, p6];
 }
 
 class _PassiveScreenState extends State<PassiveScreen> {
-  var currentPassives = new List<Passive>();
-  var p = new Passive();
-  Color _backgroundColor = Colors.green;
+  Color _buttonColor = Colors.green;
+  PassiveState pState = new PassiveState();
 
   /**
    * TODO:
@@ -35,38 +113,51 @@ class _PassiveScreenState extends State<PassiveScreen> {
    * to determine who the passive should be assigned to.
    * Also updates the state of the FloatingActionButton colors and return value
    */
-  void purchasePassive() {
+  void purchasePassive(Passive p) {
     setState(() {
-      if (p.isActive){
-        _backgroundColor = Colors.grey[600];
-        return null;
-      } 
-      else {
-      // assign a passive to the user
-      p.isActive = true;
-      }
+      // assign the given Passive p to the user
+      // if (game.isRed) {
+      //   p.assign("Red");
+      // }
+      _buttonColor = Colors.grey[600];
     });
   }
 
-  void removePassive(){
+  void removePassive(Passive p) {
     setState(() {
       // unassing a passive to the user
-      p.isActive = false;
+      p.unassign();
+      _buttonColor = Colors.green;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'PassiveScreen',
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Colors.red,
+      ),
       home: Scaffold(
+        appBar: PreferredSize(
+          child: AppBar(
+            title: Text("Passive Selection"),
+            automaticallyImplyLeading: true,
+            leading: BackButton(
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+          preferredSize: Size.fromHeight(30.0),
+        ),
         body: Container(
           // this container holds the entire widget tree for this screen
           constraints: BoxConstraints(
             maxHeight: 500,
           ),
           alignment: Alignment.bottomLeft,
-          padding: EdgeInsets.all(0),
-          color: Colors.blueGrey,
+          // padding: EdgeInsets.all(0),
+          // color: Colors.blueGrey,
           child: ListView(
             // this is the list of passive descriptions
             shrinkWrap: true,
@@ -74,9 +165,7 @@ class _PassiveScreenState extends State<PassiveScreen> {
             children: <Widget>[
               Container(
                 // tihs container is a row containing the passive description string and purchase button
-                constraints: BoxConstraints(
-                  maxHeight: 30,
-                ),
+                constraints: BoxConstraints(maxHeight: 60, minHeight: 60),
                 color: Colors.blue,
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.all(4),
@@ -84,16 +173,18 @@ class _PassiveScreenState extends State<PassiveScreen> {
                   children: <Widget>[
                     Icon(Icons.assessment),
                     Text('\t'),
-                    Text(p.description),
+                    Text(pState.passiveArr[1].description),
                     Spacer(
                       flex: 1,
                     ),
-                    FloatingActionButton(
-                      onPressed: purchasePassive, // call method to update user attributes
-                      shape: RoundedRectangleBorder(),
+                    FlatButton(
                       child: Text("Buy"),
-                      backgroundColor: _backgroundColor,
-                    )
+                      clipBehavior: Clip.antiAlias,
+                      autofocus: true,
+                      color: _buttonColor,
+                      onPressed: () => purchasePassive(pState.passiveArr[0]),
+                      shape: RoundedRectangleBorder(),
+                    ),
                   ],
                 ),
               ),
