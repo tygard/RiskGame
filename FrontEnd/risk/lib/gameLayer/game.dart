@@ -345,7 +345,7 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         child: Text("\$"),
         ),
-        body: new BidirectionalScrollViewPlugin(
+        body: new SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -357,8 +357,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: new Text(game.greenArmy.toString(), style: TextStyle(fontSize: 30)),
                     shape: Border.all(color: game.isGreen ? Colors.white : Colors.black, width: 5),
                     color: Colors.green,
-                    height: 150,
-                    minWidth: 150,
+                    height: 125,
+                    minWidth: 125,
 
                   ),
                   new MaterialButton(
@@ -366,16 +366,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: new Text(game.getArmyNum(1).getArmy().toString(), style: TextStyle(fontSize: 30)),
                     shape: Border.all(color: game.getArmyNum(1).getGray() ? Colors.white : Colors.black, width: 5),
                     color: game.getArmyNum(1).getColor() == "Red" ? Colors.red : game.getArmyNum(1).getColor() == "Blue" ? Colors.blue : game.getArmyNum(1).getColor() == "Green" ? Colors.green : game.getArmyNum(1).getColor() == "Yellow" ? Colors.yellow : Colors.grey,
-                    height: 150,
-                    minWidth: 150,
+                    height: 125,
+                    minWidth: 125,
                   ),
                   new MaterialButton(
                     onPressed: () => graySelect(game.getArmyNum(2)),
                     child: new Text(game.getArmyNum(2).getArmy().toString(), style: TextStyle(fontSize: 30)),
                     shape: Border.all(color: game.getArmyNum(2).getGray() ? Colors.white : Colors.black, width: 5),
                     color: game.getArmyNum(2).getColor() == "Red" ? Colors.red : game.getArmyNum(2).getColor() == "Blue" ? Colors.blue : game.getArmyNum(2).getColor() == "Green" ? Colors.green : game.getArmyNum(2).getColor() == "Yellow" ? Colors.yellow : Colors.grey,
-                    height: 150,
-                    minWidth: 150,
+                    height: 125,
+                    minWidth: 125,
 
                   ),
                   new MaterialButton(
@@ -383,8 +383,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: new Text(game.redArmy.toString(), style: TextStyle(fontSize: 30)),
                     color: Colors.red,
                     shape: Border.all(color: game.isRed ? Colors.white : Colors.black, width: 5),
-                    height: 150,
-                    minWidth: 150,
+                    height: 125,
+                    minWidth: 125,
                   ),
                 ],
               ),
@@ -396,8 +396,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: new Text(game.getArmyNum(3).getArmy().toString(), style: TextStyle(fontSize: 30)),
                     shape: Border.all(color: game.getArmyNum(3).getGray() ? Colors.white : Colors.black, width: 5),
                     color: game.getArmyNum(3).getColor() == "Red" ? Colors.red : game.getArmyNum(3).getColor() == "Blue" ? Colors.blue : game.getArmyNum(3).getColor() == "Green" ? Colors.green : game.getArmyNum(3).getColor() == "Yellow" ? Colors.yellow : Colors.grey,
-                    height: 150,
-                    minWidth: 150,
+                    height: 125,
+                    minWidth: 125,
 
                   ),
                   new MaterialButton(
@@ -405,8 +405,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: new Text(game.getArmyNum(4).getArmy().toString(), style: TextStyle(fontSize: 30)),
                     shape: Border.all(color: game.getArmyNum(4).getGray() ? Colors.white : Colors.black, width: 5),
                     color: game.getArmyNum(4).getColor() == "Red" ? Colors.red : game.getArmyNum(4).getColor() == "Blue" ? Colors.blue : game.getArmyNum(4).getColor() == "Green" ? Colors.green : game.getArmyNum(4).getColor() == "Yellow" ? Colors.yellow : Colors.grey,
-                    height: 150,
-                    minWidth: 150,
+                    height: 125,
+                    minWidth: 125,
 
                   ),
                   new MaterialButton(
@@ -414,8 +414,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: new Text(game.getArmyNum(5).getArmy().toString(), style: TextStyle(fontSize: 30)),
                     shape: Border.all(color: game.getArmyNum(5).getGray() ? Colors.white : Colors.black, width: 5),
                     color: game.getArmyNum(5).getColor() == "Red" ? Colors.red : game.getArmyNum(5).getColor() == "Blue" ? Colors.blue : game.getArmyNum(5).getColor() == "Green" ? Colors.green : game.getArmyNum(5).getColor() == "Yellow" ? Colors.yellow : Colors.grey,
-                    height: 150,
-                    minWidth: 150,
+                    height: 125,
+                    minWidth: 125,
 
                   ),
                   new MaterialButton(
@@ -423,8 +423,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: new Text(game.getArmyNum(6).getArmy().toString(), style: TextStyle(fontSize: 30)),
                     shape: Border.all(color: game.getArmyNum(6).getGray() ? Colors.white : Colors.black, width: 5),
                     color: game.getArmyNum(6).getColor() == "Red" ? Colors.red : game.getArmyNum(6).getColor() == "Blue" ? Colors.blue : game.getArmyNum(6).getColor() == "Green" ? Colors.green : game.getArmyNum(6).getColor() == "Yellow" ? Colors.yellow : Colors.grey,
-                    height: 150,
-                    minWidth: 150,
+                    height: 125,
+                    minWidth: 125,
 
                   ),
                 ],
@@ -437,16 +437,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: new Text(game.blueArmy.toString(), style: TextStyle(fontSize: 30)),
                     shape: Border.all(color: game.isBlue ? Colors.white : Colors.black, width: 5),
                     color: Colors.blue,
-                    height: 150,
-                    minWidth: 150,
+                    height: 125,
+                    minWidth: 125,
                   ),
                   new MaterialButton(
                     onPressed: () => graySelect(game.getArmyNum(7)),
                     child: new Text(game.getArmyNum(7).getArmy().toString(), style: TextStyle(fontSize: 30)),
                     shape: Border.all(color: game.getArmyNum(7).getGray() ? Colors.white : Colors.black, width: 5),
                     color: game.getArmyNum(7).getColor() == "Red" ? Colors.red : game.getArmyNum(7).getColor() == "Blue" ? Colors.blue : game.getArmyNum(7).getColor() == "Green" ? Colors.green : game.getArmyNum(7).getColor() == "Yellow" ? Colors.yellow : Colors.grey,
-                    height: 150,
-                    minWidth: 150,
+                    height: 125,
+                    minWidth: 125,
 
                   ),
                   new MaterialButton(
@@ -454,8 +454,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: new Text(game.getArmyNum(8).getArmy().toString(), style: TextStyle(fontSize: 30)),
                     shape: Border.all(color: game.getArmyNum(8).getGray() ? Colors.white : Colors.black, width: 5),
                     color: game.getArmyNum(8).getColor() == "Red" ? Colors.red : game.getArmyNum(8).getColor() == "Blue" ? Colors.blue : game.getArmyNum(8).getColor() == "Green" ? Colors.green : game.getArmyNum(8).getColor() == "Yellow" ? Colors.yellow : Colors.grey,
-                    height: 150,
-                    minWidth: 150,
+                    height: 125,
+                    minWidth: 125,
 
                   ),
                   new MaterialButton(
@@ -463,8 +463,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: new Text(game.yellowArmy.toString(), style: TextStyle(fontSize: 30)),
                     shape: Border.all(color: game.isYellow ? Colors.white : Colors.black, width: 5),
                     color: Colors.yellow,
-                    height: 150,
-                    minWidth: 150,
+                    height: 125,
+                    minWidth: 125,
                   ),
                 ],
               ),
