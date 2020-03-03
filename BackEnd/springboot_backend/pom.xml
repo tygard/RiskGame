@@ -97,7 +97,7 @@
 				<executions>
 					<execution>
 						<goals>
-							<goal>validate</goal>
+							<goal>start</goal>
 						</goals>
 					</execution>
 				</executions>
