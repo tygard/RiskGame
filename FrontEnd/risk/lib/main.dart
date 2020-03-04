@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:risk/gameLayer/game.dart';
 import 'package:risk/src/utils/providers/globalsProvider.dart';
 import 'package:risk/src/utils/routeGenerator.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
@@ -19,6 +20,18 @@ void main() {
 class Risk extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // TODO: implement build
+    return MaterialApp(
+      home: MyHomePage(
+        title: "title",
+      ),
+    );
+  }
+
+
+  
+/*   @override
+  Widget build(BuildContext context) {
     return GlobalsProvider(
           user: locator<User>(),
           child: MaterialApp(
@@ -32,5 +45,5 @@ class Risk extends StatelessWidget {
         navigatorKey: locator<RouteGenerator>().key,
       ),
     );
-  }
+  } */
 }
