@@ -1,6 +1,8 @@
 import 'dart:math';
+import 'package:risk/models/gameStateObjects/game.dart';
 import 'package:risk/models/gameStateObjects/tile.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
+
 
 enum PassiveModifiers { defense, attack, troopGeneration, moneyGeneration }
 
@@ -55,15 +57,16 @@ class Passive {
   void advanceTurn() {
     if (!isActive()){
       return;
-    } else 
-    if (duration == 0) {
+    } else if (duration == 0) {
       deActivate();
     }
   }
 
+  /**
+   * purchase the passive,
+   *  - before calling this function the user should verify that it can afford the passive
+   */
   void purchase(){
-
-
     if (modifiedValue == PassiveModifiers.attack){
       curTile.power += passiveValue;
     }
@@ -82,8 +85,22 @@ class Passive {
    * passive is no longer active, 
    */
   void deActivate() {
+    if (modifiedValue == PassiveModifiers.attack){
+      curTile.power -= passiveValue;
+    }
+    else if (modifiedValue == PassiveModifiers.defense){
+      curTile.defense -= passiveValue;
+    }
+    else if (modifiedValue == PassiveModifiers.moneyGeneration){
+      curTile.moneyGeneration -= passiveValue;
+    }
+    else if (modifiedValue == PassiveModifiers.troopGeneration){
+      curTile.troopGeneration -= passiveValue;
+    }
+
     duration = -1;
     passiveValue = 0;
+    active = false;
   }
 
   /**
@@ -93,6 +110,9 @@ class Passive {
     return (active);
   }
 
+  /**
+   * returns a string description of this passive
+   */
   String toString() {
     String s;
     s = "Cost: ${cost}\n"

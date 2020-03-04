@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
 import 'package:bidirectional_scroll_view/bidirectional_scroll_view.dart';
+import 'package:risk/src/pages/gameScreens/passivesScreen.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 import 'package:risk/dataLayer/riskHttp.dart';
 
@@ -341,7 +342,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         floatingActionButton: FloatingActionButton(onPressed: (){
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => PassiveScreen(game: this.game)));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => PassivesScreen(game: this.game)));
         },
         child: Text("\$"),
         ),
