@@ -9,7 +9,7 @@ stages:
  - androidtest
 
 # tags: "shell" should match with the tag name provided to runner, for spring runner
-should execute in shell.
+# should execute in shell.
 # Notice that in petclinic project, the spring project is in root of master, if yours is in
 # folder then cd to that folder.
 # maven -B means batch mode (i.e. not interactive)
@@ -22,7 +22,7 @@ maven-build:
  - mvn package -B
 
 # artifacts are created when job executes successfully, and can be manually
-downloaded from GitLab GUI.
+# downloaded from GitLab GUI.
 # artifacts are not mandatory, but it is good practice, in case auto deploy fails, you
 # can manually download the jar.
 maven-test:
