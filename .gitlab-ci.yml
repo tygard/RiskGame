@@ -60,8 +60,8 @@ autoDeploy:
 
 #pickup step 7
 autoDeploy:
-stage: autodeploy
-tags:
+ stage: autodeploy
+ tags:
  - springboot-runner
  only: # Will only run if these conditions are met, check documentation for more!
  refs:
