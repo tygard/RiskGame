@@ -59,6 +59,7 @@ autoDeploy:
 
 
 #pickup step 7
+autoDeploy:
 stage: autodeploy
 tags:
  - springboot-runner
