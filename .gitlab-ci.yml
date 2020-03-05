@@ -33,8 +33,8 @@ maven-test:
  - cd Spring
  - mvn test
  artifacts:
- paths:
- - Spring/target/*.jar
+  paths:
+  - Spring/target/*.jar
 
 # Below stage builds, deploys and executes the jar as service.
 # Make sure there is /target directory in your server, else script will fail, or use any
