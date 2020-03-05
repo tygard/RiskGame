@@ -16,7 +16,7 @@ stages:
 maven-build:
  stage: mavenbuild
  tags:
- - spring
+ - shell
  script:
  - cd BackEnd/springboot_backend/
  - mvn package -B
@@ -62,7 +62,7 @@ autoDeploy:
 autoDeploy:
  stage: autodeploy
  tags:
- - spring
+ - shell
  only: # Will only run if these conditions are met, check documentation for more!
   refs:
   - master
