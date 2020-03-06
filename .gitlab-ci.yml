@@ -4,6 +4,7 @@
 stages:
  - mavenbuild
  - maventest
+ - teststage
  - autodeploy
  - androidbuild
  - androidtest
@@ -35,6 +36,15 @@ maven-test:
  artifacts:
   paths:
   - BackEnd/springboot_backend/target/*.jar
+  
+  
+  test-stage:
+    stage: teststage
+    tags: 
+    - shell
+   script: 
+    - echo "WE DID IT"
+  
 
 # Below stage builds, deploys and executes the jar as service.
 # Make sure there is /target directory in your server, else script will fail, or use any
