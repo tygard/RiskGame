@@ -5,8 +5,6 @@ stages:
  - mavenbuild
  - maventest
  - autodeploy
- - androidbuild
- - androidtest
 
 # tags: "shell" should match with the tag name provided to runner, for spring runner
 # should execute in shell.
@@ -30,22 +28,31 @@ maven-test:
  tags:
  - shell
  script:
- - cd Spring
+ - cd BackEnd/springboot_backend/
  - mvn test
  artifacts:
   paths:
-  - Spring/target/*.jar
+  - BackEnd/springboot_backend/target/*.jar
+  
+  
+auto-deploy:
+ stage: autodeploy
+ tags:
+ - shell
+ script:
+ - echo "WE DID IT"
+  
 
 # Below stage builds, deploys and executes the jar as service.
 # Make sure there is /target directory in your server, else script will fail, or use any
 # other folder you like.
 # If you are changing the folder, reflect the change in systemd-web-demo service
-autoDeploy:
+auto-deploy2:
  stage: autodeploy
  tags:
  - shell
  script:
- - cd Spring
+ - cd BackEnd/springboot_backend/
  - mvn package
  - sudo mv target/*.jar /target/web-demo.jar
  - sudo systemctl stop web-demo
@@ -59,7 +66,7 @@ autoDeploy:
 
 
 #pickup step 7
-autoDeploy:
+auto-deploy3:
  stage: autodeploy
  tags:
  - shell
