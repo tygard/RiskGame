@@ -5,6 +5,8 @@ stages:
  - mavenbuild
  - maventest
  - autodeploy
+ - androidbuild
+ - andrioidtest
 
 # tags: "shell" should match with the tag name provided to runner, for spring runner
 # should execute in shell.
@@ -81,4 +83,24 @@ auto-deploy3:
  - sudo mv target/*.jar /target/web-demo.jar
  - sudo systemctl stop web-demo
  - sudo systemctl start web-demo
+ 
+
+# To build android projects
+# Notice that we cd into Android_test folder which contains all Android files before # building apk.
+# Ensure the tag matches with the tag created for Android runner
+# Android runner should have docker as executor.
+android-build:
+ image: 
+  javiersantos/android-ci: latest 
+  stage: androidbuild
+ before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+ tags:
+  - android
+ script:
+  - cd /FrontEnd/risk/android/
+  - gradle assemble
+ artifacts:
+  paths:
+  - /build/outputs/
 
