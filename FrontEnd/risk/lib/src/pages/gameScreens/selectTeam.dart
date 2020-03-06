@@ -84,6 +84,7 @@ class SelectTeam extends StatelessWidget {
     }
     locator<User>().name = myController.text;
     Map<String, dynamic> package = {'Username': myController.text, 'Faction': colorID, 'googToken': locator<User>().googleID, "fbToken": null};
+    print(package);
     Response response = await RiskHttp.makePostRequest("users", params: package);
     Toaster.successToast(response.data.toString());
     Navigator.of(context).pushReplacementNamed("/game");
