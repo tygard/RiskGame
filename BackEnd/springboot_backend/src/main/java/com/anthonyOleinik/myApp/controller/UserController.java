@@ -170,4 +170,9 @@ public class UserController {
         return user.toString();
     }
     //endregion
+
+    @GetMapping("/test")
+    public String test() {
+        return "TEST";
+    }
 }
