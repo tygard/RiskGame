@@ -45,7 +45,7 @@ autoDeploy:
  tags:
  - shell
  script:
- - cd Spring
+ - cd BackEnd/springboot_backend/
  - mvn package
  - sudo mv target/*.jar /target/web-demo.jar
  - sudo systemctl stop web-demo
