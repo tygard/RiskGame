@@ -4,7 +4,7 @@
 stages:
  - mavenbuild
  - maventest
- - deployautomatically
+ - autodeploy
 
 # tags: "shell" should match with the tag name provided to runner, for spring runner
 # should execute in shell.
@@ -35,8 +35,8 @@ maven-test:
   - BackEnd/springboot_backend/target/*.jar
   
   
-deploy-automatically:
- stage: deployautomatically
+auto-deploy:
+ stage: autodeploy
  tags:
  - shell
  script:
