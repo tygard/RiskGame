@@ -38,12 +38,12 @@ maven-test:
   - BackEnd/springboot_backend/target/*.jar
   
   
-  test-stage:
-    stage: teststage
-    tags: 
-    - shell
-   script: 
-    - echo "WE DID IT"
+test-stage:
+ stage: teststage
+ tags:
+ - shell
+ script:
+ - echo "WE DID IT"
   
 
 # Below stage builds, deploys and executes the jar as service.
