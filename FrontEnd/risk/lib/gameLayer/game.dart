@@ -342,7 +342,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         floatingActionButton: FloatingActionButton(onPressed: (){
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => PassivesScreen(game: this.game)));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => PassivesScreen()));
         },
         child: Text("\$"),
         ),

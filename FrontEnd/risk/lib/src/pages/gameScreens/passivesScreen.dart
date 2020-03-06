@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:risk/gameLayer/game.dart';
 import 'package:risk/models/gameStateObjects/passive.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
+import 'package:risk/models/gameStateObjects/tile.dart';
+
+import '../../../models/gameStateObjects/game.dart';
+import '../../../models/gameStateObjects/game.dart';
 
 class PassivesScreen extends StatefulWidget {
-  PassivesScreen(GameState gState);
+  PassivesScreen();
   final PassiveState pState = new PassiveState();
 
   @override
@@ -19,11 +22,7 @@ class PassivesScreen extends StatefulWidget {
 class PassiveState {
   static Passive p1 = new Passive();
   static Passive p2 = new Passive();
-  static Passive p3 = new Passive();
-  static Passive p4 = new Passive();
-  static Passive p5 = new Passive();
-  static Passive p6 = new Passive();
-  List<Passive> passiveArr = [p1, p2, p3, p4, p5, p6];
+  List<Passive> passiveArr = [p1, p2];
 }
 
 class _PassivesScreenState extends State<PassivesScreen> {
@@ -85,7 +84,7 @@ Widget passiveRow(Passive p){
           clipBehavior: Clip.antiAlias,
           autofocus: true,
           color: passiveRowColor(p),
-          onPressed: () => (p.);
+          onPressed: () => p.purchase(),
           shape: RoundedRectangleBorder(),
         ),
       ],
@@ -94,7 +93,7 @@ Widget passiveRow(Passive p){
 }
 
 Color passiveRowColor(Passive p){
-  if (!p.isActive() && p.canAfford()){
+  if (!p.isActive() /* && p.canAfford() */){
     return Colors.green;
   }
   else {

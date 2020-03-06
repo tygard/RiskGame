@@ -26,7 +26,7 @@ class Passive {
    * passiveValue = [1-10]
    * modifiedValue = [defense, attack, troopGeneration, moneyGeneration]
    */
-  Passive(this.curTile, {int c, int d, int pV, int mV}) {
+  Passive({int c, int d, int pV, int mV}) {
     if (c == 0) {
       cost = Random().nextInt(201) + 50; // random goes from 0 to max, exclusive
     } else {
