@@ -47,7 +47,7 @@ auto-deploy:
 # Make sure there is /target directory in your server, else script will fail, or use any
 # other folder you like.
 # If you are changing the folder, reflect the change in systemd-web-demo service
-auto-deploy:
+auto-deploy2:
  stage: autodeploy
  tags:
  - shell
@@ -66,7 +66,7 @@ auto-deploy:
 
 
 #pickup step 7
-auto-deploy:
+auto-deploy3:
  stage: autodeploy
  tags:
  - shell
