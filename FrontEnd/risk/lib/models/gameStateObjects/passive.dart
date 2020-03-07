@@ -30,18 +30,19 @@ class Passive {
    * modifiedValue = [defense, attack, troopGeneration, moneyGeneration]
    */
   Passive({int cost, int passiveValue, PassiveModifiers modifiedValue}) {
-    if (cost == 0) {
-      cost = Random().nextInt(201) + 50; // random goes from 0 to max, exclusive
+    if (cost == null) {
+      cost = new Random().nextInt(201) +
+          50; // random goes from 0 to max, exclusive
     } else {
       this.cost = cost;
     }
-    if (passiveValue == 0) {
-      passiveValue = Random().nextInt(10) + 1;
+    if (passiveValue == null) {
+      passiveValue = new Random().nextInt(10) + 1;
     } else {
       this.passiveValue = passiveValue;
     }
-    if (modifiedValue == PassiveModifiers.none) {
-      this.modifiedValue = _determineModifier(Random().nextInt(4));
+    if (modifiedValue == null) {
+      this.modifiedValue = _determineModifier(new Random().nextInt(4));
     } else {
       this.modifiedValue = modifiedValue;
     }
@@ -66,11 +67,18 @@ class Passive {
    * returns a string description of this passive
    */
   String toString() {
-    String s;
-    s = "Cost: ${cost}\n";
-    s += "Modifier: ${modifiedValue}";
-    s += "Value: +${passiveValue}%";
+    String s = "Cost: $cost, \t";
+    s += _modifierToString(this.modifiedValue);
+    s += " + $passiveValue%";
     return s;
+  }
+
+  String _modifierToString(PassiveModifiers pM) {
+    if (pM == PassiveModifiers.attack) return "Attack";
+    else if (pM == PassiveModifiers.defense) return "Defense";
+    else if (pM == PassiveModifiers.troopGeneration) return "Troop Generation";
+    else if (pM == PassiveModifiers.moneyGeneration) return "Money Generation";
+    else return "Not a valid Modifier";
   }
 
   PassiveModifiers _determineModifier(int mVal) {

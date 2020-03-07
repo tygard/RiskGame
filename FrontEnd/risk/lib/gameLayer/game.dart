@@ -344,7 +344,7 @@ class _MyHomePageState extends State<MyHomePage> {
         floatingActionButton: FloatingActionButton(onPressed: (){
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => PassivesScreen()));
         },
-        child: Text("\$"),
+        child: Text("\$", textScaleFactor: 2.0,),
         ),
         body: new SingleChildScrollView(
           child: Column(

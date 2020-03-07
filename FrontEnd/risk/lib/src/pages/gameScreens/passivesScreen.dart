@@ -8,24 +8,38 @@ import '../../../models/gameStateObjects/game.dart';
 import '../../../models/gameStateObjects/game.dart';
 
 class PassivesScreen extends StatefulWidget {
-  PassivesScreen();
-  final PassiveState pState = new PassiveState();
+  List<Passive> passivesList = List<Passive>();
+  /**
+   * a passive screen needs a list of passives, usually the InGameUsers owned passives 
+   * FOR TESTING: if there is no passive list given it populates passivesList with 5 random passives
+   */
+  PassivesScreen({this.passivesList}) {
+    if (passivesList == null || passivesList.length == 0) {
+      this.passivesList = new List<Passive>();
+      this.passivesList.add(new Passive());
+      this.passivesList.add(new Passive());
+      this.passivesList.add(new Passive());
+      this.passivesList.add(new Passive());
+      this.passivesList.add(new Passive());
+    }
+  }
 
   @override
   _PassivesScreenState createState() => _PassivesScreenState();
 }
 
-
-/**
- * holds information about the state of the passive objects
- */
-class PassiveState {
-  static Passive p1 = new Passive();
-  static Passive p2 = new Passive();
-  List<Passive> passiveArr = [p1, p2];
-}
-
 class _PassivesScreenState extends State<PassivesScreen> {
+  /**
+   * --- I just set the passives active property to true for a quick test that things are working
+   * TODO: use a reference to this gameState to call the current users purchase passive
+   * function on this passive
+   */
+  void purchasePassive(Passive p) {
+    setState(() {
+      p.active = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,66 +51,53 @@ class _PassivesScreenState extends State<PassivesScreen> {
       home: Scaffold(
         appBar: PreferredSize(
           child: AppBar(
-            title: Text("Passive Selection"),
-            automaticallyImplyLeading: true,
+            title: Text("Passives Selection"),
             leading: BackButton(
               onPressed: () => Navigator.pop(context),
             ),
           ),
-          preferredSize: Size.fromHeight(30.0),
+          preferredSize: Size.fromHeight(50.0),
         ),
-        body: Container(
-          // this container holds the entire widget tree for this screen
-          constraints: BoxConstraints(
-            maxHeight: 500,
-          ),
-          alignment: Alignment.bottomLeft,
-          child: ListView(
-            // this is the list of passive descriptions
-            shrinkWrap: true,
-            controller: ScrollController(initialScrollOffset: 0),
-            children: <Widget>[
-            ],
-          ),
-        ),
+        body: _createPassivesList(widget.passivesList),
       ),
     );
   }
-}
 
-Widget passiveRow(Passive p){
-  return Container(
-    // this container is a row containing the passive description string and purchase button
-    constraints: BoxConstraints(maxHeight: 60, minHeight: 60),
-    color: Colors.blue,
-    alignment: Alignment.centerLeft,
-    padding: EdgeInsets.all(4),
-    child: Row(
-      children: <Widget>[
-        Icon(Icons.description),
-        Text('\t'),
-        Text(p.toString()),
-        Spacer(
-          flex: 1,
-        ),
-        FlatButton(
-          child: Text("Buy"),
-          clipBehavior: Clip.antiAlias,
-          autofocus: true,
-          color: passiveRowColor(p),
-          onPressed: () => p.purchase(),
-          shape: RoundedRectangleBorder(),
-        ),
-      ],
-    ),
-  );
-}
-
-Color passiveRowColor(Passive p){
-  if (!p.isActive() /* && p.canAfford() */){
-    return Colors.green;
+  Widget _createPassivesList(List<Passive> pList) {
+    return Container(
+      // this container holds the entire widget tree for this screen
+      alignment: Alignment.bottomLeft,
+      child: ListView.builder(
+        itemCount: pList.length,
+        itemBuilder: (context, index) {
+          //return _passiveRow(pList[index]);
+          return ListTile(
+            onTap: () {
+              purchasePassive(pList[index]);
+            },
+            leading: Icon(Icons.description),
+            enabled: !pList[index].active,
+            title: Text("Passive $index"),
+            subtitle: Text(pList[index].toString()),
+            trailing: FlatButton(
+              child: Text("Buy"),
+              clipBehavior: Clip.antiAlias,
+              autofocus: true,
+              color: _passiveButtonColor(pList[index]),
+              onPressed: () => purchasePassive(pList[index]),
+              shape: RoundedRectangleBorder(),
+            ),
+          );
+        },
+      ),
+    );
   }
-  else {
-    return Colors.grey;
+
+  Color _passiveButtonColor(Passive p) {
+    if (!p.isActive()) {
+      return Colors.green;
+    } else {
+      return Colors.grey;
+    }
   }
 }
