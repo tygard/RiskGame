@@ -15,4 +15,6 @@ class GameState {
 
   final int AITileGrowth = 5; //percent out of 100
   final int initAINum = 5;
+
+  GameState(this.users, this.board, this.gameID);
 }

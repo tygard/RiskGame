@@ -2,104 +2,51 @@ import 'dart:math';
 import 'package:risk/models/gameStateObjects/game.dart';
 import 'package:risk/models/gameStateObjects/tile.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
+import 'package:risk/models/gameStateObjects/InGameUser.dart';
 
 
-enum PassiveModifiers { defense, attack, troopGeneration, moneyGeneration }
+enum PassiveModifiers { none, defense, attack, troopGeneration, moneyGeneration }
 
 /**
- * passives are modifiers that apply to tiles under control of a user
+ * passives are modifiers that apply to users and can be purchased by a user
+ * from the passives screen
  */
 class Passive {
-  Tile curTile;
-  int cost;
-  int duration;
-  bool active;
-  int passiveValue;
-  PassiveModifiers modifiedValue;
+  int cost = 0;
+  int owner = -1;
+  bool active = false;
+  int passiveValue = 0;
+  PassiveModifiers modifiedValue = PassiveModifiers.none;
 
   /**
-   * generates a passive object assigned to a Tile() 
-   * TODO: restructure tiles to be the objects modified by passives, not users
    *  --- if any parameters are left blank, assigns values in the following ranges ---
    * cost = [50-250]
-   * duration = [3-15]
    * passiveValue = [1-10]
    * modifiedValue = [defense, attack, troopGeneration, moneyGeneration]
    */
-  Passive({int c, int d, int pV, int mV}) {
-    if (c == 0) {
+  Passive ({int cost, int passiveValue, PassiveModifiers modifiedValue}) {
+    if (cost == 0) {
       cost = Random().nextInt(201) + 50; // random goes from 0 to max, exclusive
     } else {
-      cost = c;
+      this.cost = cost;
     }
-    if (d == 0) {
-      duration = Random().nextInt(13) + 3;
-    } else {
-      duration = d;
-    }
-    if (pV == 0) {
+    if (passiveValue == 0) {
       passiveValue = Random().nextInt(10) + 1;
     } else {
-      passiveValue = pV;
+      this.passiveValue = passiveValue;
     }
-    if (mV == 0) {
-      modifiedValue = _determineModifier(Random().nextInt(4));
+    if (modifiedValue == PassiveModifiers.none) {
+      this.modifiedValue = _determineModifier(Random().nextInt(4));
     } else {
-      modifiedValue = _determineModifier(mV);
+      this.modifiedValue = modifiedValue;
     }
   }
 
-  /**
-   * advanceTurn is called everytime the gameState's turn updates.
-   * Decrements remaining duration of the passive if it is active,
-   * de activates the passive when remaining duration reaches zero
-   */
-  void advanceTurn() {
-    if (!isActive()){
-      return;
-    } else if (duration == 0) {
-      deActivate();
-    }
+  void setActive(){
+    active = true;
   }
 
-  /**
-   * purchase the passive,
-   *  - before calling this function the user should verify that it can afford the passive
-   */
-  void purchase(){
-    if (modifiedValue == PassiveModifiers.attack){
-      curTile.power += passiveValue;
-    }
-    else if (modifiedValue == PassiveModifiers.defense){
-      curTile.defense += passiveValue;
-    }
-    else if (modifiedValue == PassiveModifiers.moneyGeneration){
-      curTile.moneyGeneration += passiveValue;
-    }
-    else if (modifiedValue == PassiveModifiers.troopGeneration){
-      curTile.troopGeneration += passiveValue;
-    }
-  }
-
-  /**
-   * passive is no longer active, 
-   */
-  void deActivate() {
-    if (modifiedValue == PassiveModifiers.attack){
-      curTile.power -= passiveValue;
-    }
-    else if (modifiedValue == PassiveModifiers.defense){
-      curTile.defense -= passiveValue;
-    }
-    else if (modifiedValue == PassiveModifiers.moneyGeneration){
-      curTile.moneyGeneration -= passiveValue;
-    }
-    else if (modifiedValue == PassiveModifiers.troopGeneration){
-      curTile.troopGeneration -= passiveValue;
-    }
-
-    duration = -1;
-    passiveValue = 0;
+  void setInActive(){
     active = false;
   }
 
@@ -116,9 +63,8 @@ class Passive {
   String toString() {
     String s;
     s = "Cost: ${cost}\n"
-    s += "Duration: ${duration}\n";
     s += "Modifier: ${modifiedValue}";
-    s += "Value: ${passiveValue}";
+    s += "Value: +${passiveValue}%";
     return s;
   }
 
