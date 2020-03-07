@@ -4,8 +4,13 @@ import 'package:risk/models/gameStateObjects/tile.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/models/gameStateObjects/InGameUser.dart';
 
-
-enum PassiveModifiers { none, defense, attack, troopGeneration, moneyGeneration }
+enum PassiveModifiers {
+  none,
+  defense,
+  attack,
+  troopGeneration,
+  moneyGeneration
+}
 
 /**
  * passives are modifiers that apply to users and can be purchased by a user
@@ -24,7 +29,7 @@ class Passive {
    * passiveValue = [1-10]
    * modifiedValue = [defense, attack, troopGeneration, moneyGeneration]
    */
-  Passive ({int cost, int passiveValue, PassiveModifiers modifiedValue}) {
+  Passive({int cost, int passiveValue, PassiveModifiers modifiedValue}) {
     if (cost == 0) {
       cost = Random().nextInt(201) + 50; // random goes from 0 to max, exclusive
     } else {
@@ -42,11 +47,11 @@ class Passive {
     }
   }
 
-  void setActive(){
+  void setActive() {
     active = true;
   }
 
-  void setInActive(){
+  void setInActive() {
     active = false;
   }
 
@@ -62,7 +67,7 @@ class Passive {
    */
   String toString() {
     String s;
-    s = "Cost: ${cost}\n"
+    s = "Cost: ${cost}\n";
     s += "Modifier: ${modifiedValue}";
     s += "Value: +${passiveValue}%";
     return s;
