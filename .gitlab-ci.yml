@@ -55,7 +55,7 @@ auto-deploy3:
 flutter-test:
  stage: fluttertest
  before_script:
- - export PATH="$PATH:`pwd`/flutter/bin"
+ - export PATH=$PATH:/usr/lib/flutter/flutter/bin/
  tags:
   - flutter
  script:
