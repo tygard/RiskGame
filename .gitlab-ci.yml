@@ -5,7 +5,7 @@ stages:
  - mavenbuild
  - maventest
  - autodeploy
- - androidbuild
+ - flutterbuild
  - andrioidtest
 
 # tags: "shell" should match with the tag name provided to runner, for spring runner
@@ -35,15 +35,6 @@ maven-test:
  artifacts:
   paths:
   - BackEnd/springboot_backend/target/*.jar
-  
-  
-auto-deploy:
- stage: autodeploy
- tags:
- - shell
- script:
- - echo "WE DID IT"
-  
 
 # Below stage builds, deploys and executes the jar as service.
 # Make sure there is /target directory in your server, else script will fail, or use any
@@ -54,11 +45,8 @@ auto-deploy2:
  tags:
  - shell
  script:
- - cd BackEnd/springboot_backend/
- - mvn package
- - sudo mv target/*.jar /target/web-demo.jar
- - sudo systemctl stop web-demo
- - sudo systemctl start web-demo
+ - cd FrontEnd/risk/
+ - flutter test
 
 # To build android projects
 # Notice that we cd into Android_test folder which contains all Android files before
@@ -89,12 +77,10 @@ auto-deploy3:
 # Notice that we cd into Android_test folder which contains all Android files before # building apk.
 # Ensure the tag matches with the tag created for Android runner
 # Android runner should have docker as executor.
-android-build:
- image: javiersantos/android-ci:latest 
+flutter-build:
  stage: androidbuild
  before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle
-  - chmod +x ./Android_test/gradlew
+  - 
  tags:
   - android
  script:
