@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:risk/gameLayer/game.dart';
+import 'package:risk/gameLayer/GameBoard.dart';
 import 'package:risk/src/pages/gameScreens/selectTeam.dart';
 import 'package:risk/src/pages/homeScreens/homeScreen.dart';
 import 'package:risk/src/pages/homeScreens/loginScreen.dart';
@@ -22,7 +22,7 @@ class RouteGenerator {
       case "/onboard/selectTeam/":
         return NoAnimationMaterialPageRoute(builder: (_) => SelectTeam());
       case "/game": //TODO this is horrible presentation, just want to go to sleep though
-        return NoAnimationMaterialPageRoute(builder: (_) => RiskOverlay(child: MyHomePage(title: "Filler")));
+        return NoAnimationMaterialPageRoute(builder: (_) => RiskOverlay(child: GameBoard(title: "Filler")));
       default:
         throw ErrorDescription("route is unknown.");
     }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:risk/gameLayer/game.dart';
+import 'package:risk/gameLayer/GameBoard.dart';
 
 class PassiveScreen extends StatefulWidget {
-  PassiveScreen({GameState game, /*User user*/});
+  PassiveScreen({GameBoard game, /*User user*/});
 
   final PassiveState pState = new PassiveState();
 
@@ -103,7 +103,7 @@ class _PassiveScreenState extends State<PassiveScreen> {
    * to determine who the passive should be assigned to.
    * Also updates the state of the FloatingActionButton colors and return value
    */
-  void purchasePassive(Passive p, GameState game) {
+  void purchasePassive(Passive p, GameBoard game) {
     setState(() {
       // assign the given Passive p to the user
       p.assign();
