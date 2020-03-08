@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:risk/models/gameStateObjects/tile.dart';
 
 class GameBoard {

@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'gameBoard.dart';
 import 'inGameUser.dart';
 
@@ -6,8 +8,8 @@ class GameState {
   GameBoard board;
   String gameID;
 
-  int turn;
-  int currPlayer;
+  int turn = 0;
+  int currPlayer = 0;
 
   final int tileGrowthPercent = 5; //percent out of 100
   final int secondsPerTurn = 60;
@@ -16,5 +18,5 @@ class GameState {
   final int AITileGrowth = 5; //percent out of 100
   final int initAINum = 5;
 
-  GameState(this.users, this.board, this.gameID);
+  GameState({@required this.users, @required this.board, @required this.gameID});
 }

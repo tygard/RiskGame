@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:risk/models/gameStateObjects/game.dart';
 import 'package:risk/models/gameStateObjects/passive.dart';
 
@@ -11,15 +12,21 @@ class InGameUser {
   int moneyMultiplier;
   int genTroops;
   int genMoney;
+  String userName;
+  String faction;
+  String role;
 
   InGameUser(
-      this.ownedTiles,
-      this.money,
-      this.ownedPassives,
-      this.troopMultiplier,
-      this.moneyMultiplier,
-      this.genTroops,
-      this.genMoney);
+      {@required this.ownedTiles,
+      @required this.money,
+      @required this.ownedPassives,
+      @required this.troopMultiplier,
+      @required this.moneyMultiplier,
+      @required this.genTroops,
+      @required this.genMoney,
+      @required this.userName,
+      @required this.faction,
+      @required this.role});
 
   /**
    * returns the status of wether the currPlayer in gameState can afford this passive
@@ -35,9 +42,9 @@ class InGameUser {
   void purchasePassive(Passive p) {
     if (canAfford(p) && !p.isActive()) {
       if (p.modifiedValue == PassiveModifiers.attack) {
-        // do nothing for now
+        // these apply to Tiles do nothing for now
       } else if (p.modifiedValue == PassiveModifiers.defense) {
-        // do nothing for now
+        // these apply to Tiles do nothing for now
       } else if (p.modifiedValue == PassiveModifiers.moneyGeneration) {
         moneyMultiplier += p.passiveValue;
       } else if (p.modifiedValue == PassiveModifiers.troopGeneration) {
@@ -55,9 +62,9 @@ class InGameUser {
   void sellPassive(Passive p) {
     if (p.isActive() && ownedPassives.contains(p)) {
       if (p.modifiedValue == PassiveModifiers.attack) {
-        // do nothing for now
+        // these apply to Tiles do nothing for now
       } else if (p.modifiedValue == PassiveModifiers.defense) {
-        // do nothing for now
+        // these apply to Tiles do nothing for now
       } else if (p.modifiedValue == PassiveModifiers.moneyGeneration) {
         moneyMultiplier -= p.passiveValue;
       } else if (p.modifiedValue == PassiveModifiers.troopGeneration) {

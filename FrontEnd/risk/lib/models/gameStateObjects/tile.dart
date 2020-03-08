@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:risk/models/gameStateObjects/game.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
+import 'package:risk/src/utils/serviceProviders.dart';
 
 class Tile {
   int x;
@@ -18,15 +20,41 @@ class Tile {
 
   /**
    * creates a new tile object with coordinats of x, y
-   * ownership defaults to -1, troops defaults to 5
+   * ownership defaults to -1 (uncaptured tile)
    * TODO: default params should probably reference inits in GameState but I
    * dont know how the gameController will handle the instance of gameState yet
    */
-  Tile(this.x, this.y,
+  Tile(@required this.x, @required this.y,
       {this.ownership = -1,
-      this.troops = 5,
+      this.troops,
       this.power,
       this.defense,
       this.moneyGeneration,
-      this.troopGeneration});
+      this.troopGeneration}) {
+    switch (this.ownership) {
+      case -2:
+        {
+          this.power = 0;
+          this.defense = 0;
+          this.moneyGeneration = 0;
+          this.troopGeneration = 0;
+        }
+        break;
+
+      case -1:
+        {
+          this.power = 1;
+          this.defense = 1;
+          this.moneyGeneration = locator<GameState>().AITileGrowth;
+          this.troopGeneration = locator<GameState>().AITileGrowth;
+        }
+        break;
+
+      default:
+        this.power = 1;
+        this.power = 1;
+        this.moneyGeneration = locator<GameState>().tileGrowthPercent;
+        this.troopGeneration = locator<GameState>().initArmyNum;
+    }
+  }
 }

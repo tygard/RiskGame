@@ -31,8 +31,7 @@ class Passive {
    */
   Passive({int cost, int passiveValue, PassiveModifiers modifiedValue}) {
     if (cost == null) {
-      cost = new Random().nextInt(201) +
-          50; // random goes from 0 to max, exclusive
+      cost = new Random().nextInt(201) + 50; // random goes from 0 to max, exclusive
     } else {
       this.cost = cost;
     }
@@ -74,11 +73,16 @@ class Passive {
   }
 
   String _modifierToString(PassiveModifiers pM) {
-    if (pM == PassiveModifiers.attack) return "Attack";
-    else if (pM == PassiveModifiers.defense) return "Defense";
-    else if (pM == PassiveModifiers.troopGeneration) return "Troop Generation";
-    else if (pM == PassiveModifiers.moneyGeneration) return "Money Generation";
-    else return "Not a valid Modifier";
+    if (pM == PassiveModifiers.attack)
+      return "Attack";
+    else if (pM == PassiveModifiers.defense)
+      return "Defense";
+    else if (pM == PassiveModifiers.troopGeneration)
+      return "Troop Generation";
+    else if (pM == PassiveModifiers.moneyGeneration)
+      return "Money Generation";
+    else
+      return "Not a valid Modifier";
   }
 
   PassiveModifiers _determineModifier(int mVal) {
