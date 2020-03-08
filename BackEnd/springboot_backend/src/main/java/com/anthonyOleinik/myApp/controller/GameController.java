@@ -51,7 +51,7 @@ public class GameController {
     }
 
     @GetMapping("/game/placeholder/")
-    GameState DefaultGame(){
+    public GameState DefaultGame(){
         List<InGameUser> tmp = new ArrayList<InGameUser>();
         tmp.add(new InGameUser());
         tmp.add(new InGameUser());
