@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:risk/models/gameStateObjects/gameState.dart';
+import 'package:risk/src/utils/serviceProviders.dart';
 import 'Territory.dart';
 import 'globalVars.dart';
 
@@ -26,13 +28,13 @@ class _GameBoard extends State<GameBoard> {
           width: 1000.0,
           child:
           new ListView.builder(
-            cacheExtent: 7*125.0, //Important to update so flutter doesn't try to constantly reload the buttons. 7 is the items in a row, 125 is the height
-            itemCount: 7, //Creates 7 rows
+            cacheExtent: locator<GameState>().board.dimensions*125.0, //Important to update so flutter doesn't try to constantly reload the buttons. 7 is the items in a row, 125 is the height
+            itemCount: locator<GameState>().board.dimensions, 
             itemBuilder: (BuildContext context, int i) {
               return new Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children:
-                new List.generate(7, (int j) {
+                new List.generate(locator<GameState>().board.dimensions, (int j) {
                   if (i == 0 && j == 0) {
                     return Territory(updateBoard, Colors.red, 20);
                   }
