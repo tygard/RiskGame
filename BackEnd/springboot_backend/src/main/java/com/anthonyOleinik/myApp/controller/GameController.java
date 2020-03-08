@@ -1,17 +1,18 @@
 package com.anthonyOleinik.myApp.controller;
 
+import com.anthonyOleinik.myApp.Repositories.ConnectionsRepository;
+import com.anthonyOleinik.myApp.Repositories.FactionRepository;
+import com.anthonyOleinik.myApp.Repositories.RolesRepository;
+import com.anthonyOleinik.myApp.Repositories.UserRepository;
 import com.anthonyOleinik.myApp.entities.GameState.GameBoard;
 import com.anthonyOleinik.myApp.entities.GameState.GameState;
 import com.anthonyOleinik.myApp.entities.GameState.InGameUser;
 import com.anthonyOleinik.myApp.entities.GameState.Tile;
-import com.anthonyOleinik.myApp.entities.Packet;
 import com.anthonyOleinik.myApp.entities.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import static com.ea.async.Async.await;
@@ -27,6 +28,9 @@ import java.util.concurrent.CompletableFuture;
 public class GameController {
     HashMap<Integer, GameState> activeGames = new HashMap<Integer, GameState>();
     List<InGameUser> waitingPlayers = new ArrayList<InGameUser>();
+
+    @Autowired
+    UserRepository userRepo;
 
     @GetMapping("/games/{id}/")
     GameState FindGame(@PathVariable("id") Integer id){
@@ -55,7 +59,13 @@ public class GameController {
         tmp.add(new InGameUser());
         tmp.add(new InGameUser());
         tmp.add(new InGameUser());
-        return new GameState(tmp, new GameBoard(), "0");
+        tmp.add(new InGameUser());
+        GameBoard tmpBoard = new GameBoard();
+        tmpBoard.getTile(0).setOwner(tmp.get(0));
+        tmpBoard.getTile(tmpBoard.getTiles().size()*2/5).setOwner(tmp.get(1));
+        tmpBoard.getTile(tmpBoard.getTiles().size()*3/5).setOwner(tmp.get(2));
+        tmpBoard.getTile(tmpBoard.getTiles().size()-1).setOwner(tmp.get(3));
+        return new GameState(tmp, tmpBoard, "0");
     }
 
     //Ignore this code for now. Working on asynchronously grouping players

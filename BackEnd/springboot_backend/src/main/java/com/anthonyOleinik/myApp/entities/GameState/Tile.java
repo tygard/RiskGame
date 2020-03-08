@@ -4,7 +4,7 @@ public class Tile {
     public int x;
     public int y;
 
-    private InGameUser owner = new InGameUser();
+    private InGameUser owner = null;
 
     //an int from -2 to 3 inclusive, with -2 being an immovable tile and -1 being a uncaptured tile.
     private int terrain = 0;
