@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class InGameUser {
-    private UserEntity user;
+    private UserEntity user = new UserEntity("Anonymous"+ String.format("%04d", new Random().nextInt(10000)),
+                                        new RolesEntity(0),
+                                        new FactionEntity(0));;
 
     private ArrayList<Passive> passives = new ArrayList<Passive>();
     private ArrayList<Tile> ownedTiles = new ArrayList<Tile>();
@@ -20,11 +22,7 @@ public class InGameUser {
     private Float multiplierTroops = 1.0f;
     private Float multiplierMoney = 1.0f;
 
-    public InGameUser(){
-        user = new UserEntity("Anonymous",
-                new RolesEntity(0),
-                new FactionEntity(0));
-    }
+    public InGameUser(){ }
 
     public InGameUser(UserEntity _user){
         user = _user == null ? new UserEntity("Anonymous"+ String.format("%04d", new Random().nextInt(10000)),
@@ -49,6 +47,7 @@ public class InGameUser {
 
     public ArrayList<Passive> getPassives(){ return passives; }
     public ArrayList<Tile> getOwnedTiles(){ return ownedTiles; }
+    public UserEntity getUser() { return user; }
     public int getMoney(){ return money; }
     public int getGeneratedTroops(){ return generatedTroops; }
     public int getGeneratedMoney(){ return generatedMoney; }
