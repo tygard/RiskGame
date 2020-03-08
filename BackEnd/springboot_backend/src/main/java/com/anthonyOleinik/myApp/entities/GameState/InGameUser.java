@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class InGameUser {
+
     private UserEntity user = new UserEntity("Anonymous"+ String.format("%04d", new Random().nextInt(10000)),
-                                        new RolesEntity(new Random().nextInt(3)),
-                                        new FactionEntity(new Random().nextInt(3)));;
+                                        new RolesEntity(new Random().nextInt(2)),
+                                        new FactionEntity(new Random().nextInt(3)));
 
     private ArrayList<Passive> passives = new ArrayList<Passive>();
     private ArrayList<Tile> ownedTiles = new ArrayList<Tile>();
