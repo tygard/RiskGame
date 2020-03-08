@@ -4,6 +4,13 @@ import 'package:risk/models/gameStateObjects/passive.dart';
 
 import 'passive.dart';
 
+import 'package:json_annotation/json_annotation.dart';
+
+import 'passive.dart';
+
+part 'inGameUser.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class InGameUser {
   List<Tile> ownedTiles = List<Tile>();
   int money;
@@ -27,6 +34,10 @@ class InGameUser {
       @required this.userName,
       @required this.faction,
       @required this.role});
+
+  factory InGameUser.fromJson(Map<String, dynamic> json) =>
+      _$InGameUserFromJson(json);
+  Map<String, dynamic> toJson() => _$InGameUserToJson(this);
 
   /**
    * returns the status of wether the currPlayer in gameState can afford this passive

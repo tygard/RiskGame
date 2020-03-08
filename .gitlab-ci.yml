@@ -1,0 +1,64 @@
+stages:
+ - mavenbuild
+ - maventest
+ - autodeploy
+ - fluttertest
+
+maven-build:
+ stage: mavenbuild
+ tags:
+ - shell
+ script:
+ - cd BackEnd/springboot_backend/
+ - mvn package -B
+
+maven-test:
+ stage: maventest
+ tags:
+ - shell
+ script:
+ - cd BackEnd/springboot_backend/
+ - mvn test
+ artifacts:
+  paths:
+  - BackEnd/springboot_backend/target/*.jar
+
+auto-deploy2:
+ stage: autodeploy
+ tags:
+ - shell
+ script:
+ - cd BackEnd/springboot_backend/
+ - mvn package
+ - sudo mv target/*.jar /target/web-demo.jar
+ - sudo systemctl stop web-demo
+ - sudo systemctl start web-demo
+
+
+auto-deploy3:
+ stage: autodeploy
+ tags:
+ - shell
+ only: 
+  refs:
+  - master
+  variables:
+  - $CI_COMMIT_MESSAGE =~ /autodeploy/
+ script:
+ - cd BackEnd/springboot_backend/
+ - mvn package
+ - sudo mv target/*.jar /target/web-demo.jar
+ - sudo systemctl stop web-demo
+ - sudo systemctl start web-demo
+ 
+
+flutter-test:
+ stage: fluttertest
+ before_script:
+ - export PATH=$PATH:/home/gitlab-runner/flutter/flutter/bin/
+ tags:
+  - flutter
+ script:
+  - cd FrontEnd/risk/
+  - flutter test
+

@@ -4,6 +4,12 @@ import 'package:risk/models/gameStateObjects/tile.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/models/gameStateObjects/InGameUser.dart';
 
+import 'package:json_annotation/json_annotation.dart';
+
+part 'passive.g.dart';
+
+@JsonSerializable(explicitToJson: true)
+
 enum PassiveModifiers {
   none,
   defense,
@@ -46,6 +52,9 @@ class Passive {
       this.modifiedValue = modifiedValue;
     }
   }
+
+  factory Passive.fromJson(Map<String, dynamic> json) => _$PassiveFromJson(json);
+    Map<String, dynamic> toJson() => _$PassiveToJson(this);
 
   void setActive() {
     active = true;

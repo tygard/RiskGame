@@ -3,6 +3,11 @@ import 'package:risk/models/gameStateObjects/game.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
 
+import 'package:json_annotation/json_annotation.dart';
+
+part 'tile.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class Tile {
   int x;
   int y;
@@ -57,4 +62,6 @@ class Tile {
         this.troopGeneration = locator<GameState>().initArmyNum;
     }
   }
+  factory Tile.fromJson(Map<String, dynamic> json) => _$TileFromJson(json);
+  Map<String, dynamic> toJson() => _$TileToJson(this);
 }
