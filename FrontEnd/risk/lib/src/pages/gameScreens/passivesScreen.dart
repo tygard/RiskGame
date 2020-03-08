@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:risk/gameLayer/GameBoard.dart';
+import 'package:risk/models/gameStateObjects/game.dart';
 
 class PassiveScreen extends StatefulWidget {
   PassiveScreen({GameBoard game, /*User user*/});

@@ -1,11 +1,7 @@
 library globals;
 import 'package:flutter/material.dart';
-import 'package:game_basis/Users.dart';
+import 'Users.dart';
 var selected;
-Users user1;
-Users user2;
-Users user3;
-Users user4;
 Color turn = Colors.red;
 
 void attack(var button1, var button2)
