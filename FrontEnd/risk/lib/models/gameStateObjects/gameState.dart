@@ -1,6 +1,11 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'gameBoard.dart';
 import 'inGameUser.dart';
 
+part 'gameState.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class GameState {
   List<InGameUser> users = [];
   GameBoard board;
@@ -9,8 +14,7 @@ class GameState {
   int turn;
   int currPlayer;
 
-  //TODO delete this.
-  GameState();
+  GameState(this.users, this.board, this.gameID);
 
   final int tileGrowthPercent = 5; //percent out of 100
   final int secondsPerTurn = 60;
@@ -19,9 +23,6 @@ class GameState {
   final int AITileGrowth = 5; //percent out of 100
   final int initAINum = 5;
 
-
-  factory GameState.fromJson(Map<String, dynamic> map){
-    //TODO impliment parsing.
-    return GameState();
-  }
+    factory GameState.fromJson(Map<String, dynamic> json) => _$GameStateFromJson(json);
+    Map<String, dynamic> toJson() => _$GameStateToJson(this);
 }

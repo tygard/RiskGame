@@ -42,13 +42,18 @@ class SocketManager {
 
   Stream<Chat> chatDelegator() async* {
     await for (var chat in _mainDelegator()){
-      print(chat);
-      yield chat;
+      if (chat is Chat){
+        yield chat;
+      }
     }
   }
 
   Stream<GameState> gameStateDelegator() async* {
-    
+    await for (var state in _mainDelegator()){
+      if (state is GameState){
+        yield state;
+      }
+    }
   }
 
   void sendChat(Chat chat){
