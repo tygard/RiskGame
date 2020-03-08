@@ -7,7 +7,11 @@ import 'package:risk/models/freezedClasses/chat.dart';
 import 'package:risk/src/utils/config/config.dart';
 import 'package:risk/src/utils/providers/globalsProvider.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
+import 'package:risk/src/utils/socketManager.dart';
+import 'package:risk/src/widgets/buttonStack.dart';
 import 'package:web_socket_channel/io.dart';
+
+import '../../models/freezedClasses/user.dart';
 
 class RiskOverlay extends StatefulWidget {
   final Widget child;
@@ -23,11 +27,10 @@ class _RiskOverlayState extends State<RiskOverlay> {
   TextEditingController _textController;
   ScrollController _scrollController;
   List<Chat> chats;
-  final channel = IOWebSocketChannel.connect('ws://${locator<Config>().getEndpoint()}/chat');
 
   @override
   void initState() {
-    _beginListeningToGlobal();
+    _beginListeningToChat();
     _textController = TextEditingController();
     _scrollController = ScrollController(initialScrollOffset: 0);
     chats = new List<Chat>();
@@ -37,7 +40,6 @@ class _RiskOverlayState extends State<RiskOverlay> {
   @override
   void dispose() {
     _textController.dispose();
-    this.channel.sink.close();
     super.dispose();
   }
 
@@ -59,19 +61,7 @@ class _RiskOverlayState extends State<RiskOverlay> {
                 alignment: Alignment.topRight,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Builder(
-                    builder: (context) => FloatingActionButton(
-                      onPressed: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                      backgroundColor: Colors.blueGrey,
-                      child: Icon(
-                        Icons.chat,
-                        color: Colors.white,
-                        size: 35,
-                      ),
-                    ),
-                  ),
+                  child:  ButtonStack(),
                 )),
           )
         ],
@@ -98,7 +88,7 @@ class _RiskOverlayState extends State<RiskOverlay> {
                   child: TextField(
                 decoration: InputDecoration(hintText: "chat"),
                 controller: _textController,
-                onSubmitted: (val){_selfChat(val, context);},
+                onSubmitted: _sendChat,
               )),
             )
           ],
@@ -134,12 +124,10 @@ class _RiskOverlayState extends State<RiskOverlay> {
     );
   }
 
-  void _selfChat(String message, BuildContext context) {
+  void _sendChat(String message) {
     _textController.clear();
-    Map<String, String> jsonMsg  = new Map<String, String>();
-    jsonMsg["username"] = GlobalsProvider.of(context).user.name;
-    jsonMsg["message"] = message;
-    channel.sink.add(json.encode(jsonMsg));
+    Chat chat = Chat(GlobalsProvider.of(context).user.name, message, DateFormat('EEE, h:mm a').format(DateTime.now()));
+    locator<SocketManager>().sendChat(chat);
   }
 
   void _addItem(Chat chat) async {
@@ -158,14 +146,11 @@ class _RiskOverlayState extends State<RiskOverlay> {
     }
   }
 
-  void _beginListeningToGlobal() {
-    this.channel.stream.listen((chat) {
-      print(chat);
-      Map<String, dynamic> map = json.decode(chat);
-      if (map["username"] == GlobalsProvider.of(context).user.name){
-        _addItem(Chat("You", map["message"], DateFormat('EEE, h:mm a').format(DateTime.now())));
-      } else {
-        _addItem(Chat(map["username"], map["message"], DateFormat('EEE, h:mm a').format(DateTime.now())));      
+  void _beginListeningToChat() {
+    locator<SocketManager>().chatDelegator().listen((chat) {
+      if (chat.name == locator<User>().name){
+        chat.name = locator<User>().name;
+        _addItem(chat);
       }
     });
   }
