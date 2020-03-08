@@ -33,6 +33,10 @@ public class GameBoard {
         return tiles;
     }
 
+    public Tile getTile(int num){
+        return tiles.get(num);
+    }
+
     public void setTiles(List<Tile> tiles) {
         this.tiles = tiles;
     }

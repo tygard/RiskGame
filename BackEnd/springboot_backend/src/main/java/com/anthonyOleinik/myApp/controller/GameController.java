@@ -55,7 +55,13 @@ public class GameController {
         tmp.add(new InGameUser());
         tmp.add(new InGameUser());
         tmp.add(new InGameUser());
-        return new GameState(tmp, new GameBoard(), "0");
+        tmp.add(new InGameUser());
+        GameBoard tmpBoard = new GameBoard();
+        tmpBoard.getTile(0).setOwner(tmp.get(0));
+        tmpBoard.getTile(tmpBoard.getTiles().size()/4).setOwner(tmp.get(2));
+        tmpBoard.getTile(tmpBoard.getTiles().size()/3).setOwner(tmp.get(2));
+        tmpBoard.getTile(tmpBoard.getTiles().size()).setOwner(tmp.get(3));
+        return new GameState(tmp, tmpBoard, "0");
     }
 
     //Ignore this code for now. Working on asynchronously grouping players
