@@ -1,11 +1,12 @@
 package com.anthonyOleinik.myApp.entities.GameState;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class GameBoard {
     private int dimensions = (new Random().nextInt(4)*2 + 7);
-    private List<Tile> tiles;
+    private List<Tile> tiles = new ArrayList<Tile>();
 
     public GameBoard(){ CreateTiles(dimensions); }
 

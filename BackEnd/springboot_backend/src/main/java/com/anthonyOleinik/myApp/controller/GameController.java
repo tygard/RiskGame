@@ -25,8 +25,8 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 public class GameController {
-    HashMap<Integer, GameState> activeGames;
-    List<InGameUser> waitingPlayers;
+    HashMap<Integer, GameState> activeGames = new HashMap<Integer, GameState>();
+    List<InGameUser> waitingPlayers = new ArrayList<InGameUser>();
 
     @GetMapping("/games/{id}/")
     GameState FindGame(@PathVariable("id") Integer id){
