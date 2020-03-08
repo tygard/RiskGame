@@ -58,6 +58,6 @@ flutter-test:
  tags:
   - flutter
  script:
-  - cd /FrontEnd/risk/
+  - cd FrontEnd/risk/
   - flutter test
 
