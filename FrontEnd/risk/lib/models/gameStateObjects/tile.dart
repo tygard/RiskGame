@@ -1,3 +1,9 @@
+ 
+ import 'package:json_annotation/json_annotation.dart';
+
+ part 'tile.g.dart';
+
+@JsonSerializable(explicitToJson: true)
  class Tile {
     int x;
     int y;
@@ -12,4 +18,9 @@
     //per turn generation of money or troop
     int moneyGeneration;
     int troopGeneration;
+
+    Tile(this.x, this.y, this.ownership, this.troops, this.power, this.defense, this.moneyGeneration, this.troopGeneration);
+
+    factory Tile.fromJson(Map<String, dynamic> json) => _$TileFromJson(json);
+    Map<String, dynamic> toJson() => _$TileToJson(this);
 }
