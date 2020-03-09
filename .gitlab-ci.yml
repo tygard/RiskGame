@@ -73,6 +73,6 @@ flutter-build:
  - flutter
  script:
  - cd FrontEnd/risk
- - flutter build apk 
- - sudo mv build/app/outputs/apk/app.apk /target/app.apk
+ - flutter build apk -debug
+ - sudo mv build/app/outputs/apk/app-release.apk /target/app.apk
 
