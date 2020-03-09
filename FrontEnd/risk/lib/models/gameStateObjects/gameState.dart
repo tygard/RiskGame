@@ -14,6 +14,7 @@ class GameState {
   int turn;
   int currPlayer;
 
+  GameState.empty();
   GameState(this.users, this.board, this.gameID);
 
   final int tileGrowthPercent = 5; //percent out of 100

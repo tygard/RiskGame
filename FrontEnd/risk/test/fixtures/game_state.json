@@ -1,0 +1,203 @@
+{
+    "users": [
+        {
+            "username": "Anonymous1179",
+            "role": "Anonymous",
+            "faction": "Red",
+            "passives": [],
+            "ownedTiles": [],
+            "money": 0,
+            "generatedTroops": 0,
+            "generatedMoney": 0,
+            "multiplierTroops": 1.0,
+            "multiplierMoney": 1.0
+        },
+        {
+            "username": "Anonymous4165",
+            "role": "Anonymous",
+            "faction": "Red",
+            "passives": [],
+            "ownedTiles": [],
+            "money": 0,
+            "generatedTroops": 0,
+            "generatedMoney": 0,
+            "multiplierTroops": 1.0,
+            "multiplierMoney": 1.0
+        },
+        {
+            "username": "Anonymous3778",
+            "role": "Anonymous",
+            "faction": "Red",
+            "passives": [],
+            "ownedTiles": [],
+            "money": 0,
+            "generatedTroops": 0,
+            "generatedMoney": 0,
+            "multiplierTroops": 1.0,
+            "multiplierMoney": 1.0
+        },
+        {
+            "username": "Anonymous4264",
+            "role": "Anonymous",
+            "faction": "Red",
+            "passives": [],
+            "ownedTiles": [],
+            "money": 0,
+            "generatedTroops": 0,
+            "generatedMoney": 0,
+            "multiplierTroops": 1.0,
+            "multiplierMoney": 1.0
+        }
+    ],
+    "board": {
+        "dimensions": 9,
+        "tiles": [
+            {
+                "x": 1,
+                "y": 0,
+                "owner": {
+                    "username": "Anonymous1179",
+                    "role": "Anonymous",
+                    "faction": "Red",
+                    "passives": [],
+                    "ownedTiles": [],
+                    "money": 0,
+                    "generatedTroops": 0,
+                    "generatedMoney": 0,
+                    "multiplierTroops": 1.0,
+                    "multiplierMoney": 1.0
+                },
+                "terrain": 0,
+                "troops": 0,
+                "power": 0,
+                "defense": 0,
+                "moneyGeneration": 0,
+                "troopGeneration": 0
+            },
+            {
+                "x": 2,
+                "y": 0,
+                "owner": null,
+                "terrain": 0,
+                "troops": 0,
+                "power": 0,
+                "defense": 0,
+                "moneyGeneration": 0,
+                "troopGeneration": 0
+            },
+            {
+                "x": 3,
+                "y": 0,
+                "owner": null,
+                "terrain": 0,
+                "troops": 0,
+                "power": 0,
+                "defense": 0,
+                "moneyGeneration": 0,
+                "troopGeneration": 0
+            },
+            {
+                "x": 4,
+                "y": 0,
+                "owner": {
+                    "username": "Anonymous4165",
+                    "role": "Anonymous",
+                    "faction": "Red",
+                    "passives": [],
+                    "ownedTiles": [],
+                    "money": 0,
+                    "generatedTroops": 0,
+                    "generatedMoney": 0,
+                    "multiplierTroops": 1.0,
+                    "multiplierMoney": 1.0
+                },
+                "terrain": 0,
+                "troops": 0,
+                "power": 0,
+                "defense": 0,
+                "moneyGeneration": 0,
+                "troopGeneration": 0
+            },
+            {
+                "x": 5,
+                "y": 0,
+                "owner": null,
+                "terrain": 0,
+                "troops": 0,
+                "power": 0,
+                "defense": 0,
+                "moneyGeneration": 0,
+                "troopGeneration": 0
+            },
+            {
+                "x": 6,
+                "y": 0,
+                "owner": {
+                    "username": "Anonymous3778",
+                    "role": "Anonymous",
+                    "faction": "Red",
+                    "passives": [],
+                    "ownedTiles": [],
+                    "money": 0,
+                    "generatedTroops": 0,
+                    "generatedMoney": 0,
+                    "multiplierTroops": 1.0,
+                    "multiplierMoney": 1.0
+                },
+                "terrain": 0,
+                "troops": 0,
+                "power": 0,
+                "defense": 0,
+                "moneyGeneration": 0,
+                "troopGeneration": 0
+            },
+            {
+                "x": 7,
+                "y": 0,
+                "owner": null,
+                "terrain": 0,
+                "troops": 0,
+                "power": 0,
+                "defense": 0,
+                "moneyGeneration": 0,
+                "troopGeneration": 0
+            },
+            {
+                "x": 8,
+                "y": 0,
+                "owner": null,
+                "terrain": 0,
+                "troops": 0,
+                "power": 0,
+                "defense": 0,
+                "moneyGeneration": 0,
+                "troopGeneration": 0
+            },
+            {
+                "x": 0,
+                "y": 1,
+                "owner": {
+                    "username": "Anonymous4264",
+                    "role": "Anonymous",
+                    "faction": "Red",
+                    "passives": [],
+                    "ownedTiles": [],
+                    "money": 0,
+                    "generatedTroops": 0,
+                    "generatedMoney": 0,
+                    "multiplierTroops": 1.0,
+                    "multiplierMoney": 1.0
+                },
+                "terrain": 0,
+                "troops": 0,
+                "power": 0,
+                "defense": 0,
+                "moneyGeneration": 0,
+                "troopGeneration": 0
+            }
+        ]
+    },
+    "gameID": "0",
+    "turn": 0,
+    "currPlayer": 0
+}

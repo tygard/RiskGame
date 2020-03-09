@@ -64,6 +64,7 @@ public class SocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         //SEND NEW GAMESTATE
+
         sessions.add(session);
     }
 
