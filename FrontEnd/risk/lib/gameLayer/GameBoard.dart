@@ -54,15 +54,15 @@ class _GameBoard extends State<GameBoard> {
                     Tile t = Tile(updateBoard, Colors.red, locator<GameState>().board.tiles[i+j].troops, i, j);
                     return t;
                   }
-                  else if (i == 6 && j == 0) {
+                  else if (i == locator<GameState>().board.dimensions - 1 && j == 0) {
                     Tile t = Tile(updateBoard, Colors.blue, locator<GameState>().board.tiles[i+j].troops, i , j);
                     return t;
                   }
-                  else if (i == 0 && j == 6) {
+                  else if (i == 0 && j == locator<GameState>().board.dimensions - 1) {
                     Tile t = Tile(updateBoard, Colors.green, locator<GameState>().board.tiles[i+j].troops, i , j);
                     return t;
                   }
-                  else if (i == 6 && j == 6) {
+                  else if (i == locator<GameState>().board.dimensions - 1 && j == locator<GameState>().board.dimensions - 1) {
                     Tile t = Tile(updateBoard, Colors.yellow, locator<GameState>().board.tiles[i+j].troops, i , j);
                     return t;
                   }
