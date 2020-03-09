@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:risk/gameLayer/GameBoard.dart';
-import 'package:risk/gameLayer/Territory.dart';
+import 'package:risk/gameLayer/Tile.dart';
 import 'package:flutter/material.dart';
 
 

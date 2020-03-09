@@ -7,7 +7,7 @@ import 'globalVars.dart';
 
 
 
-class Tile extends StatefulWidget extends Tile{
+class Tile extends StatefulWidget{
   Function update;
   int x;
   int y;
@@ -18,6 +18,8 @@ class Tile extends StatefulWidget extends Tile{
     update = updateGameboard;
     c = color;
     num = armyNum;
+    this.x = x;
+    this.y = y;
   }
 
   _Tile createState() =>  _Tile();
