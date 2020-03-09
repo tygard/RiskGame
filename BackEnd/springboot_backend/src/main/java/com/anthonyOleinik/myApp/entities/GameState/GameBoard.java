@@ -19,7 +19,7 @@ public class GameBoard {
     }
 
     public void CreateTiles(int tileNum){
-        for(int i = 1; i <= dimensions; i++){
+        for(int i = 1; i <= dimensions +1; i++){
             //trust me, im a scientist on this one.
             tiles.add(new Tile(i % dimensions, i / dimensions));
         }

@@ -18,6 +18,18 @@ public class GameState {
     private final int initAITroopGen = 1;
     private final int initAIMoneyGen = 0;
 
+    public GameState(){super();}
+
+    public GameState(List<InGameUser> users, GameBoard board, String gameID, int turn,
+                     int currPlayer){
+        this.users = users;
+        this.board = board;
+        this.gameID = gameID;
+        this.turn = turn;
+        this.currPlayer = currPlayer;
+
+    }
+
     public GameState(List<InGameUser> _users, GameBoard _board, String id){
         users = _users;
         board = _board;
