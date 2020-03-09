@@ -1,26 +1,65 @@
- 
- import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter/foundation.dart';
+import 'package:risk/models/gameStateObjects/game.dart';
+import 'package:risk/models/gameStateObjects/gameState.dart';
+import 'package:risk/src/utils/serviceProviders.dart';
 
- part 'tile.g.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'tile.g.dart';
 
 @JsonSerializable(explicitToJson: true)
- class Tile {
-    int x;
-    int y;
+class Tile {
+  int x;
+  int y;
 
-    //an int from -2 to 3 inclusive, with -2 being an immovable tile and -1 being a uncaptured tile.
-    //ints 0, 1, 2, 3 are refrences to player nums.
-    int ownership;
-    int troops;
-    int power;
-    int defense;
+  //an int from -2 to 3 inclusive, with -2 being an immovable tile and -1 being a uncaptured tile.
+  //ints 0, 1, 2, 3 are refrences to player nums.
+  int ownership;
+  int troops;
+  int power;
+  int defense;
 
-    //per turn generation of money or troop
-    int moneyGeneration;
-    int troopGeneration;
+  //per turn generation of money or troop
+  int moneyGeneration;
+  int troopGeneration;
 
-    Tile(this.x, this.y, this.ownership, this.troops, this.power, this.defense, this.moneyGeneration, this.troopGeneration);
+  /**
+   * creates a new tile object with coordinats of x, y
+   * ownership defaults to -1 (uncaptured tile)
+   */
+  Tile(@required this.x, @required this.y,
+      {this.ownership = -1,
+      this.troops,
+      this.power,
+      this.defense,
+      this.moneyGeneration,
+      this.troopGeneration}) {
+    switch (this.ownership) {
+      case -2:
+        {
+          this.power = 0;
+          this.defense = 0;
+          this.moneyGeneration = 0;
+          this.troopGeneration = 0;
+        }
+        break;
 
-    factory Tile.fromJson(Map<String, dynamic> json) => _$TileFromJson(json);
-    Map<String, dynamic> toJson() => _$TileToJson(this);
+      case -1:
+        {
+          this.power = 1;
+          this.defense = 1;
+          this.moneyGeneration = locator<GameState>().AITileGrowth;
+          this.troopGeneration = locator<GameState>().AITileGrowth;
+        }
+        break;
+
+      default:
+        this.power = 1;
+        this.power = 1;
+        this.moneyGeneration = locator<GameState>().tileGrowthPercent;
+        this.troopGeneration = locator<GameState>().initArmyNum;
+    }
+  }
+  factory Tile.fromJson(Map<String, dynamic> json) => _$TileFromJson(json);
+  Map<String, dynamic> toJson() => _$TileToJson(this);
 }
