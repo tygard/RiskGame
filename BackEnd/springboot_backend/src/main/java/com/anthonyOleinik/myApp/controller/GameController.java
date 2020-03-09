@@ -14,6 +14,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import static com.ea.async.Async.await;
 import static java.util.concurrent.CompletableFuture.completedFuture;
@@ -51,6 +52,13 @@ public class GameController {
         //this probably works, I have no idea how spring does websockets
         //
         activeGames.replace(Integer.parseInt(id), data);
+    }
+
+    @GetMapping("/game/template/")
+    public GameState GameTemplate(){
+        RestTemplate rtemp = new RestTemplate();
+        GameState game = rtemp.getForObject("http://localhost:8080/game/placeholder/", GameState.class);
+        return game;
     }
 
     @GetMapping("/game/placeholder/")
