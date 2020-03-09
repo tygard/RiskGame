@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
-import 'Territory.dart';
-import 'globalVars.dart';
+import 'Tile.dart';
+
 
 class GameBoard extends StatefulWidget
 {
@@ -14,9 +14,10 @@ class GameBoard extends StatefulWidget
 }
 
 class _GameBoard extends State<GameBoard> {
-  void updateBoard()
+  void updateBoard({GameBoard game})
   {
     setState(() {
+
     });
   }
   //Add array object
@@ -36,19 +37,29 @@ class _GameBoard extends State<GameBoard> {
                 children:
                 new List.generate(locator<GameState>().board.dimensions, (int j) {
                   if (i == 0 && j == 0) {
-                    return Territory(updateBoard, Colors.red, 20);
+                    Tile t = Tile(updateBoard, Colors.red, 20, i, j);
+                    locator<GameState>().board.tiles[i+j].troops = 20;
+                    return t;
                   }
                   else if (i == 6 && j == 0) {
-                    return Territory(updateBoard, Colors.blue, 20);
+                    Tile t = Tile(updateBoard, Colors.blue, 20, i , j);
+                    locator<GameState>().board.tiles[i+j].troops = 20;
+                    return t;
                   }
                   else if (i == 0 && j == 6) {
-                    return Territory(updateBoard, Colors.yellow, 20);
+                    Tile t = Tile(updateBoard, Colors.green, 20, i , j);
+                    locator<GameState>().board.tiles[i+j].troops = 20;
+                    return t;
                   }
                   else if (i == 6 && j == 6) {
-                    return Territory(updateBoard, Colors.green, 20);
+                    Tile t = Tile(updateBoard, Colors.yellow, 20, i , j);
+                    locator<GameState>().board.tiles[i+j].troops = 20;
+                    return t;
                   }
                   else {
-                    return Territory(updateBoard, Colors.grey, 10);
+                    Tile t = Tile(updateBoard, Colors.grey, 10, i, j);
+                    locator<GameState>().board.tiles[i+j].troops = 10;
+                    return t;
                   }
                 }),
               );

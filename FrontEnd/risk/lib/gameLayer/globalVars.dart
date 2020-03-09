@@ -37,3 +37,19 @@ Color moveTurn(Color turn)
         return Colors.red;
     }
 }
+
+int ColorToNum(Color turn)
+{
+    if (turn == Colors.red) {
+        return 0;
+    }
+    if (turn == Colors.blue){
+        return 3;
+    }
+    if (turn == Colors.green){
+        return 2;
+    }
+    if (turn == Colors.yellow){
+        return 1;
+    }
+}

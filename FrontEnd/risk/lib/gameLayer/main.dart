@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'SelectTeam.dart';
+import 'package:risk/src/pages/gameScreens/selectTeam.dart';
 
 
 void main() => runApp(MyApp());

@@ -1,25 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:risk/models/gameStateObjects/game.dart';
+import 'package:risk/src/utils/serviceProviders.dart';
 import 'globalVars.dart';
 
 
 
-class Territory extends StatefulWidget{
+class Tile extends StatefulWidget extends Tile{
   Function update;
+  int x;
+  int y;
   int num;
   Color c;
-  Territory (Function updateGameboard, Color color, int armyNum)
+  Tile (Function updateGameboard, Color color, int armyNum, int x, int y)
   {
     update = updateGameboard;
     c = color;
     num = armyNum;
   }
 
-  _Territory createState() =>  _Territory();
+  _Tile createState() =>  _Tile();
 }
 
-class _Territory extends State<Territory> {
+class _Tile extends State<Tile> {
   int armyNum;
   bool isSelected;
   Color color;
@@ -57,7 +61,8 @@ class _Territory extends State<Territory> {
         if (selected != null && selected != this && selected.color != color) {
           attack(this, selected);
           turn = moveTurn(turn);
-          print(turn);
+          locator<GameState>().turn = ColorToNum(turn);
+
         }
       }
     });
