@@ -5,7 +5,7 @@ import 'package:risk/models/gameStateObjects/passive.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 
-part 'InGameUser.g.dart';
+part 'inGameUser.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class InGameUser {

@@ -1,8 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'gameBoard.dart';
-import 'InGameUser.dart';
+import 'inGameUser.dart';
 
 part 'gameState.g.dart';
 

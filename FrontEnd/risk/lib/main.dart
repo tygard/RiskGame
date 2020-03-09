@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:risk/src/pages/gameScreens/selectTeam.dart';
 import 'package:risk/src/utils/providers/globalsProvider.dart';
 import 'package:risk/src/utils/routeGenerator.dart';
 import 'package:risk/src/utils/serviceProviders.dart';

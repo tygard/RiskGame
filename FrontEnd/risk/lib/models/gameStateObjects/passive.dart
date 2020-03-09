@@ -1,8 +1,4 @@
 import 'dart:math';
-import 'package:risk/models/gameStateObjects/game.dart';
-import 'package:risk/models/gameStateObjects/tile.dart';
-import 'package:risk/models/gameStateObjects/gameState.dart';
-import 'package:risk/models/gameStateObjects/InGameUser.dart';
 
 import 'package:json_annotation/json_annotation.dart';
 
