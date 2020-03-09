@@ -67,6 +67,10 @@ flutter-build:
  stage: flutterbuild
  before_script:
  - export PATH=$PATH:/home/gitlab-runner/flutter/flutter/bin/
+ - export ANDROID_SDK=$PATH:/home/gitlab-runner/android-sdk 
+ - export ANDROID_PATH=$PATH:/home/gitlab-runner/android-sdk/tools:$ANDROID_SDK/platform-tools
+ - export FLUTTER=$PATH:/home/gitlab-runner/flutter/flutter/bin/
+ - export PATH=$PATH:$ANDROID_PATH:$FLUTTER
  tags:
  - flutter
  script:
