@@ -3,6 +3,7 @@ stages:
  - maventest
  - autodeploy
  - fluttertest
+ - flutterbuild
 
 maven-build:
  stage: mavenbuild
@@ -61,4 +62,15 @@ flutter-test:
  script:
   - cd FrontEnd/risk/
   - flutter test
+  
+flutter-build:
+ stage: flutterbuild
+ before_script:
+ - export PATH=$PATH:/home/gitlab-runner/flutter/flutter/bin/
+ tags:
+ - flutter
+ script:
+ - cd FrontEnd/risk
+ - flutter build apk 
+ - sudo mv build/app/outputs/apk/app.apk /target/app.apk
 
