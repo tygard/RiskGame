@@ -11,16 +11,18 @@ class Tile extends StatefulWidget{
   Function update;
   int x;
   int y;
-  int num;
+  int armyNum;
+  bool isSelected = false;
   Color c;
   Tile (Function updateGameboard, Color color, int armyNum, int x, int y)
   {
     update = updateGameboard;
     c = color;
-    num = armyNum;
+    this.armyNum = armyNum;
     this.x = x;
     this.y = y;
   }
+
 
   _Tile createState() =>  _Tile();
 }
@@ -31,7 +33,7 @@ class _Tile extends State<Tile> {
   Color color;
   @override
   void initState() {
-    armyNum = widget.num;
+    armyNum = widget.armyNum;
     isSelected = false;
     color = widget.c;
     super.initState();
@@ -64,7 +66,6 @@ class _Tile extends State<Tile> {
           attack(this, selected);
           turn = moveTurn(turn);
           locator<GameState>().turn = ColorToNum(turn);
-
         }
       }
     });
