@@ -2,13 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:risk/models/gameStateObjects/game.dart';
 import 'package:risk/models/gameStateObjects/passive.dart';
 
-import 'passive.dart';
-
 import 'package:json_annotation/json_annotation.dart';
 
-import 'passive.dart';
 
-part 'inGameUser.g.dart';
+part 'InGameUser.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class InGameUser {

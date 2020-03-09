@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'inGameUser.dart';
+part of 'InGameUser.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -8,14 +8,36 @@ part of 'inGameUser.dart';
 
 InGameUser _$InGameUserFromJson(Map<String, dynamic> json) {
   return InGameUser(
-    (json['passives'] as List)
+    ownedTiles: (json['ownedTiles'] as List)
+        ?.map(
+            (e) => e == null ? null : Tile.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+    money: json['money'] as int,
+    ownedPassives: (json['ownedPassives'] as List)
         ?.map((e) =>
             e == null ? null : Passive.fromJson(e as Map<String, dynamic>))
         ?.toList(),
+    troopMultiplier: json['troopMultiplier'] as int,
+    moneyMultiplier: json['moneyMultiplier'] as int,
+    genTroops: json['genTroops'] as int,
+    genMoney: json['genMoney'] as int,
+    userName: json['userName'] as String,
+    faction: json['faction'] as String,
+    role: json['role'] as String,
   );
 }
 
 Map<String, dynamic> _$InGameUserToJson(InGameUser instance) =>
     <String, dynamic>{
-      'passives': instance.passives?.map((e) => e?.toJson())?.toList(),
+      'ownedTiles': instance.ownedTiles?.map((e) => e?.toJson())?.toList(),
+      'money': instance.money,
+      'ownedPassives':
+          instance.ownedPassives?.map((e) => e?.toJson())?.toList(),
+      'troopMultiplier': instance.troopMultiplier,
+      'moneyMultiplier': instance.moneyMultiplier,
+      'genTroops': instance.genTroops,
+      'genMoney': instance.genMoney,
+      'userName': instance.userName,
+      'faction': instance.faction,
+      'role': instance.role,
     };

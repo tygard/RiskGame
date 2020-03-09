@@ -8,8 +8,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'passive.g.dart';
 
-@JsonSerializable(explicitToJson: true)
-
 enum PassiveModifiers {
   none,
   defense,
@@ -18,6 +16,7 @@ enum PassiveModifiers {
   moneyGeneration
 }
 
+@JsonSerializable(explicitToJson: true)
 /**
  * passives are modifiers that apply to users and can be purchased by a user
  * from the passives screen
@@ -27,6 +26,7 @@ class Passive {
   int owner = -1;
   bool active = false;
   int passiveValue = 0;
+  int duration;
   PassiveModifiers modifiedValue = PassiveModifiers.none;
 
   /**
@@ -37,7 +37,8 @@ class Passive {
    */
   Passive({int cost, int passiveValue, PassiveModifiers modifiedValue}) {
     if (cost == null) {
-      cost = new Random().nextInt(201) + 50; // random goes from 0 to max, exclusive
+      cost = new Random().nextInt(201) +
+          50; // random goes from 0 to max, exclusive
     } else {
       this.cost = cost;
     }
@@ -53,8 +54,9 @@ class Passive {
     }
   }
 
-  factory Passive.fromJson(Map<String, dynamic> json) => _$PassiveFromJson(json);
-    Map<String, dynamic> toJson() => _$PassiveToJson(this);
+  factory Passive.fromJson(Map<String, dynamic> json) =>
+      _$PassiveFromJson(json);
+  Map<String, dynamic> toJson() => _$PassiveToJson(this);
 
   void setActive() {
     active = true;

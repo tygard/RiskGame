@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:risk/gameLayer/game.dart';
+import 'package:risk/src/pages/gameScreens/selectTeam.dart';
 import 'package:risk/src/utils/providers/globalsProvider.dart';
 import 'package:risk/src/utils/routeGenerator.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
@@ -22,9 +22,7 @@ class Risk extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return MaterialApp(
-      home: MyHomePage(
-        title: "title",
-      ),
+      home: SelectTeam()
     );
   }
 

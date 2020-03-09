@@ -26,8 +26,6 @@ class Tile {
   /**
    * creates a new tile object with coordinats of x, y
    * ownership defaults to -1 (uncaptured tile)
-   * TODO: default params should probably reference inits in GameState but I
-   * dont know how the gameController will handle the instance of gameState yet
    */
   Tile(@required this.x, @required this.y,
       {this.ownership = -1,

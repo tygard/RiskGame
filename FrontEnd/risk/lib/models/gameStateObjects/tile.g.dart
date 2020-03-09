@@ -10,12 +10,12 @@ Tile _$TileFromJson(Map<String, dynamic> json) {
   return Tile(
     json['x'] as int,
     json['y'] as int,
-    json['ownership'] as int,
-    json['troops'] as int,
-    json['power'] as int,
-    json['defense'] as int,
-    json['moneyGeneration'] as int,
-    json['troopGeneration'] as int,
+    ownership: json['ownership'] as int,
+    troops: json['troops'] as int,
+    power: json['power'] as int,
+    defense: json['defense'] as int,
+    moneyGeneration: json['moneyGeneration'] as int,
+    troopGeneration: json['troopGeneration'] as int,
   );
 }
 

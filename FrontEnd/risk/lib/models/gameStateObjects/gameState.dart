@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'gameBoard.dart';
-import 'inGameUser.dart';
+import 'InGameUser.dart';
 
 part 'gameState.g.dart';
 

@@ -8,19 +8,22 @@ part of 'passive.dart';
 
 Passive _$PassiveFromJson(Map<String, dynamic> json) {
   return Passive(
-    json['cost'] as int,
-    json['duration'] as int,
-    json['active'] as bool,
-    json['passiveValue'] as int,
-    _$enumDecodeNullable(_$PassiveModifiersEnumMap, json['modifiedValue']),
-  );
+    cost: json['cost'] as int,
+    passiveValue: json['passiveValue'] as int,
+    modifiedValue:
+        _$enumDecodeNullable(_$PassiveModifiersEnumMap, json['modifiedValue']),
+  )
+    ..owner = json['owner'] as int
+    ..active = json['active'] as bool
+    ..duration = json['duration'] as int;
 }
 
 Map<String, dynamic> _$PassiveToJson(Passive instance) => <String, dynamic>{
       'cost': instance.cost,
-      'duration': instance.duration,
+      'owner': instance.owner,
       'active': instance.active,
       'passiveValue': instance.passiveValue,
+      'duration': instance.duration,
       'modifiedValue': _$PassiveModifiersEnumMap[instance.modifiedValue],
     };
 
@@ -57,6 +60,7 @@ T _$enumDecodeNullable<T>(
 }
 
 const _$PassiveModifiersEnumMap = {
+  PassiveModifiers.none: 'none',
   PassiveModifiers.defense: 'defense',
   PassiveModifiers.attack: 'attack',
   PassiveModifiers.troopGeneration: 'troopGeneration',
