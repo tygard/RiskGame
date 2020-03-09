@@ -19,7 +19,7 @@ public class TestController {
     //requires formData.get("test").get(0)
     @PostMapping(path = "/test", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String httpTest(@RequestBody MultiValueMap<String, String> formData){
-        return formData.get("test").get(0);
+        return "{\"test\": \"" + formData.get("test").get(0) + "\"}";
     }
 }
 
