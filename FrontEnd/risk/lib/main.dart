@@ -18,17 +18,7 @@ void main() {
 }
 
 class Risk extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return MaterialApp(
-      home: SelectTeam()
-    );
-  }
-
-
-  
-/*   @override
+@override
   Widget build(BuildContext context) {
     return GlobalsProvider(
           user: locator<User>(),
@@ -43,5 +33,5 @@ class Risk extends StatelessWidget {
         navigatorKey: locator<RouteGenerator>().key,
       ),
     );
-  } */
+  }
 }
