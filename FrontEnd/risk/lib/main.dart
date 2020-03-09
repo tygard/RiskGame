@@ -17,7 +17,7 @@ void main() {
 }
 
 class Risk extends StatelessWidget {
-  @override
+@override
   Widget build(BuildContext context) {
     return GlobalsProvider(
           user: locator<User>(),
