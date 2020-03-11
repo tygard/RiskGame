@@ -46,12 +46,25 @@ android {
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    signingConfigs {
+        // It's not necessary to specify, but I like to keep the debug keystore
+        // in SCM so all our debug builds (on all workstations) use the same
+        // key for convenience
+        debug {
+            storeFile file("../../debug")
+            keyAlias "debug"
+            keyPassword "android"
+        }
+        release {
+            storeFile file("../../release.keystore")
+            storePassword "yD_#8UkD"
+            keyAlias "release"
+            keyPassword "c4_:5Neq"
+        }
+    }
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+
         }
     }
 }

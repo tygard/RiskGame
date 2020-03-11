@@ -21,7 +21,7 @@ class RouteGenerator {
         return NoAnimationMaterialPageRoute(builder: (_) => HomeScreen());
       case "/onboard/selectTeam/":
         return NoAnimationMaterialPageRoute(builder: (_) => SelectTeam());
-      case "/game": //TODO this is horrible presentation, just want to go to sleep though
+      case "/game":
         return NoAnimationMaterialPageRoute(builder: (_) => RiskOverlay(child: GameBoard(title: "Filler")));
       default:
         throw ErrorDescription("route is unknown.");

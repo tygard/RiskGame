@@ -9,6 +9,7 @@ import com.anthonyOleinik.myApp.entities.GameState.GameState;
 import com.anthonyOleinik.myApp.entities.GameState.InGameUser;
 import com.anthonyOleinik.myApp.entities.GameState.Tile;
 import com.anthonyOleinik.myApp.entities.UserEntity;
+import com.anthonyOleinik.myApp.sockets.SocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -33,6 +34,9 @@ public class GameController {
     @Autowired
     UserRepository userRepo;
 
+    @Autowired
+    SocketHandler sockets;
+
     @GetMapping("/games/{id}/")
     GameState FindGame(@PathVariable("id") Integer id){
         return activeGames.get(id);
@@ -46,12 +50,11 @@ public class GameController {
         return "GroupPlayers";
     }
 
-    @MessageMapping("/games/")
-    @SendTo("/gameser/{id}")
     public void HandlePacket(@DestinationVariable String id, @DestinationVariable GameState data){
         //this probably works, I have no idea how spring does websockets
         //
         activeGames.replace(Integer.parseInt(id), data);
+        sockets.sendGameState(id, data);
     }
 
     @GetMapping("/game/template/")
