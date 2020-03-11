@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:risk/models/gameStateObjects/gameState.dart';
-import 'package:risk/src/utils/serviceProviders.dart';
+import 'package:risk/gameLayer/Tile.dart';
 import 'Tile.dart';
-
+import 'dart:math';
 
 class GameBoard extends StatefulWidget
 {
@@ -14,61 +13,43 @@ class GameBoard extends StatefulWidget
 }
 
 class _GameBoard extends State<GameBoard> {
-  void initState()
-  {
-    for (int i = 0; i < locator<GameState>().board.dimensions; i++){
-      for (int j = 0; j < locator<GameState>().board.dimensions; j++){
-        if (i == 0 && j == 0 || i == 6 && j == 0 || i == 0 && j == 6 ||i == 6 && j == 6) {
-          locator<GameState>().board.tiles[i + j].troops = 20;
-        }
-        else {
-          locator<GameState>().board.tiles[i + j].troops = 10;
-        }
-      }
-    }
-
-  }
-  void updateBoard({GameBoard game})
+  int dimensions = (new Random().nextInt(9) + 7);
+  void updateBoard()
   {
     setState(() {
-
     });
   }
+
   //Add array object
   Widget build(BuildContext context) {
     return new Scaffold(
       body: new SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: new SizedBox(
-          width: 1000.0,
+          width: dimensions * 130.0,
           child:
           new ListView.builder(
-            cacheExtent: locator<GameState>().board.dimensions*125.0, //Important to update so flutter doesn't try to constantly reload the buttons. 7 is the items in a row, 125 is the height
-            itemCount: locator<GameState>().board.dimensions, 
+            cacheExtent: dimensions*130.0, //Important to update so flutter doesn't try to constantly reload the buttons. 7 is the items in a row, 125 is the height
+            itemCount: dimensions, //Creates 7 rows
             itemBuilder: (BuildContext context, int i) {
               return new Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children:
-                new List.generate(locator<GameState>().board.dimensions, (int j) {
+                new List.generate(dimensions, (int j) {
                   if (i == 0 && j == 0) {
-                    Tile t = Tile(updateBoard, Colors.red, locator<GameState>().board.tiles[i+j].troops, i, j);
-                    return t;
+                    return Tile(updateBoard, Colors.red, 20, i, j);
                   }
-                  else if (i == locator<GameState>().board.dimensions - 1 && j == 0) {
-                    Tile t = Tile(updateBoard, Colors.blue, locator<GameState>().board.tiles[i+j].troops, i , j);
-                    return t;
+                  else if (i == dimensions - 1 && j == 0) {
+                    return Tile(updateBoard, Colors.blue, 20, i, j);
                   }
-                  else if (i == 0 && j == locator<GameState>().board.dimensions - 1) {
-                    Tile t = Tile(updateBoard, Colors.green, locator<GameState>().board.tiles[i+j].troops, i , j);
-                    return t;
+                  else if (i == 0 && j == dimensions - 1) {
+                    return Tile(updateBoard, Colors.yellow, 20, i, j);
                   }
-                  else if (i == locator<GameState>().board.dimensions - 1 && j == locator<GameState>().board.dimensions - 1) {
-                    Tile t = Tile(updateBoard, Colors.yellow, locator<GameState>().board.tiles[i+j].troops, i , j);
-                    return t;
+                  else if (i == dimensions - 1 && j == dimensions - 1) {
+                    return Tile(updateBoard, Colors.green, 20, i, j);
                   }
                   else {
-                    Tile t = Tile(updateBoard, Colors.grey, locator<GameState>().board.tiles[i+j].troops, i, j);
-                    return t;
+                    return Tile(updateBoard, Colors.grey, 10, i, j);
                   }
                 }),
               );

@@ -6,12 +6,12 @@ import 'package:risk/src/utils/routeGenerator.dart';
 import 'package:risk/src/utils/socketManager.dart';
 
 import 'config/config.dart';
-import 'config/debugConfig.dart';
+import 'config/productionConfig.dart';
 
 GetIt locator = GetIt.I;
 
 void registerServices(){
-  locator.registerLazySingleton<Config>(() =>  DebugConfig());
+  locator.registerLazySingleton<Config>(() =>  ProductionConfig());
   locator.registerLazySingleton<RouteGenerator>(() =>  RouteGenerator());
   locator.registerLazySingleton<GameState>(() =>  GameState.empty());
   locator.registerLazySingleton<User>(() =>  User());

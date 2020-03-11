@@ -10,13 +10,14 @@ class SelectTeam extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
+        body: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                new SizedBox(height: 60),
                 new TextField(
                     obscureText: false,
                     controller: myController,
