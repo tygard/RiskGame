@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -118,10 +119,15 @@ public class UserController {
     //Queries the connections repo for the gogole id, uses that to query user repo for
     //the user, other wise return null
     @GetMapping(path = "/users/goog/{token}")
-    public Optional<UserEntity> queryGoogleId(@PathVariable("token") String id) {
+    public ResponseEntity<UserEntity> queryGoogleId(@PathVariable("token") String id) {
         try{
-            return userRepo.findById(connectionsRepo.FindByGID(id).
-                    orElseThrow(() -> new IllegalArgumentException()).getUserId());
+            UserEntity user = userRepo.findById(connectionsRepo.FindByGID(id).
+                    orElseThrow(() -> new IllegalArgumentException()).getUserId()).get();
+            if(user != null){
+                return ResponseEntity.ok(user);
+            }else{
+                return ResponseEntity.notFound().build();
+            }
         }catch(Exception e){
             logger.info("User doesn't exist.");
             return null;

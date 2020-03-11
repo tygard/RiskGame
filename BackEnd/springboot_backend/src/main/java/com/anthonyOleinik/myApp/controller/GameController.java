@@ -42,8 +42,8 @@ public class GameController {
         return activeGames.get(id);
     }
 
-
     //send player to this function, players get added to wait list
+    @PostMapping("/lobby/join/" )
     String AddWaiting(UserEntity player){
         InGameUser tmp = new InGameUser(player);
         waitingPlayers.add(tmp);
