@@ -5,6 +5,7 @@ import com.anthonyOleinik.myApp.entities.GameState.GameState;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -23,6 +24,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class SocketHandler extends TextWebSocketHandler {
     List sessions = new CopyOnWriteArrayList<>();
 
+    @Autowired
+    GameController game;
+
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message)
             throws InterruptedException, IOException {
@@ -35,7 +39,7 @@ public class SocketHandler extends TextWebSocketHandler {
                 //then pass it to wherever you need it to go.
                 //for example, you probably want to put it into a
                 //function, like handleGameState(gameStateWrapper.gameState);
-                passGameState(gameStateWrapper.state);
+                game.HandlePacket(gameStateWrapper.state.getGameID(), gameStateWrapper.state);
             } catch (JsonParseException e){
                 //resends the message. this makes it
                 //so that any message other than a gamestate
@@ -45,15 +49,6 @@ public class SocketHandler extends TextWebSocketHandler {
         }
     }
 
-    //not sure if this will work, it should send a packet to the GameController where it can
-    //be handled
-    @SendTo("/games/")
-    public GameState passGameState(GameState gamestate){
-            return gamestate;
-    }
-
-    @MessageMapping("/gameser/{id}")
-    @SendTo("/gamecli/{id}")
     public String sendGameState(@DestinationVariable String id, @DestinationVariable GameState gameState) {
         Gson gson = new Gson();
         JsonElement jsonElement = gson.toJsonTree(gameState);

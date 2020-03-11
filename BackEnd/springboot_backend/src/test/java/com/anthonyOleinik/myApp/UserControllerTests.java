@@ -68,7 +68,7 @@ public class UserControllerTests {
 
     //simple check to make sure controller is initializing
     @Test
-    public void contextLoads() throws Exception {
+    public void ValidateController() throws Exception {
         assertThat(mvc).isNotNull();
     }
 

@@ -17,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: <Widget>[
                     _buildLoginButton(
                         image: Image.asset("assets/logos/facebookLogo.png"),
+                        function: (){Navigator.of(context).pushReplacementNamed("/game");},
                         text: Text(
                           "Login with Facebook",
                           style: TextStyle(color: Colors.white, fontSize: 20),
