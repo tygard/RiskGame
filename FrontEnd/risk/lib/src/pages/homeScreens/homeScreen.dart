@@ -15,7 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
                   children: <Widget>[
                     _buildButton(
-                        function: () => Navigator.of(context).pushReplacementNamed("/onboard/selectTeam/"),
+                        function: () => Navigator.of(context).pushReplacementNamed("/queue"),
                         text: Text(
                           "Play RISK",
                           style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20),

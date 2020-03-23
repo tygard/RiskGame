@@ -3,6 +3,7 @@ import 'package:risk/gameLayer/GameBoard.dart';
 import 'package:risk/src/pages/gameScreens/selectTeam.dart';
 import 'package:risk/src/pages/homeScreens/homeScreen.dart';
 import 'package:risk/src/pages/homeScreens/loginScreen.dart';
+import 'package:risk/src/pages/homeScreens/queueScreen.dart';
 import 'package:risk/src/pages/loadScreen.dart';
 import 'package:risk/src/pages/overlay.dart';
 import 'noAnimationMaterialPageRoute.dart';
@@ -19,7 +20,9 @@ class RouteGenerator {
         return NoAnimationMaterialPageRoute(builder: (_) => LoginScreen());
       case "/home":
         return NoAnimationMaterialPageRoute(builder: (_) => HomeScreen());
-      case "/onboard/selectTeam/":
+      case "/queue":
+        return NoAnimationMaterialPageRoute(builder: (_) => QueueScreen());
+      case "/onboard/selectTeam/": //UNUSED
         return NoAnimationMaterialPageRoute(builder: (_) => SelectTeam());
       case "/game":
         return NoAnimationMaterialPageRoute(builder: (_) => RiskOverlay(child: GameBoard(title: "Filler")));
