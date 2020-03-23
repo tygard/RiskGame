@@ -50,7 +50,7 @@ class _QueueScreenState extends State<QueueScreen> {
               Text(
                   "If you're a developer, you can click that cake button to move to the game screen."),
               Text("Otherwise, either wait or click the exit to leave."),
-              Text("Players in queue: $playerCount / 4", style: Theme.of(context).textTheme.subtitle1)
+              Text("Players in queue: $playerCount / 4", style: TextStyle(color: Colors.grey))
             ],
           ),
         ),
