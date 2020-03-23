@@ -59,14 +59,19 @@ class Passive {
    */
   void purchase(int owner) {
     this.owner = owner;
+    this.active = true;
   }
 
-  void setActive() {
-    active = true;
+  /**
+   * removes reference to this passive
+   */
+  void sell(){
+    this.owner = null;
+    this.active = false;
   }
 
-  void setInActive() {
-    active = false;
+  int getCost(){
+    return this.cost;
   }
 
   /**
