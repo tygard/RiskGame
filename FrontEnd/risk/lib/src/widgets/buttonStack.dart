@@ -19,14 +19,17 @@ class ButtonStack extends StatelessWidget {
             size: 35,
           ),
         ),
-        FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => PassivesScreen()));
-          },
-          child: Text(
-            "\$",
-            textScaleFactor: 2.0,
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => PassivesScreen()));
+            },
+            child: Text(
+              "\$",
+              textScaleFactor: 2.0,
+            ),
           ),
         ),
         Padding(
