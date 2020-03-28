@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:risk/models/freezedClasses/lobbyState.dart';
 import 'package:web_socket_channel/io.dart';
 
 import '../../models/freezedClasses/chat.dart';
@@ -24,45 +25,54 @@ class SocketManager {
     _mainDelegator();
     chatDelegator();
     gameStateDelegator();
-  }
-
-  //this is the main delegator, which reads all the data from the websocket.
-  //it delegates out the messages to every other delegator.
-  Stream<dynamic> _mainDelegator() async* {
-    await for (var input in channel.stream){
-      Map<String, dynamic> inputMap = json.decode(input);
-      print(inputMap["type"]);
-      if (inputMap.containsKey("type") && inputMap["type"] == "chat"){
-        yield Chat.fromJson(inputMap);
-      } else if (inputMap.containsKey("type") && inputMap["type"] == "gamestate"){
-        yield GameState.fromJson(inputMap);
+    lobbyDelegator();
       }
-    }
-  }
-
-  Stream<Chat> chatDelegator() async* {
-    await for (var chat in _mainDelegator()){
-      if (chat is Chat){
-        yield chat;
+    
+      //this is the main delegator, which reads all the data from the websocket.
+      //it delegates out the messages to every other delegator.
+      Stream<dynamic> _mainDelegator() async* {
+        await for (var input in channel.stream){
+          Map<String, dynamic> inputMap = json.decode(input);
+          print(inputMap["type"]);
+          if (inputMap.containsKey("type") && inputMap["type"] == "chat"){
+            yield Chat.fromJson(inputMap);
+          } else if (inputMap.containsKey("type") && inputMap["type"] == "gamestate"){
+            yield GameState.fromJson(inputMap);
+          }
+        }
       }
-    }
-  }
-
-  Stream<GameState> gameStateDelegator() async* {
-    await for (var state in _mainDelegator()){
-      if (state is GameState){
-        yield state;
+    
+      Stream<Chat> chatDelegator() async* {
+        await for (var chat in _mainDelegator()){
+          if (chat is Chat){
+            yield chat;
+          }
+        }
       }
-    }
-  }
+    
+      Stream<GameState> gameStateDelegator() async* {
+        await for (var state in _mainDelegator()){
+          if (state is GameState){
+            yield state;
+          }
+        }
+      }
 
-  void sendChat(Chat chat){
-    String message = json.encode({"username": chat.name, "message": chat.message, "type": "chat"});
-      channel.sink.add(message);
-  }
-
-    void sendGameState(GameState state){
-    String message = json.encode({"type": "gamestate", "gamestate": state});
-      channel.sink.add(message);
-  }
+      Stream<LobbyState> lobbyDelegator() async* {
+        await for (var lobbyState in _mainDelegator()){
+          if (lobbyState is LobbyState){
+            yield lobbyState;
+          }
+        }
+      }
+    
+      void sendChat(Chat chat){
+        String message = json.encode({"username": chat.name, "message": chat.message, "type": "chat"});
+          channel.sink.add(message);
+      }
+    
+        void sendGameState(GameState state){
+        String message = json.encode({"type": "gamestate", "gamestate": state});
+          channel.sink.add(message);
+      }
 }

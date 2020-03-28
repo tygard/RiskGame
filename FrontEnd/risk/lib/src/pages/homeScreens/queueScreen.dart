@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:risk/models/freezedClasses/lobbyState.dart';
+import 'package:risk/src/utils/config/config.dart';
+import 'package:risk/src/utils/serviceProviders.dart';
+import 'package:risk/src/utils/socketManager.dart';
 
 class QueueScreen extends StatefulWidget {
   @override
@@ -7,6 +11,15 @@ class QueueScreen extends StatefulWidget {
 
 class _QueueScreenState extends State<QueueScreen> {
   int playerCount = 1;
+  int myNum = 0;
+
+  SocketManager sm;
+
+  @override
+  void initState() {
+    sm = SocketManager(channelUrl: "ws://${locator<Config>().getEndpoint()}/lobby");
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,5 +69,17 @@ class _QueueScreenState extends State<QueueScreen> {
         ),
       ),
     );
+  }
+
+  void _beginListeningToLobby(){
+    sm.lobbyDelegator().listen((lobby) {
+        setState(() {
+          myNum = myNum ?? lobby.playersInLobby;
+          this.playerCount = lobby.playersInLobby;
+        });
+    });
+    sm.gameStateDelegator().listen((gameState){
+      print("got a gamestate");
+    });
   }
 }
