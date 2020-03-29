@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:risk/models/freezedClasses/lobbyState.dart';
+import 'package:risk/models/freezedClasses/user.dart';
+import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/src/utils/config/config.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
 import 'package:risk/src/utils/socketManager.dart';
@@ -17,8 +19,17 @@ class _QueueScreenState extends State<QueueScreen> {
 
   @override
   void initState() {
-    sm = SocketManager(channelUrl: "ws://${locator<Config>().getEndpoint()}/lobby");
+    sm = SocketManager(
+        channelUrl: "ws://${locator<Config>().getEndpoint()}/lobby");
+    locator<User>().inGamePlayerNumber = null;
+    _beginListeningToLobby();
     super.initState();
+  }
+
+  @override
+  void dispose(){
+    sm.dispose();
+    super.dispose();
   }
 
   @override
@@ -63,7 +74,8 @@ class _QueueScreenState extends State<QueueScreen> {
               Text(
                   "If you're a developer, you can click that cake button to move to the game screen."),
               Text("Otherwise, either wait or click the exit to leave."),
-              Text("Players in queue: $playerCount / 4", style: TextStyle(color: Colors.grey))
+              Text("Players in queue: $playerCount / 4",
+                  style: TextStyle(color: Colors.grey))
             ],
           ),
         ),
@@ -71,15 +83,32 @@ class _QueueScreenState extends State<QueueScreen> {
     );
   }
 
-  void _beginListeningToLobby(){
+  void _beginListeningToLobby() {
     sm.lobbyDelegator().listen((lobby) {
-        setState(() {
-          myNum = myNum ?? lobby.playersInLobby;
-          this.playerCount = lobby.playersInLobby;
-        });
+      setState(() {
+        myNum = myNum ?? lobby.playersInLobby;
+        this.playerCount = lobby.playersInLobby;
+      });
     });
-    sm.gameStateDelegator().listen((gameState){
-      print("got a gamestate");
+    _beginListeningForGamestates();
+    _beginListeningForLobby();
+  }
+
+  void _beginListeningForGamestates() {
+    sm.gameStateDelegator().listen((gameState) {
+        if (locator<User>().inGamePlayerNumber == null){
+        locator<GameState>().fromGameState(gameState);
+      }
+    });
+  }
+
+    void _beginListeningForLobby() {
+    sm.lobbyDelegator().listen((lobbyMessage) {
+      //will setPlayernum = the amount of players in lobby ONLY IF
+      //we do not yet have a player num
+      if (locator<User>().inGamePlayerNumber == null){
+        locator<User>().inGamePlayerNumber = lobbyMessage.playersInLobby;
+      }
     });
   }
 }

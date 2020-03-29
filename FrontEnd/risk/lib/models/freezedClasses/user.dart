@@ -14,8 +14,10 @@ class User{
   String email;
   String googleID;
   String uuid;
+  
+  int inGamePlayerNumber;
 
-  User({this.name, this.color, this.googleID, this.uuid, this.email);
+  User({this.name, this.color, this.googleID, this.uuid, this.email});
 
   void fromUser(User user){
     color = user.color;

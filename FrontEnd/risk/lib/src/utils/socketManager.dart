@@ -26,7 +26,11 @@ class SocketManager {
     chatDelegator();
     gameStateDelegator();
     lobbyDelegator();
-      }
+  }
+
+  void dispose(){
+    this.channel.sink.close();
+  }
     
       //this is the main delegator, which reads all the data from the websocket.
       //it delegates out the messages to every other delegator.
