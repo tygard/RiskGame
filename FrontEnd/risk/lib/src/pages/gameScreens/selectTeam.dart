@@ -10,6 +10,7 @@ class SelectTeam extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+<<<<<<< HEAD
         body: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -65,35 +66,48 @@ class SelectTeam extends StatelessWidget {
           ),
                   ),
         ));
+=======
+      body: SafeArea(
+          child: SingleChildScrollView(child: Container(color: Colors.pink))
+        ),
+    );
+>>>>>>> 145d3dfbf8de88bc07548e5ac0d492d79ca4658a
   }
 
   void _colorSelected(String color, BuildContext context) async {
-    if (myController.text != null && myController.text != ""){
-    int colorID = 0;
-    //TODO this should be a sealed union
-    switch (color){
-      case "Red":
-        colorID = 0;
-        break;
-      case "Green":
-        colorID = 1;
-        break;
-      case "Blue":
-        colorID = 2;
-        break;
-      case "Yellow":
-        colorID = 3;
-        break;
-      default:
-    }
-    locator<User>().name = myController.text;
-    Map<String, dynamic> package = {'Username': myController.text, 'Faction': colorID, 'googToken': locator<User>().googleID, "fbToken": null};
-    print(package);
-    Response response = await RiskHttp.makePostRequest("users", params: package);
-    Toaster.successToast(response.data.toString());
-    Navigator.of(context).pushReplacementNamed("/game");
+    if (myController.text != null && myController.text != "") {
+      int colorID = 0;
+      //TODO this should be a sealed union
+      switch (color) {
+        case "Red":
+          colorID = 0;
+          break;
+        case "Green":
+          colorID = 1;
+          break;
+        case "Blue":
+          colorID = 2;
+          break;
+        case "Yellow":
+          colorID = 3;
+          break;
+        default:
+      }
+      locator<User>().name = myController.text;
+      Map<String, dynamic> package = {
+        'Username': myController.text,
+        'Faction': colorID,
+        'googToken': locator<User>().googleID,
+        "fbToken": null
+      };
+      print(package);
+      Response response =
+          await RiskHttp.makePostRequest("users", params: package);
+      Toaster.successToast(response.data.toString());
+      Navigator.of(context).pushReplacementNamed("/game");
     } else {
-    Toaster.errorToast("Listen here, smart guy. You have to put a name in the box."); 
+      Toaster.errorToast(
+          "Listen here, smart guy. You have to put a name in the box.");
     }
   }
 }

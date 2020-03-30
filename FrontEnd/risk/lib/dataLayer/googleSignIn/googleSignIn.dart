@@ -1,3 +1,4 @@
+
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:risk/models/freezedClasses/user.dart';
 import 'package:risk/src/utils/routeGenerator.dart';
@@ -23,5 +24,7 @@ initLogin() {
 }
 
 doLogin() async {
-  await _googleSignIn.signIn();
+  GoogleSignInAccount account = await _googleSignIn.signIn();
+  locator<User>().fromGoogleSignIn(account);
+  locator<RouteGenerator>().generateRouteNamed("/home");
 }
