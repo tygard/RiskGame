@@ -96,8 +96,9 @@ class _QueueScreenState extends State<QueueScreen> {
 
   void _beginListeningForGamestates() {
     sm.gameStateDelegator().listen((gameState) {
-        if (locator<User>().inGamePlayerNumber == null){
+        if (locator<User>().inGamePlayerNumber != null){
         locator<GameState>().fromGameState(gameState);
+        Navigator.of(context).pushReplacementNamed("/game");
       }
     });
   }
