@@ -11,17 +11,13 @@ import 'config/productionConfig.dart';
 
 GetIt locator = GetIt.I;
 
-<<<<<<< HEAD
-void registerServices(){
-  locator.registerLazySingleton<Config>(() =>  ProductionConfig());
-=======
+
 void registerServices({bool production = false}){
   if (production){
     locator.registerLazySingleton<Config>(() =>  ProductionConfig());
   } else {
     locator.registerLazySingleton<Config>(() =>  DebugConfig());
   }
->>>>>>> 145d3dfbf8de88bc07548e5ac0d492d79ca4658a
   locator.registerLazySingleton<RouteGenerator>(() =>  RouteGenerator());
   locator.registerLazySingleton<GameState>(() =>  GameState.empty());
   locator.registerLazySingleton<User>(() =>  User());

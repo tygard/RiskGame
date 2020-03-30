@@ -10,7 +10,6 @@ class SelectTeam extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-<<<<<<< HEAD
         body: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -66,12 +65,6 @@ class SelectTeam extends StatelessWidget {
           ),
                   ),
         ));
-=======
-      body: SafeArea(
-          child: SingleChildScrollView(child: Container(color: Colors.pink))
-        ),
-    );
->>>>>>> 145d3dfbf8de88bc07548e5ac0d492d79ca4658a
   }
 
   void _colorSelected(String color, BuildContext context) async {
