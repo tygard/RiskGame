@@ -48,6 +48,7 @@ class Passive {
     } else {
       this.modifiedValue = modifiedValue;
     }
+    this.active = false;
   }
 
   factory Passive.fromJson(Map<String, dynamic> json) =>
@@ -79,7 +80,7 @@ class Passive {
    * returns active state of the passive object
    */
   bool isActive() {
-    return (active);
+    return this.active;
   }
 
   /**

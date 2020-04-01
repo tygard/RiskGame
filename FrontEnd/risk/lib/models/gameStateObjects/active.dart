@@ -39,11 +39,11 @@ class Active {
       this.power = power;
     }
     if (defense == null) {
-      defense = new Random().nextInt(10) + 1;
+      this.defense = new Random().nextInt(10) + 1;
     } else {
       this.defense = defense;
     }
-    if (duration = null) {
+    if (duration == null) {
       this.duration = new Random().nextInt(10) + 1;
     } else {
       this.duration = duration;
@@ -69,8 +69,16 @@ class Active {
     return this.cost;
   }
 
+  String toString() {
+    String s = "Cost: $cost, \t";
+    s += "Power + $power% \t";
+    s += "Defense + $defense% \t";
+    s += "Duration: $duration";
+    return s;
+  }
+
   bool isActive() {
-    return (duration > 0);
+    return (this.tile != null && duration > 0);
   }
 
   int getCost() {

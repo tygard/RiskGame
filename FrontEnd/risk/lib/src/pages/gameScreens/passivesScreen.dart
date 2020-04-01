@@ -12,7 +12,7 @@ class PassivesScreen extends StatefulWidget {
   List<Active> activesList = List<Active>();
   /**
    * a passive screen needs a list of passives, usually the InGameUsers owned passives 
-   * FOR TESTING: if there is no passive list given it populates passivesList with 5 random passives
+   * FOR TESTING: if there is no passive list given it populates passivesList with 5 random passives, 1 for actives
    */
   PassivesScreen({this.passivesList, this.activesList}) {
     if (passivesList == null || passivesList.length == 0) {
@@ -35,7 +35,7 @@ class PassivesScreen extends StatefulWidget {
 
 class _PassivesScreenState extends State<PassivesScreen> {
   /**
-   * calls this users purchasePassive function with the Passive p and the int currPlayer 
+   * calls this users purchasePassive function with the Passive p
    */
   void purchasePassive(Passive p) {
     setState(() {
@@ -46,12 +46,15 @@ class _PassivesScreenState extends State<PassivesScreen> {
   }
 
 /**
- * calls the chosen actives purchase
+ * calls the chosen tiles purchase 
  */
   void purchaseActive(Active a, int selectedTileIndex) {
     setState(() {
-      // TODO: modify this to reference a user selected tile
-      a.pruchase(locator<GameState>().board.tiles[selectedTileIndex]);
+      locator<GameState>()
+          .board
+          .tiles
+          .elementAt(selectedTileIndex)
+          .purchaseActive(a);
     });
   }
 
@@ -63,29 +66,28 @@ class _PassivesScreenState extends State<PassivesScreen> {
         brightness: Brightness.dark,
         primaryColor: Colors.red,
       ),
-      home: Scaffold(
-        appBar: PreferredSize(
-          child: AppBar(
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
             title: Text("Modifiers"),
             leading: BackButton(
               onPressed: () => Navigator.pop(context),
             ),
-            bottom: TabBar(tabs: [
-              Tab(
-                text: "Passives",
-              ),
-              Tab(
-                text: "Actives",
-              ),
-            ]),
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(50),
+              child: TabBar(tabs: [
+                Tab(text: "Passives"),
+                Tab(text: "Actives"),
+              ]),
+            ),
           ),
-          preferredSize: Size.fromHeight(50.0),
+          body: TabBarView(children: [
+            _createPassivesList(widget.passivesList),
+            _createActiveList(widget.activesList),
+          ]),
         ),
-        body: TabBarView(children: [
-          _createPassivesList(widget.passivesList),
-          _createActiveList(widget.activesList),
-        ]),
-        //body: _createPassivesList(widget.passivesList),
       ),
     );
   }
@@ -97,9 +99,6 @@ class _PassivesScreenState extends State<PassivesScreen> {
         itemCount: aList.length,
         itemBuilder: (context, index) {
           return ListTile(
-            onTap: () {
-              //purchaseActive(aList[index]);
-            },
             leading: Icon(Icons.description),
             enabled: !aList[index].isActive(),
             title: Text("Active $index"),
@@ -126,11 +125,8 @@ class _PassivesScreenState extends State<PassivesScreen> {
         itemCount: pList.length,
         itemBuilder: (context, index) {
           return ListTile(
-            onTap: () {
-              purchasePassive(pList[index]);
-            },
             leading: Icon(Icons.description),
-            enabled: !pList[index].active,
+            enabled: !pList[index].isActive(),
             title: Text("Passive $index"),
             subtitle: Text(pList[index].toString()),
             trailing: FlatButton(
@@ -149,9 +145,15 @@ class _PassivesScreenState extends State<PassivesScreen> {
 
   Color _passiveButtonColor(Passive p) {
     // if the passive isnt active and the current user has more money than the cost of the passive
-    if (!p.isActive() &&
+
+    /*  ---------------------------------------------------------------------------------------
+    FOR TESTING: the second expression is commented out bc the server is not currently running
+    --------------------------------------------------------------------------------------- */
+
+    if (!p.isActive() /* &&
         p.getCost() <
-            locator<GameState>().users[locator<GameState>().currPlayer].money) {
+            locator<GameState>().users[locator<GameState>().currPlayer].money */
+        ) {
       return Colors.green;
     } else {
       return Colors.grey;
@@ -159,10 +161,16 @@ class _PassivesScreenState extends State<PassivesScreen> {
   }
 
   Color _activeButtonColor(Active a) {
-    // if the passive isnt active and the current user has more money than the cost of the passive
-    if (!a.isActive() &&
+    // if the active isnt active and the current user has more money than the cost of the active
+
+    /*  ---------------------------------------------------------------------------------------
+    FOR TESTING: the second expression is commented out bc the server is not currently running
+    --------------------------------------------------------------------------------------- */
+
+    if (!a.isActive() /* &&
         a.getCost() <
-            locator<GameState>().users[locator<GameState>().currPlayer].money) {
+            locator<GameState>().users[locator<GameState>().currPlayer].money */
+        ) {
       return Colors.green;
     } else {
       return Colors.grey;
