@@ -14,7 +14,7 @@ class PassivesScreen extends StatefulWidget {
    * a passive screen needs a list of passives, usually the InGameUsers owned passives 
    * FOR TESTING: if there is no passive list given it populates passivesList with 5 random passives
    */
-  PassivesScreen(this.passivesList, this.activesList) {
+  PassivesScreen({this.passivesList, this.activesList}) {
     if (passivesList == null || passivesList.length == 0) {
       this.passivesList = new List<Passive>();
       this.passivesList.add(new Passive());

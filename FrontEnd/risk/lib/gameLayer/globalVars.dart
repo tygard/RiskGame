@@ -2,7 +2,6 @@ library globals;
 import 'package:flutter/material.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
-import 'Users.dart';
 var selected;
 Color turn = Colors.red;
 
@@ -19,8 +18,6 @@ void attack(var button1, var button2)
       button2.color = button1.color;
       button2.armyNum = 5;
     }
-    locator<GameState>().board.tiles[button1.x + button1.y].troops = button1.armyNum;
-    locator<GameState>().board.tiles[button2.x + button2.y].troops = button2.armyNum;
     button1.widget.update();
     button2.widget.update();
     selected = null;

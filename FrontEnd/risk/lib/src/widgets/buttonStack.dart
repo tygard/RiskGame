@@ -7,21 +7,24 @@ class ButtonStack extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        FloatingActionButton(
-          heroTag: "chat btn",
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
-          backgroundColor: Colors.blueGrey,
-          child: Icon(
-            Icons.chat,
-            color: Colors.white,
-            size: 35,
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: new FloatingActionButton(
+            heroTag: "chat btn",
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+            backgroundColor: Colors.blueGrey,
+            child: Icon(
+              Icons.chat,
+              color: Colors.white,
+              size: 35,
+            ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: FloatingActionButton(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: new FloatingActionButton(
             onPressed: () {
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => PassivesScreen()));
@@ -33,7 +36,7 @@ class ButtonStack extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: FloatingActionButton(
               heroTag: "end turn btn",
               onPressed: () {
