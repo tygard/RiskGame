@@ -26,6 +26,10 @@ class PassivesScreen extends StatefulWidget {
     if (activesList == null || passivesList.length == 0) {
       this.activesList = new List<Active>();
       this.activesList.add(new Active());
+      this.activesList.add(new Active());
+      this.activesList.add(new Active());
+      this.activesList.add(new Active());
+      this.activesList.add(new Active());
     }
   }
 
@@ -76,11 +80,14 @@ class _PassivesScreenState extends State<PassivesScreen> {
               onPressed: () => Navigator.pop(context),
             ),
             bottom: PreferredSize(
-              preferredSize: Size.fromHeight(50),
-              child: TabBar(tabs: [
-                Tab(text: "Passives"),
-                Tab(text: "Actives"),
-              ]),
+              preferredSize: Size.fromHeight(10),
+              child: Container(
+                height: 35,
+                child: TabBar(tabs: [
+                  Tab(text: "Passives"),
+                  Tab(text: "Actives"),
+                ]),
+              ),
             ),
           ),
           body: TabBarView(children: [
