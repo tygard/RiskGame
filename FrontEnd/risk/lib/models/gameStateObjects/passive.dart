@@ -33,8 +33,8 @@ class Passive {
    */
   Passive({int cost, int passiveValue, PassiveModifiers modifiedValue}) {
     if (cost == null) {
-      this.cost = new Random().nextInt(201) +
-          50; // random goes from 0 to max, exclusive
+      this.cost = new Random().nextInt(200) +
+          51; // random goes from 0 to max, exclusive
     } else {
       this.cost = cost;
     }
@@ -63,14 +63,15 @@ class Passive {
   }
 
   /**
-   * removes reference to this passive
+   * removes reference to this passive, return the cost
    */
-  void sell(){
+  int sell() {
     this.owner = null;
     this.active = false;
+    return this.cost;
   }
 
-  int getCost(){
+  int getCost() {
     return this.cost;
   }
 

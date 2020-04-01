@@ -3,7 +3,7 @@ import 'package:risk/models/gameStateObjects/game.dart';
 import 'package:risk/models/gameStateObjects/passive.dart';
 
 import 'package:json_annotation/json_annotation.dart';
-
+import 'package:risk/src/utils/serviceProviders.dart';
 
 part 'inGameUser.g.dart';
 
@@ -47,9 +47,9 @@ class InGameUser {
    * purchases a passive object
    * applies the modifiers and sets the passives active status to true
    */
-  void purchasePassive(Passive p) {
+  void purchasePassive(Passive p, int currUser) {
     if (canAfford(p) && !p.isActive()) {
-      p.purchase(-1); //TODO: fix reference to the number that corresponds to this InGameUser in gameState
+      p.purchase(currUser);
       ownedPassives.add(p);
     }
   }
@@ -57,29 +57,33 @@ class InGameUser {
 /**
  * sells a passive object
  * removes the modifiers from the user and sets the passive status to false
+ * returns -1 if the passive did not belong to this user
  */
-  void sellPassive(Passive p) {
-    if (p.isActive() && ownedPassives.contains(p)) {
-      p.sell();
+  int sellPassive(Passive p) {
+    if (ownedPassives.contains(p)) {
       ownedPassives.remove(p);
+      return p.sell();
     }
+    return -1;
   }
 
   /**
-   * applies the modifiers of the ownedPassive objects to the inGameUser
+   * resets the current passiveModifiers applies the modifiers of the current ownedPassive objects to the inGameUser
    */
-  void updateModifiers(){
-    for (int i = 0; i < this.ownedPassives.length; i++){
-      if (ownedPassives.elementAt(i).modifiedValue == PassiveModifiers.attack){
+  void updateModifiers() {
+    this.moneyMultiplier = 0;
+    this.troopMultiplier = 0;
+    for (int i = 0; i < this.ownedPassives.length; i++) {
+      if (ownedPassives.elementAt(i).modifiedValue == PassiveModifiers.attack) {
         // this applies to tiles not users, do nothing
-      } else
-      if (ownedPassives.elementAt(i).modifiedValue == PassiveModifiers.defense){
+      } else if (ownedPassives.elementAt(i).modifiedValue ==
+          PassiveModifiers.defense) {
         // this applies to tiles not users, do nothing
-      } else
-      if (ownedPassives.elementAt(i).modifiedValue == PassiveModifiers.moneyGeneration){
+      } else if (ownedPassives.elementAt(i).modifiedValue ==
+          PassiveModifiers.moneyGeneration) {
         this.moneyMultiplier += ownedPassives.elementAt(i).passiveValue;
-      } else
-      if (ownedPassives.elementAt(i).modifiedValue == PassiveModifiers.troopGeneration){
+      } else if (ownedPassives.elementAt(i).modifiedValue ==
+          PassiveModifiers.troopGeneration) {
         this.troopMultiplier += ownedPassives.elementAt(i).passiveValue;
       }
     }
