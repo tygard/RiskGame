@@ -1,19 +1,14 @@
 package com.anthonyOleinik.myApp.controller;
 
-import com.anthonyOleinik.myApp.Repositories.ConnectionsRepository;
-import com.anthonyOleinik.myApp.Repositories.FactionRepository;
-import com.anthonyOleinik.myApp.Repositories.RolesRepository;
 import com.anthonyOleinik.myApp.Repositories.UserRepository;
 import com.anthonyOleinik.myApp.entities.GameState.GameBoard;
 import com.anthonyOleinik.myApp.entities.GameState.GameState;
 import com.anthonyOleinik.myApp.entities.GameState.InGameUser;
 import com.anthonyOleinik.myApp.entities.GameState.Tile;
 import com.anthonyOleinik.myApp.entities.UserEntity;
-import com.anthonyOleinik.myApp.sockets.SocketHandler;
+import com.anthonyOleinik.myApp.sockets.GameSocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -35,7 +30,7 @@ public class GameController {
     UserRepository userRepo;
 
     @Autowired
-    SocketHandler sockets;
+    GameSocketHandler sockets;
 
     @GetMapping("/games/{id}/")
     GameState FindGame(@PathVariable("id") Integer id){

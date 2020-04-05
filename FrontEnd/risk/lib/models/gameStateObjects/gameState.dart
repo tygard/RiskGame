@@ -17,6 +17,14 @@ class GameState {
   GameState.empty();
   GameState(this.users, this.board, this.gameID);
 
+  void fromGameState(GameState state){
+    users = state.users;
+    board = state.board;
+    gameID = state.gameID;
+    turn = state.turn;
+    currPlayer = state.currPlayer;
+  }
+
   final int tileGrowthPercent = 5; //percent out of 100
   final int secondsPerTurn = 60;
   final int initArmyNum = 20;
