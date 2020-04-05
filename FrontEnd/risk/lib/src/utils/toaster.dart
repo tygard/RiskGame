@@ -25,7 +25,6 @@ class Toaster{
         msg: message,
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.TOP,
-        timeInSecForIos: 4,
         backgroundColor: bgColor,
         textColor: textColor,
         fontSize: 16.0
