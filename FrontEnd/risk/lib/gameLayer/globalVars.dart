@@ -2,8 +2,11 @@ library globals;
 import 'package:flutter/material.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
-var selected;
+
+var selected1;
+var selected2;
 Color turn = Colors.red;
+bool isTurnOver = false;
 
 void attack(var button1, var button2)
 {
@@ -20,7 +23,8 @@ void attack(var button1, var button2)
     }
     button1.widget.update();
     button2.widget.update();
-    selected = null;
+    selected1 = null;
+    selected2 = null;
 }
 
 Color moveTurn(Color turn)

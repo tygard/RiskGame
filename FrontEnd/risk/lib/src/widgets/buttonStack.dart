@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:risk/src/pages/gameScreens/passivesScreen.dart';
+import 'package:risk/gameLayer/globalVars.dart';
+import 'package:risk/src/utils/toaster.dart';
 
 class ButtonStack extends StatelessWidget {
   @override
@@ -40,7 +42,15 @@ class ButtonStack extends StatelessWidget {
           child: FloatingActionButton(
               heroTag: "end turn btn",
               onPressed: () {
-                print("turn ended");
+                if (selected1 == null && selected2 == null)
+                {
+                  Toaster.errorToast("Please select a valid territory to attack and a territory to attack it");
+                }
+                else {
+                  isTurnOver = true;
+                  attack(selected1, selected2);
+                  turn = moveTurn(turn);
+                }
               },
               backgroundColor: Colors.red,
               child: Text(
