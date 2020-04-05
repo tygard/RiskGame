@@ -43,10 +43,6 @@ dev_dependencies:
     sdk: flutter
 
 flutter:
-  assets:
-  - assets/images/
-  - assets/logos/
-
   uses-material-design: true
   fonts:
   - family: Digital
