@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
-public class SocketHandler extends TextWebSocketHandler {
+public class GameSocketHandler extends TextWebSocketHandler {
     List sessions = new CopyOnWriteArrayList<>();
 
     @Autowired
