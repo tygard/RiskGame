@@ -15,7 +15,7 @@ void registerServices({bool production = false}){
   if (production){
     locator.registerLazySingleton<Config>(() =>  ProductionConfig());
   } else {
-    locator.registerLazySingleton<Config>(() =>  ProductionConfig());
+    locator.registerLazySingleton<Config>(() =>  DebugConfig());
   }
   locator.registerLazySingleton<RouteGenerator>(() =>  RouteGenerator());
   locator.registerLazySingleton<GameState>(() =>  GameState.empty());

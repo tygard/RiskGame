@@ -13,7 +13,7 @@ class QueueScreen extends StatefulWidget {
 
 class _QueueScreenState extends State<QueueScreen> {
   int playerCount = 1;
-  int myNum = 0;
+  int yourPlaceInLobby = 0;
 
   SocketManager sm;
 
@@ -27,7 +27,7 @@ class _QueueScreenState extends State<QueueScreen> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     sm.dispose();
     super.dispose();
   }
@@ -75,6 +75,8 @@ class _QueueScreenState extends State<QueueScreen> {
                   "If you're a developer, you can click that cake button to move to the game screen."),
               Text("Otherwise, either wait or click the exit to leave."),
               Text("Players in queue: $playerCount / 4",
+                  style: TextStyle(color: Colors.grey)),
+              Text("Your place in queue: $yourPlaceInLobby",
                   style: TextStyle(color: Colors.grey))
             ],
           ),
@@ -84,32 +86,27 @@ class _QueueScreenState extends State<QueueScreen> {
   }
 
   void _beginListeningToLobby() {
-    sm.lobbyDelegator().listen((lobby) {
-      setState(() {
-        myNum = myNum ?? lobby.playersInLobby;
-        this.playerCount = lobby.playersInLobby;
-      });
-    });
     _beginListeningForGamestates();
     _beginListeningForLobby();
   }
 
   void _beginListeningForGamestates() {
     sm.gameStateDelegator().listen((gameState) {
-        if (locator<User>().inGamePlayerNumber != null){
+      if (locator<User>().inGamePlayerNumber != null) {
         locator<GameState>().fromGameState(gameState);
         Navigator.of(context).pushReplacementNamed("/game");
       }
     });
   }
 
-    void _beginListeningForLobby() {
+  void _beginListeningForLobby() {
     sm.lobbyDelegator().listen((lobbyMessage) {
-      //will setPlayernum = the amount of players in lobby ONLY IF
-      //we do not yet have a player num
-      if (locator<User>().inGamePlayerNumber == null){
-        locator<User>().inGamePlayerNumber = lobbyMessage.playersInLobby;
-      }
+      locator<User>().inGamePlayerNumber = lobbyMessage.yourPlayerNum;
+      //setState here so that after every message, we update the your place in lobby
+      setState(() {
+        playerCount = lobbyMessage.playersInLobby;
+        yourPlaceInLobby = locator<User>().inGamePlayerNumber + 1;
+      });
     });
   }
 }

@@ -2,15 +2,13 @@ package com.anthonyOleinik.myApp.sockets;
 
 import com.anthonyOleinik.myApp.controller.GameController;
 import com.anthonyOleinik.myApp.entities.GameState.GameState;
+import com.anthonyOleinik.myApp.sockets.socketMessages.GameStateWrapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -22,7 +20,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
 public class GameSocketHandler extends TextWebSocketHandler {
-    List sessions = new CopyOnWriteArrayList<>();
+    List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
 
     @Autowired
     GameController game;
@@ -39,7 +37,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
                 //then pass it to wherever you need it to go.
                 //for example, you probably want to put it into a
                 //function, like handleGameState(gameStateWrapper.gameState);
-                game.HandlePacket(gameStateWrapper.state.getGameID(), gameStateWrapper.state);
+                game.HandlePacket(gameStateWrapper.getState().getGameID(), gameStateWrapper.getState());
             } catch (JsonParseException e){
                 //resends the message. this makes it
                 //so that any message other than a gamestate
