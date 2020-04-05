@@ -3,7 +3,7 @@ stages:
  - maventest
  - autodeploy
  - fluttertest
- - flutterbuild
+# - flutterbuild
 
 maven-build:
  stage: mavenbuild
@@ -62,6 +62,7 @@ flutter-test:
  script:
   - cd FrontEnd/risk/
   - flutter test
+  
   
 flutter-build:
  stage: flutterbuild
