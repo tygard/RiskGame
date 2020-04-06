@@ -18,6 +18,7 @@ class InGameUser {
   int genMoney;
   String userName;
   String faction;
+  int id;
   String role;
 
   InGameUser(
@@ -30,6 +31,7 @@ class InGameUser {
       @required this.genMoney,
       @required this.userName,
       @required this.faction,
+      @required this.id,
       @required this.role});
 
   factory InGameUser.fromJson(Map<String, dynamic> json) =>
