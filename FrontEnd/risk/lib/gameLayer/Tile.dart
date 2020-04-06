@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:risk/models/gameStateObjects/game.dart';
-import 'package:risk/src/utils/serviceProviders.dart';
 import 'globalVars.dart';
 
 
@@ -41,16 +39,19 @@ class _Tile extends State<Tile> {
 
   void graySelect() {
     setState(() {
-      if (color == turn || color == Colors.grey && selected != null) {
+      if (color == turn || color == Colors.grey && selected1 != null) {
         if (isSelected) {
-          if (selected != null) {
-            selected = null;
+          if (selected1 != null && selected1 == this) {
+            selected1 = null;
+          }
+          else if (selected2 != null && selected2 == this) {
+            selected2 = null;
           }
           isSelected = false;
         }
         else if (!isSelected) {
-          if (selected != null) {
-            if (selected.color != color) {
+          if (selected1 != null) {
+            if (selected1.color != color) {
               isSelected = true;
             }
           }
@@ -58,14 +59,12 @@ class _Tile extends State<Tile> {
             isSelected = true;
           }
         }
-        if (isSelected == true && selected == null) {
-          selected = this;
+        if (isSelected == true && selected1 == null) {
+          selected1 = this;
         }
-        else
-        if (selected != null && selected != this && selected.color != color) {
-          attack(this, selected);
-          turn = moveTurn(turn);
-          locator<GameState>().turn = ColorToNum(turn);
+        else if (selected1 != null && selected1 != this && selected2 == null && selected1.color != color)
+        {
+          selected2 = this;
         }
       }
     });

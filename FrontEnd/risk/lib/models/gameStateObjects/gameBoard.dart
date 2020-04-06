@@ -6,7 +6,7 @@ part 'gameBoard.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class GameBoard {
-  int dimensions = (new Random().nextInt(9) + 7);
+  int dimensions;
   List<Tile> tiles = new List();
 
   GameBoard(this.dimensions, this.tiles) {
