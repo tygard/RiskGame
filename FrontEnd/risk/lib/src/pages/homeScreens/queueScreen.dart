@@ -74,6 +74,7 @@ class _QueueScreenState extends State<QueueScreen> {
               Text(
                   "If you're a developer, you can click that cake button to move to the game screen."),
               Text("Otherwise, either wait or click the exit to leave."),
+
               Text("Players in queue: $playerCount / 4",
                   style: TextStyle(color: Colors.grey)),
               Text("Your place in queue: $yourPlaceInLobby",

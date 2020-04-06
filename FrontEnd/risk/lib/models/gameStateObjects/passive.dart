@@ -22,7 +22,7 @@ class Passive {
   int owner = -1;
   bool active = false;
   int passiveValue = 0;
-  int duration;
+  int duration; // not used, left in just in case it needs to be parsed for the gameState
   PassiveModifiers modifiedValue = PassiveModifiers.none;
 
   /**
@@ -33,13 +33,13 @@ class Passive {
    */
   Passive({int cost, int passiveValue, PassiveModifiers modifiedValue}) {
     if (cost == null) {
-      cost = new Random().nextInt(201) +
-          50; // random goes from 0 to max, exclusive
+      this.cost = new Random().nextInt(200) +
+          51; // random goes from 0 to max, exclusive
     } else {
       this.cost = cost;
     }
     if (passiveValue == null) {
-      passiveValue = new Random().nextInt(10) + 1;
+      this.passiveValue = new Random().nextInt(10) + 1;
     } else {
       this.passiveValue = passiveValue;
     }
@@ -48,25 +48,39 @@ class Passive {
     } else {
       this.modifiedValue = modifiedValue;
     }
+    this.active = false;
   }
 
   factory Passive.fromJson(Map<String, dynamic> json) =>
       _$PassiveFromJson(json);
   Map<String, dynamic> toJson() => _$PassiveToJson(this);
 
-  void setActive() {
-    active = true;
+  /**
+   * assigns an owner to a passive
+   */
+  void purchase(int owner) {
+    this.owner = owner;
+    this.active = true;
   }
 
-  void setInActive() {
-    active = false;
+  /**
+   * removes reference to this passive, return the cost
+   */
+  int sell() {
+    this.owner = null;
+    this.active = false;
+    return this.cost;
+  }
+
+  int getCost() {
+    return this.cost;
   }
 
   /**
    * returns active state of the passive object
    */
   bool isActive() {
-    return (active);
+    return this.active;
   }
 
   /**
@@ -119,7 +133,7 @@ class Passive {
         break;
 
       default:
-        return PassiveModifiers.defense; // this should never happen
+        return PassiveModifiers.none; // this should never happen
     }
   }
 }

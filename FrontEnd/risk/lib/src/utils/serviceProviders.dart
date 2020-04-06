@@ -7,9 +7,10 @@ import 'package:risk/src/utils/routeGenerator.dart';
 import 'package:risk/src/utils/socketManager.dart';
 
 import 'config/config.dart';
-import 'config/debugConfig.dart';
+import 'config/productionConfig.dart';
 
 GetIt locator = GetIt.I;
+
 
 void registerServices({bool production = false}){
   if (production){

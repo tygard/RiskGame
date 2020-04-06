@@ -19,6 +19,9 @@ class Tile {
   int power;
   int defense;
 
+  // actives that are applied to this tile
+  List<Active> activesList = List<Active>();
+
   //per turn generation of money or troop
   int moneyGeneration;
   int troopGeneration;
@@ -55,11 +58,68 @@ class Tile {
 
       default:
         this.power = 1;
-        this.power = 1;
+        this.defense = 1;
         this.moneyGeneration = locator<GameState>().tileGrowthPercent;
         this.troopGeneration = locator<GameState>().initArmyNum;
     }
   }
   factory Tile.fromJson(Map<String, dynamic> json) => _$TileFromJson(json);
   Map<String, dynamic> toJson() => _$TileToJson(this);
+
+  /**
+   * adds the Active a to this tiles activesList, assigns the actives tile property to this tile
+   */
+  void purchaseActive(Active a) {
+    a.pruchase(this);
+    this.activesList.add(a);
+  }
+
+  /**
+   * removes an Active a from this tiles activesList, removes the actives reference to its owning tile
+   * returns the cost of the active
+   * returns -1 if active did not belong to the tile
+   */
+  int sellActive(Active a) {
+    if (activesList.contains(a)) {
+      activesList.remove(a);
+      return a.sell();
+    }
+    return -1;
+  }
+
+
+  /**
+   * resets the attributes of this tile to their defaults, applies all of the current actives to the tile
+   */
+  void updateModifiers() {
+    switch (this.ownership) {
+      case -2:
+        {
+          this.power = 0;
+          this.defense = 0;
+          this.moneyGeneration = 0;
+          this.troopGeneration = 0;
+        }
+        break;
+
+      case -1:
+        {
+          this.power = 1;
+          this.defense = 1;
+          this.moneyGeneration = locator<GameState>().AITileGrowth;
+          this.troopGeneration = locator<GameState>().AITileGrowth;
+        }
+        break;
+
+      default:
+        this.power = 1;
+        this.defense = 1;
+        this.moneyGeneration = locator<GameState>().tileGrowthPercent;
+        this.troopGeneration = locator<GameState>().initArmyNum;
+    }
+    for (int i = 0; i < this.activesList.length; i++) {
+      this.defense += this.activesList.elementAt(i).defense;
+      this.power += this.activesList.elementAt(i).power;
+    }
+  }
 }

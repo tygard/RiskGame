@@ -30,7 +30,7 @@ class GameState {
   final int initArmyNum = 20;
 
   final int AITileGrowth = 5; //percent out of 100
-  final int initAINum = 5;
+  final int initAINum = 10;
 
     factory GameState.fromJson(Map<String, dynamic> json) => _$GameStateFromJson(json);
     Map<String, dynamic> toJson() => _$GameStateToJson(this);

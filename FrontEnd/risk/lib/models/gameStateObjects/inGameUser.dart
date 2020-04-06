@@ -3,7 +3,7 @@ import 'package:risk/models/gameStateObjects/game.dart';
 import 'package:risk/models/gameStateObjects/passive.dart';
 
 import 'package:json_annotation/json_annotation.dart';
-
+import 'package:risk/src/utils/serviceProviders.dart';
 
 part 'inGameUser.g.dart';
 
@@ -42,25 +42,16 @@ class InGameUser {
    * returns the status of wether the currPlayer in gameState can afford this passive
    */
   bool canAfford(Passive p) {
-    return (p.cost <= money);
+    return (p.getCost() <= money);
   }
 
   /**
    * purchases a passive object
    * applies the modifiers and sets the passives active status to true
    */
-  void purchasePassive(Passive p) {
+  void purchasePassive(Passive p, int currUser) {
     if (canAfford(p) && !p.isActive()) {
-      if (p.modifiedValue == PassiveModifiers.attack) {
-        // these apply to Tiles do nothing for now
-      } else if (p.modifiedValue == PassiveModifiers.defense) {
-        // these apply to Tiles do nothing for now
-      } else if (p.modifiedValue == PassiveModifiers.moneyGeneration) {
-        moneyMultiplier += p.passiveValue;
-      } else if (p.modifiedValue == PassiveModifiers.troopGeneration) {
-        troopMultiplier += p.passiveValue;
-      }
-      p.setActive();
+      p.purchase(currUser);
       ownedPassives.add(p);
     }
   }
@@ -68,20 +59,35 @@ class InGameUser {
 /**
  * sells a passive object
  * removes the modifiers from the user and sets the passive status to false
+ * returns -1 if the passive did not belong to this user
  */
-  void sellPassive(Passive p) {
-    if (p.isActive() && ownedPassives.contains(p)) {
-      if (p.modifiedValue == PassiveModifiers.attack) {
-        // these apply to Tiles do nothing for now
-      } else if (p.modifiedValue == PassiveModifiers.defense) {
-        // these apply to Tiles do nothing for now
-      } else if (p.modifiedValue == PassiveModifiers.moneyGeneration) {
-        moneyMultiplier -= p.passiveValue;
-      } else if (p.modifiedValue == PassiveModifiers.troopGeneration) {
-        troopMultiplier -= p.passiveValue;
-      }
-      p.setInActive();
+  int sellPassive(Passive p) {
+    if (ownedPassives.contains(p)) {
       ownedPassives.remove(p);
+      return p.sell();
+    }
+    return -1;
+  }
+
+  /**
+   * resets the current passiveModifiers applies the modifiers of the current ownedPassive objects to the inGameUser
+   */
+  void updateModifiers() {
+    this.moneyMultiplier = 0;
+    this.troopMultiplier = 0;
+    for (int i = 0; i < this.ownedPassives.length; i++) {
+      if (ownedPassives.elementAt(i).modifiedValue == PassiveModifiers.attack) {
+        // this applies to tiles not users, do nothing
+      } else if (ownedPassives.elementAt(i).modifiedValue ==
+          PassiveModifiers.defense) {
+        // this applies to tiles not users, do nothing
+      } else if (ownedPassives.elementAt(i).modifiedValue ==
+          PassiveModifiers.moneyGeneration) {
+        this.moneyMultiplier += ownedPassives.elementAt(i).passiveValue;
+      } else if (ownedPassives.elementAt(i).modifiedValue ==
+          PassiveModifiers.troopGeneration) {
+        this.troopMultiplier += ownedPassives.elementAt(i).passiveValue;
+      }
     }
   }
 }

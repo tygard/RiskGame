@@ -10,10 +10,61 @@ class SelectTeam extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-          child: SingleChildScrollView(child: Container(color: Colors.pink))
-        ),
-    );
+        body: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                new SizedBox(height: 60),
+                new TextField(
+                    obscureText: false,
+                    controller: myController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Enter Username',
+                    ),
+                ),
+                new ButtonBar(
+                    alignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      new MaterialButton(
+                        onPressed: () => _colorSelected("Red", context),
+                        child: new Text("Red", style: TextStyle(fontSize: 30)),
+                        color: Colors.red,
+                        height: 125,
+                        minWidth: 125,
+                      ),
+                      new MaterialButton(
+                        onPressed: () => _colorSelected(myController.text, context),
+                        child: new Text("Blue", style: TextStyle(fontSize: 30)),
+                        color: Colors.blue,
+                        height: 125,
+                        minWidth: 125,
+                      ),
+                      new MaterialButton(
+                        onPressed: () => _colorSelected(myController.text, context),
+                        child: new Text("Green", style: TextStyle(fontSize: 30)),
+                        color: Colors.green,
+                        height: 125,
+                        minWidth: 125,
+                      ),
+                      new MaterialButton(
+                        onPressed: () => _colorSelected(myController.text, context),
+                        
+                        child: new Text("Yellow", style: TextStyle(fontSize: 30)),
+                        color: Colors.yellow,
+                        height: 125,
+                        minWidth: 125,
+                      ),
+                    ],
+                ),
+              ],
+            ),
+          ),
+                  ),
+        ));
   }
 
   void _colorSelected(String color, BuildContext context) async {
