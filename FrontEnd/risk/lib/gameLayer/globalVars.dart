@@ -1,6 +1,8 @@
 library globals;
 
 import 'package:flutter/material.dart';
+import 'package:risk/models/gameStateObjects/gameState.dart';
+import 'package:risk/src/utils/serviceProviders.dart';
 
 var selected1;
 var selected2;
@@ -28,6 +30,7 @@ void attack(var button1, var button2) {
   selected1 = null;
   selected2 = null;
   turn = moveTurn(turn);
+  locator<GameState>().turn = ColorToNum(turn);
 }
 
 Color moveTurn(Color turn) {

@@ -14,7 +14,6 @@ class GameBoard extends StatefulWidget {
   GameBoard({Key key, this.title}) : super(key: key);
   final String title;
   static int dimensions = new Random().nextInt(9) + 7;
-
   @override
   _GameBoard createState() => _GameBoard();
 }
@@ -26,12 +25,11 @@ class _GameBoard extends State<GameBoard> {
     gb.GameBoard board = locator<GameState>().board;
     if (board == null) {
       int dim = GameBoard.dimensions;
-      debugPrint(dim.toString());
       List<t.Tile> tiles = new List();
-      int count = 0;
-      for (int i = 0; i < dim; i++) {
+      for (int i = 0; i < dim * dim; i++) {
         for (int j = 0; j < dim; j++) {
           t.Tile tile = new t.Tile(i, j);
+          tile.ownership = -1;
           tile.power = 10;
           if (i == 0 && j == 0)
           {
@@ -43,23 +41,22 @@ class _GameBoard extends State<GameBoard> {
           {
             tile.ownership = 3;
             tile.power = 20;
-            debugPrint(count.toString());
             tiles.add(tile);
           }
           else if (i == 0 && j == dim - 1)
           {
             tile.ownership = 2;
             tile.power = 20;
-            debugPrint(count.toString());
             tiles.add(tile);
           }
           else if (i == dim - 1 && j == dim - 1)
           {
             tile.ownership = 1;
-            debugPrint(count.toString());
             tiles.add(tile);
           }
-          count++;
+          else {
+            tiles.add(tile);
+          }
         }
       }
       locator<GameState>().board = gb.GameBoard(dim, tiles);
@@ -74,6 +71,7 @@ class _GameBoard extends State<GameBoard> {
   void initState() {
     createBoard();
     tiles = locator<GameState>().board.tiles;
+    locator<GameState>().turn = 0;
   }
 
   //Add array object
@@ -92,13 +90,12 @@ class _GameBoard extends State<GameBoard> {
               return new Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: new List.generate(locator<GameState>().board.dimensions, (int j) {
-                  //debugPrint(i.toString() + " " + j.toString());
                   if (tiles[i * locator<GameState>().board.dimensions + j].ownership != -1)
                   {
-                    return Tile(updateBoard, NumToColor(tiles[i+j].ownership), 20, i, j);
+                    return Tile(updateBoard, NumToColor(tiles[i * locator<GameState>().board.dimensions + j].ownership), locator<GameState>().initArmyNum, i, j);
                   }
                   else
-                    return Tile(updateBoard, Colors.grey, 10, i, j);
+                    return Tile(updateBoard, Colors.grey, locator<GameState>().initAINum, i, j);
                 }),
               );
             },
