@@ -2,6 +2,7 @@ package com.anthonyOleinik.myApp.sockets;
 
 import com.anthonyOleinik.myApp.controller.GameController;
 import com.anthonyOleinik.myApp.entities.GameState.GameState;
+import com.anthonyOleinik.myApp.entities.GameState.InGameUser;
 import com.anthonyOleinik.myApp.sockets.socketMessages.LobbyMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -44,6 +45,7 @@ public class LobbySocketHandler extends TextWebSocketHandler {
         int numPlayersInLobby = sessionToLobbyNum.size();
         sessionToLobbyNum.add(numPlayersInLobby);
         sessions.add(session);
+        game.waitingPlayers.add(GSON.fromJson(session.getHandshakeHeaders().get("player").toString(), InGameUser.class));
         playerCountUpdated();
         //+ 1  cause we just added one
         System.out.println("Player joined. new num of players in lobby: " + (numPlayersInLobby + 1));
