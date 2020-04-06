@@ -31,10 +31,7 @@ class ButtonStack extends StatelessWidget {
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => PassivesScreen()));
             },
-            child: Text(
-              "\$",
-              textScaleFactor: 2.0,
-            ),
+            child: Icon(Icons.attach_money),
           ),
         ),
         Padding(

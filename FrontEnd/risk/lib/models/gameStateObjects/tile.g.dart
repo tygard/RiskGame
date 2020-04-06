@@ -16,7 +16,10 @@ Tile _$TileFromJson(Map<String, dynamic> json) {
     defense: json['defense'] as int,
     moneyGeneration: json['moneyGeneration'] as int,
     troopGeneration: json['troopGeneration'] as int,
-  );
+  )..activesList = (json['activesList'] as List)
+      ?.map(
+          (e) => e == null ? null : Active.fromJson(e as Map<String, dynamic>))
+      ?.toList();
 }
 
 Map<String, dynamic> _$TileToJson(Tile instance) => <String, dynamic>{
@@ -26,6 +29,7 @@ Map<String, dynamic> _$TileToJson(Tile instance) => <String, dynamic>{
       'troops': instance.troops,
       'power': instance.power,
       'defense': instance.defense,
+      'activesList': instance.activesList?.map((e) => e?.toJson())?.toList(),
       'moneyGeneration': instance.moneyGeneration,
       'troopGeneration': instance.troopGeneration,
     };
