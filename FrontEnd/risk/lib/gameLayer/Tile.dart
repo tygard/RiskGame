@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:risk/models/gameStateObjects/game.dart';
-import 'package:risk/src/utils/serviceProviders.dart';
 import 'globalVars.dart';
 
 

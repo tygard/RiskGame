@@ -49,7 +49,7 @@ class ButtonStack extends StatelessWidget {
                 else {
                   isTurnOver = true;
                   attack(selected1, selected2);
-                  turn = moveTurn(turn);
+                  ;
                 }
               },
               backgroundColor: Colors.red,
