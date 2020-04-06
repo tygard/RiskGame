@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:risk/gameLayer/globalVars.dart';
 import 'package:risk/models/gameStateObjects/active.dart';
 import 'package:risk/models/gameStateObjects/passive.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
@@ -24,6 +25,8 @@ class PassivesScreen extends StatefulWidget {
     if (this.selectedTile != null) {
       this.activesList = selectedTile.activesList;
     }
+
+    this.selectedTile = new Tile(1, 2);
 
     /*  ---------------------------------------------------------------------------------------
     FOR TESTING: the following expression is commented out bc the server is not currently running
@@ -95,8 +98,8 @@ class _PassivesScreenState extends State<PassivesScreen> {
             ),
           ),
           body: TabBarView(children: [
-            _createModifierList(widget.passivesList),
-            _createModifierList(widget.activesList),
+            _createPassivesList(widget.passivesList),
+            _createActivesList(widget.activesList),
           ]),
         ),
       ),
@@ -104,36 +107,95 @@ class _PassivesScreenState extends State<PassivesScreen> {
   }
 
   /**
-   * creates a list of modifiers to be displayed to the user
-   * if there is no selected tile and this list is for the active objects
-   * display a message to select a tile to view actives
+   * creates a list of passives to be displayed to the user
    */
-  Widget _createModifierList(mList) {
-    String itemType;
-    if (mList[0].runtimeType == Active) {
-      itemType = "Actives";
-      if (widget.selectedTile == null) {
-        return Center(
-          child: Text("Select a Tile from the Gameboard to view actives"),
-        );
-      }
-    } else if (mList[0].runtimeType == Passive) {
-      itemType = "Passives";
-    }
+  Widget _createPassivesList(List<Passive> mList) {
     return Container(
       alignment: Alignment.bottomLeft,
       child: ListView.builder(
-        itemCount: mList.length,
+        itemCount: mList.length + 1,
         itemBuilder: (context, index) {
+          if (index == 0) {
+            return new Column(
+              children: <Widget>[
+                Text(
+                  "\nCurrent User Stats: ",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+/*                 Text(
+                  "Troop Generation: ${locator<GameState>().users[locator<GameState>().currPlayer].genTroops}, " +
+                      "Money Generation: ${locator<GameState>().users[locator<GameState>().currPlayer].genMoney}, ",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                )
+                --------- locator is still throwing error, uncomment when working */
+              ],
+            );
+          }
+          index -= 1;
           return ListTile(
             leading: Icon(Icons.description),
             enabled: !mList[index].isActive(),
-            title: Text("$itemType $index"),
+            title: Text("Passive $index"),
             subtitle: Text(mList[index].toString()),
             trailing: FlatButton(
               child: Text(_buttonString(mList[index])),
               clipBehavior: Clip.antiAlias,
-              autofocus: true,
+              autofocus: false,
+              color: _modifierButtonColor(mList[index]),
+              onPressed: () => purchasePassive(mList[index]),
+              shape: RoundedRectangleBorder(),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  /**
+   * creates a list of actives to be displayed to the user
+   * if there is no selected tile and this list is for the active objects
+   * display a message to select a tile to view actives
+   */
+  Widget _createActivesList(List<Active> mList) {
+    if (widget.selectedTile == null) {
+      return Center(
+        child: Text("Select a Tile on the Gameboard to view Actives"),
+      );
+    }
+    return Container(
+      alignment: Alignment.bottomLeft,
+      child: ListView.builder(
+        itemCount: mList.length + 1,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return new Column(
+              children: <Widget>[
+                Text(
+                  "\nCurrent Tile Stats: ",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "X: ${widget.selectedTile.x}, Y: ${widget.selectedTile.y}, " +
+                      "Power: ${widget.selectedTile.power}, Defense: ${widget.selectedTile.defense}\n",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                )
+              ],
+            );
+          }
+          index -= 1;
+          return ListTile(
+            leading: Icon(Icons.description),
+            enabled: !mList[index].isActive(),
+            title: Text("Active $index"),
+            subtitle: Text(mList[index].toString()),
+            trailing: FlatButton(
+              child: Text(_buttonString(mList[index])),
+              clipBehavior: Clip.antiAlias,
+              autofocus: false,
               color: _modifierButtonColor(mList[index]),
               onPressed: () =>
                   purchaseActive(mList[index], widget.selectedTile),
@@ -145,7 +207,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
     );
   }
 
-  String _buttonString(listItem) {
+  String _buttonString(dynamic listItem) {
     if (!listItem.isActive()) {
       return "Buy";
     } else if (listItem.isActive()) {
@@ -154,7 +216,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
     return "Error";
   }
 
-  Color _modifierButtonColor(listItem) {
+  Color _modifierButtonColor(dynamic listItem) {
     // if the passive isnt active and the current user has more money than the cost of the passive
 
     /*  ---------------------------------------------------------------------------------------
