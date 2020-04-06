@@ -8,12 +8,7 @@ import 'package:risk/src/utils/serviceProviders.dart';
 
 import '../../../models/gameStateObjects/game.dart';
 
-class PassivesScreen extends StatefulWidget {
-  Tile selectedTile;
-
-  List<Passive> passivesList = List<Passive>();
-  List<Active> activesList = List<Active>();
-  /**
+/**
    * a passives screen takes an optional tile parameter
    * it displays 5 randomly generated passive objects under the passives tab
    * along with any passives that the current user owns
@@ -21,38 +16,51 @@ class PassivesScreen extends StatefulWidget {
    * if given a selectedTile then 5 random actives and the actives owned by
    * that tile are displayed under the actives tab
    */
-  PassivesScreen({this.selectedTile}) {
-    if (this.selectedTile != null) {
-      this.activesList = selectedTile.activesList;
-    }
+class PassivesScreen extends StatefulWidget {
+  final Tile selectedTile;
 
-    this.selectedTile = new Tile(1, 2);
-
-    /*  ---------------------------------------------------------------------------------------
-    FOR TESTING: the following expression is commented out bc the server is not currently running
-    --------------------------------------------------------------------------------------- */
-    //passivesList += locator<GameState>().users[locator<GameState>().currPlayer].ownedPassives;
-
-    // generate 5 random actives and passives to their respective
-    for (int i = 0; i < 5; i++) {
-      activesList.add(new Active());
-      passivesList.add(new Passive());
-    }
-  }
+  PassivesScreen({this.selectedTile});
 
   @override
-  _PassivesScreenState createState() => _PassivesScreenState();
+  _PassivesScreenState createState() => _PassivesScreenState(this.selectedTile);
 }
 
 class _PassivesScreenState extends State<PassivesScreen> {
+  Tile sTile;
+  List<Passive> passivesList = List<Passive>();
+  List<Active> activesList = List<Active>();
+  GameState gs;
+  InGameUser u;
+
+  _PassivesScreenState(this.sTile);
+
+  @override
+  void initState() {
+    // if the gameState is null there will be nothing to base this screen around
+    if (locator<GameState>().users.length != 0) {
+      print("$locator<GameState>()");
+      if (sTile != null) {
+        activesList = sTile.activesList;
+      }
+      gs = locator<GameState>();
+      passivesList = gs.users.elementAt(gs.currPlayer).ownedPassives;
+
+      // generate 5 random actives and passives to their respective lists
+      for (int i = 0; i < 5; i++) {
+        activesList.add(new Active());
+        passivesList.add(new Passive());
+      }
+    }
+  }
+
   /**
    * calls this users purchasePassive function with the Passive p
    */
   void purchasePassive(Passive p) {
     setState(() {
-      /* locator<GameState>()
+      locator<GameState>()
           .users[locator<GameState>().currPlayer]
-          .purchasePassive(p, locator<GameState>().currPlayer); */
+          .purchasePassive(p, locator<GameState>().currPlayer);
     });
   }
 
@@ -61,11 +69,11 @@ class _PassivesScreenState extends State<PassivesScreen> {
  */
   void purchaseActive(Active a, Tile selTile) {
     setState(() {
-/*       for (int i = 0; i < locator<GameState>().board.tiles.length; i ++){
-        if (locator<GameState>().board.tiles.elementAt(i) == selTile){
+      for (int i = 0; i < locator<GameState>().board.tiles.length; i++) {
+        if (locator<GameState>().board.tiles.elementAt(i) == selTile) {
           locator<GameState>().board.tiles.elementAt(i).purchaseActive(a);
         }
-      } */
+      }
     });
   }
 
@@ -98,8 +106,8 @@ class _PassivesScreenState extends State<PassivesScreen> {
             ),
           ),
           body: TabBarView(children: [
-            _createPassivesList(widget.passivesList),
-            _createActivesList(widget.activesList),
+            _createPassivesList(passivesList),
+            _createActivesList(activesList),
           ]),
         ),
       ),
@@ -110,6 +118,11 @@ class _PassivesScreenState extends State<PassivesScreen> {
    * creates a list of passives to be displayed to the user
    */
   Widget _createPassivesList(List<Passive> mList) {
+    if (locator<GameState>().users.length == 0) {
+      return Center(
+        child: Text("GameState was not initialized properly, no users exist"),
+      );
+    }
     return Container(
       alignment: Alignment.bottomLeft,
       child: ListView.builder(
@@ -122,14 +135,13 @@ class _PassivesScreenState extends State<PassivesScreen> {
                   "\nCurrent User Stats: ",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-/*                 Text(
+                Text(
                   "Troop Generation: ${locator<GameState>().users[locator<GameState>().currPlayer].genTroops}, " +
                       "Money Generation: ${locator<GameState>().users[locator<GameState>().currPlayer].genMoney}, ",
                   style: TextStyle(
                     fontSize: 14,
                   ),
                 )
-                --------- locator is still throwing error, uncomment when working */
               ],
             );
           }
@@ -159,7 +171,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
    * display a message to select a tile to view actives
    */
   Widget _createActivesList(List<Active> mList) {
-    if (widget.selectedTile == null) {
+    if (sTile == null) {
       return Center(
         child: Text("Select a Tile on the Gameboard to view Actives"),
       );
@@ -177,8 +189,8 @@ class _PassivesScreenState extends State<PassivesScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "X: ${widget.selectedTile.x}, Y: ${widget.selectedTile.y}, " +
-                      "Power: ${widget.selectedTile.power}, Defense: ${widget.selectedTile.defense}\n",
+                  "X: ${sTile.x}, Y: ${sTile.y}, " +
+                      "Power: ${sTile.power}, Defense: ${sTile.defense}\n",
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -197,8 +209,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
               clipBehavior: Clip.antiAlias,
               autofocus: false,
               color: _modifierButtonColor(mList[index]),
-              onPressed: () =>
-                  purchaseActive(mList[index], widget.selectedTile),
+              onPressed: () => purchaseActive(mList[index], sTile),
               shape: RoundedRectangleBorder(),
             ),
           );
