@@ -36,9 +36,8 @@ class _PassivesScreenState extends State<PassivesScreen> {
 
   @override
   void initState() {
-    // if the gameState is null there will be nothing to base this screen around
+    // if the number of users is 0 there will be nothing to base this screen around
     if (locator<GameState>().users.length != 0) {
-      print("$locator<GameState>()");
       if (sTile != null) {
         activesList = sTile.activesList;
       }
@@ -120,7 +119,8 @@ class _PassivesScreenState extends State<PassivesScreen> {
   Widget _createPassivesList(List<Passive> mList) {
     if (locator<GameState>().users.length == 0) {
       return Center(
-        child: Text("GameState was not initialized properly, no users exist"),
+        child: Text("GameState was not initialized properly, no users exist\n" +
+            "Users = ${locator<GameState>().users}\tCurrplayer = ${locator<GameState>().currPlayer}"),
       );
     }
     return Container(
