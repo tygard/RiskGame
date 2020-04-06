@@ -23,6 +23,7 @@ InGameUser _$InGameUserFromJson(Map<String, dynamic> json) {
     genMoney: json['genMoney'] as int,
     userName: json['userName'] as String,
     faction: json['faction'] as String,
+    id: json['id'] as int,
     role: json['role'] as String,
   );
 }
@@ -39,5 +40,6 @@ Map<String, dynamic> _$InGameUserToJson(InGameUser instance) =>
       'genMoney': instance.genMoney,
       'userName': instance.userName,
       'faction': instance.faction,
+      'id': instance.id,
       'role': instance.role,
     };
