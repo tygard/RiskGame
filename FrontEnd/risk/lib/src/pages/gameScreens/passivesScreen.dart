@@ -25,6 +25,12 @@ class PassivesScreen extends StatefulWidget {
       this.activesList = selectedTile.activesList;
     }
 
+    /*  ---------------------------------------------------------------------------------------
+    FOR TESTING: the following expression is commented out bc the server is not currently running
+    --------------------------------------------------------------------------------------- */
+    //passivesList += locator<GameState>().users[locator<GameState>().currPlayer].ownedPassives;
+
+    // generate 5 random actives and passives to their respective
     for (int i = 0; i < 5; i++) {
       activesList.add(new Active());
       passivesList.add(new Passive());
@@ -41,9 +47,9 @@ class _PassivesScreenState extends State<PassivesScreen> {
    */
   void purchasePassive(Passive p) {
     setState(() {
-      locator<GameState>()
+      /* locator<GameState>()
           .users[locator<GameState>().currPlayer]
-          .purchasePassive(p, locator<GameState>().currPlayer);
+          .purchasePassive(p, locator<GameState>().currPlayer); */
     });
   }
 
@@ -52,11 +58,11 @@ class _PassivesScreenState extends State<PassivesScreen> {
  */
   void purchaseActive(Active a, Tile selTile) {
     setState(() {
-      for (int i = 0; i < locator<GameState>().board.tiles.length; i ++){
+/*       for (int i = 0; i < locator<GameState>().board.tiles.length; i ++){
         if (locator<GameState>().board.tiles.elementAt(i) == selTile){
           locator<GameState>().board.tiles.elementAt(i).purchaseActive(a);
         }
-      }
+      } */
     });
   }
 
@@ -108,7 +114,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
       itemType = "Actives";
       if (widget.selectedTile == null) {
         return Center(
-          child: Text("Select a tile from the Game Board to view actives"),
+          child: Text("Select a Tile from the Gameboard to view actives"),
         );
       }
     } else if (mList[0].runtimeType == Passive) {
@@ -129,7 +135,8 @@ class _PassivesScreenState extends State<PassivesScreen> {
               clipBehavior: Clip.antiAlias,
               autofocus: true,
               color: _modifierButtonColor(mList[index]),
-              onPressed: () => purchaseActive(mList[index], widget.selectedTile),
+              onPressed: () =>
+                  purchaseActive(mList[index], widget.selectedTile),
               shape: RoundedRectangleBorder(),
             ),
           );
@@ -138,13 +145,13 @@ class _PassivesScreenState extends State<PassivesScreen> {
     );
   }
 
-  String _buttonString(listItem){
-    if (!listItem.isActive()){
+  String _buttonString(listItem) {
+    if (!listItem.isActive()) {
       return "Buy";
-    } else if (listItem.isActive()){
+    } else if (listItem.isActive()) {
       return "Owned";
     }
-
+    return "Error";
   }
 
   Color _modifierButtonColor(listItem) {
