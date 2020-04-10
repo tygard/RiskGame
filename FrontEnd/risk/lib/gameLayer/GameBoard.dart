@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:risk/gameLayer/Tile.dart';
 import 'package:risk/gameLayer/globalVars.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
@@ -10,22 +11,26 @@ import 'package:risk/models/gameStateObjects/gameBoard.dart' as gb;
 import 'package:risk/models/gameStateObjects/tile.dart' as t;
 import 'Tile.dart';
 
+
 class GameBoard extends StatefulWidget {
   GameBoard({Key key, this.title}) : super(key: key);
   final String title;
   static int dimensions = new Random().nextInt(9) + 7;
+  List<t.Tile> tiles;
   @override
   _GameBoard createState() => _GameBoard();
 }
 
 class _GameBoard extends State<GameBoard> {
-  List<t.Tile> tiles;
+  GameBoardViewModel game;
+
+  _GameBoard({this.game});
 
   void createBoard() {
     gb.GameBoard board = locator<GameState>().board;
     if (board == null) {
       int dim = GameBoard.dimensions;
-      List<t.Tile> tiles = new List();
+      widget.tiles = new List();
       for (int i = 0; i < dim * dim; i++) {
         for (int j = 0; j < dim; j++) {
           t.Tile tile = new t.Tile(i, j);
@@ -35,44 +40,53 @@ class _GameBoard extends State<GameBoard> {
           {
             tile.ownership = 0;
             tile.power = 20;
-            tiles.add(tile);
+            widget.tiles.add(tile);
           }
           else if (i == dim - 1 && j == 0)
           {
             tile.ownership = 3;
             tile.power = 20;
-            tiles.add(tile);
+            widget.tiles.add(tile);
           }
           else if (i == 0 && j == dim - 1)
           {
             tile.ownership = 2;
             tile.power = 20;
-            tiles.add(tile);
+            widget.tiles.add(tile);
           }
           else if (i == dim - 1 && j == dim - 1)
           {
             tile.ownership = 1;
-            tiles.add(tile);
+            widget.tiles.add(tile);
           }
           else {
-            tiles.add(tile);
+            widget.tiles.add(tile);
           }
         }
       }
-      locator<GameState>().board = gb.GameBoard(dim, tiles);
+      locator<GameState>().board = gb.GameBoard(dim, widget.tiles);
     }
   }
 
   void updateBoard() {
+    //Provider.of<GameBoardViewModel>(context, listen: true).getGameBoard();
     setState(() {});
   }
 
   @override
   void initState() {
-    createBoard();
-    tiles = locator<GameState>().board.tiles;
-    locator<GameState>().turn = 0;
+    if (game == null)
+      {
+        createBoard();
+        widget.tiles = locator<GameState>().board.tiles;
+        locator<GameState>().turn = 0;
+      }
+    else{
+      Provider.of<GameBoardViewModel>(context, listen: true).getGameBoard();
+    }
+
   }
+
 
   //Add array object
   Widget build(BuildContext context) {
@@ -90,9 +104,9 @@ class _GameBoard extends State<GameBoard> {
               return new Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: new List.generate(locator<GameState>().board.dimensions, (int j) {
-                  if (tiles[i * locator<GameState>().board.dimensions + j].ownership != -1)
+                  if (widget.tiles[i * locator<GameState>().board.dimensions + j].ownership != -1)
                   {
-                    return Tile(updateBoard, NumToColor(tiles[i * locator<GameState>().board.dimensions + j].ownership), locator<GameState>().initArmyNum, i, j);
+                    return Tile(updateBoard, NumToColor(widget.tiles[i * locator<GameState>().board.dimensions + j].ownership), locator<GameState>().initArmyNum, i, j);
                   }
                   else
                     return Tile(updateBoard, Colors.grey, locator<GameState>().initAINum, i, j);
@@ -103,5 +117,17 @@ class _GameBoard extends State<GameBoard> {
         ),
       ),
     );
+  }
+}
+
+class GameBoardViewModel extends ChangeNotifier{
+
+  GameBoard game;
+  GameBoardViewModel({this.game});
+  Future<void> getGameBoard()
+  {
+    game.tiles = locator<GameState>().board.tiles;
+    GameBoard.dimensions = locator<GameState>().board.dimensions;
+    notifyListeners();
   }
 }
