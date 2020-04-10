@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
 
+var selectedTile;
 var selected1;
 var selected2;
 Color turn = Colors.red;
@@ -68,5 +69,4 @@ Color NumToColor(int num) {
   if (num == 1) return Colors.yellow;
   if (num == 2) return Colors.green;
   if (num == 3) return Colors.blue;
-
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:risk/gameLayer/globalVars.dart';
 import 'package:risk/models/gameStateObjects/active.dart';
 import 'package:risk/models/gameStateObjects/passive.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
-
-import '../../../models/gameStateObjects/game.dart';
+import 'package:risk/gameLayer/globalVars.dart';
+import 'package:risk/gameLayer/Tile.dart' as _TileState;
+import 'package:risk/models/gameStateObjects/tile.dart' as tileObject;
 
 /**
    * a passives screen takes an optional tile parameter
@@ -17,37 +17,66 @@ import '../../../models/gameStateObjects/game.dart';
    * that tile are displayed under the actives tab
    */
 class PassivesScreen extends StatefulWidget {
-  final Tile selectedTile;
-
-  PassivesScreen({this.selectedTile});
+  PassivesScreen();
 
   @override
-  _PassivesScreenState createState() => _PassivesScreenState(this.selectedTile);
+  _PassivesScreenState createState() => _PassivesScreenState();
 }
 
 class _PassivesScreenState extends State<PassivesScreen> {
-  Tile sTile;
   List<Passive> passivesList = List<Passive>();
   List<Active> activesList = List<Active>();
-  GameState gs;
-  InGameUser u;
-
-  _PassivesScreenState(this.sTile);
+  _TileState.Tile prevtWidget;
+  _TileState.Tile tWidget;
+  tileObject.Tile sTile;
 
   @override
   void initState() {
-    // if the number of users is 0 there will be nothing to base this screen around
-    if (locator<GameState>().users.length != 0) {
-      if (sTile != null) {
-        activesList = sTile.activesList;
-      }
-      gs = locator<GameState>();
-      passivesList = gs.users.elementAt(gs.currPlayer).ownedPassives;
+    // ---- still doesn't handle a widget being unselected but otherwise tile selection works
 
-      // generate 5 random actives and passives to their respective lists
+    // if the previous widget that opened the passiveScreen is the same as the current widget, keep the same state
+    // if the previous widget is not the same as the current widget, reset the state of the passivesScreen
+    if (prevtWidget == null) {
+      prevtWidget = tWidget;
+    } else if (prevtWidget != tWidget) {
+      widget.createState();
+    }
+
+    // if the number of users is 0 there will be nothing to base the passives tab around
+    if (locator<GameState>().users.length != 0) {
+      passivesList = locator<GameState>()
+          .users
+          .elementAt(locator<GameState>().currPlayer)
+          .ownedPassives;
+
+      // generate 5 random passives to their respective lists
+      for (int i = 0; i < 5; i++) {
+        passivesList.add(new Passive());
+      }
+    }
+    //--------------FOR TESTING-------------
+    // widget.sTile = new Tile(5, 5);
+    // widget.sTile.purchaseActive(new Active());
+    //--------------------------------------
+
+    tWidget = selectedTile;
+    // if there is a tile widget where tileState = selected, find the tileObject that is represented by that tile widget
+    if (tWidget != null) {
+      loop:
+      for (int i = 0; i < locator<GameState>().board.tiles.length; i++) {
+        if (locator<GameState>().board.tiles.elementAt(i).x == tWidget.x &&
+            locator<GameState>().board.tiles.elementAt(i).y == tWidget.y) {
+          sTile = locator<GameState>().board.tiles.elementAt(i);
+          break loop;
+        }
+      }
+    }
+    if (sTile != null) {
+      activesList = sTile.activesList;
+
+      // generate 5 random actives to their respective lists
       for (int i = 0; i < 5; i++) {
         activesList.add(new Active());
-        passivesList.add(new Passive());
       }
     }
   }
@@ -58,7 +87,8 @@ class _PassivesScreenState extends State<PassivesScreen> {
   void purchasePassive(Passive p) {
     setState(() {
       locator<GameState>()
-          .users[locator<GameState>().currPlayer]
+          .users
+          .elementAt(locator<GameState>().currPlayer)
           .purchasePassive(p, locator<GameState>().currPlayer);
     });
   }
@@ -66,7 +96,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
 /**
  * calls the chosen tiles purchase 
  */
-  void purchaseActive(Active a, Tile selTile) {
+  void purchaseActive(Active a, tileObject.Tile selTile) {
     setState(() {
       for (int i = 0; i < locator<GameState>().board.tiles.length; i++) {
         if (locator<GameState>().board.tiles.elementAt(i) == selTile) {
