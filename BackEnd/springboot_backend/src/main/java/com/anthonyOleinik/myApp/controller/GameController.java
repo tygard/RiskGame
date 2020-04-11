@@ -131,6 +131,7 @@ public class GameController {
         //ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
         List<InGameUser> tmp = new ArrayList<InGameUser>(waitingPlayers.subList(0, gameSize));
+
         for(int i = 0; i < tmp.size() ;i++){
             tmp.get(i).setTurnID(i);
         }

@@ -82,7 +82,7 @@ public class LobbySocketHandler extends TextWebSocketHandler {
     }
 
     private void sendGameState() throws IOException {
-            //TODO: FIGURE OUT HOW we generate the gamestate, and send the 4 players the gamestate.
+            //TODO: FIGURE OUT HOW we generate the gamestate, and send the X players the gamestate.
             //GET THE GAMESTATE HERE!!!
             //Adds game from
             GameState gameState = await(game.AddGame());
