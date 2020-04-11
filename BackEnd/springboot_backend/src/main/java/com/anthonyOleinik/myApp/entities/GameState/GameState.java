@@ -1,9 +1,10 @@
 package com.anthonyOleinik.myApp.entities.GameState;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameState {
-    private List<InGameUser> users;
+    private List<InGameUser> users = new ArrayList<>();
     private GameBoard board;
     private String gameID;
 
@@ -55,6 +56,16 @@ public class GameState {
     public String getGameID() {
         return gameID;
     }
+    public int getInitTroop() {
+        return initTroop;
+    }
+    public int getInitTroopGen() {
+        return initTroopGen;
+    }
+
+    public int getInitMoneyGen() {
+        return initMoneyGen;
+    }
 
     public void setBoard(GameBoard board) {
         this.board = board;
@@ -75,5 +86,6 @@ public class GameState {
     public void setCurrPlayer(int currPlayer) {
         this.currPlayer = currPlayer;
     }
+
 }
 
