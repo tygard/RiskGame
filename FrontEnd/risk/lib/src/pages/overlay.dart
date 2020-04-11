@@ -4,13 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:risk/models/freezedClasses/chat.dart';
-import 'package:risk/src/utils/config/config.dart';
+import 'package:risk/models/gameStateObjects/inGameUser.dart';
 import 'package:risk/src/utils/providers/globalsProvider.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
 import 'package:risk/src/utils/socketManager.dart';
 import 'package:risk/src/widgets/buttonStack.dart';
-import 'package:web_socket_channel/io.dart';
-
 import '../../models/freezedClasses/user.dart';
 
 class RiskOverlay extends StatefulWidget {
@@ -27,9 +25,15 @@ class _RiskOverlayState extends State<RiskOverlay> {
   TextEditingController _textController;
   ScrollController _scrollController;
   List<Chat> chats;
+  SocketManager sm;
 
   @override
   void initState() {
+    sm = SocketManager(headers: {
+      "player": json.encode(InGameUser(
+          id: locator<User>().inGamePlayerNumber,
+          userName: locator<User>().email)),
+    });
     _beginListeningToChat();
     _textController = TextEditingController();
     _scrollController = ScrollController(initialScrollOffset: 0);
@@ -61,7 +65,7 @@ class _RiskOverlayState extends State<RiskOverlay> {
                 alignment: Alignment.topRight,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child:  ButtonStack(),
+                  child: ButtonStack(),
                 )),
           )
         ],
@@ -126,8 +130,9 @@ class _RiskOverlayState extends State<RiskOverlay> {
 
   void _sendChat(String message) {
     _textController.clear();
-    Chat chat = Chat(GlobalsProvider.of(context).user.name, message, DateFormat('EEE, h:mm a').format(DateTime.now()));
-    locator<SocketManager>().sendChat(chat);
+    Chat chat = Chat(GlobalsProvider.of(context).user.name, message,
+        DateFormat('EEE, h:mm a').format(DateTime.now()));
+    sm.sendChat(chat);
   }
 
   void _addItem(Chat chat) async {
@@ -147,8 +152,8 @@ class _RiskOverlayState extends State<RiskOverlay> {
   }
 
   void _beginListeningToChat() {
-    locator<SocketManager>().chatDelegator().listen((chat) {
-      if (chat.name == locator<User>().name){
+    sm.chatDelegator().listen((chat) {
+      if (chat.name == locator<User>().name) {
         chat.name = locator<User>().name;
         _addItem(chat);
       }
