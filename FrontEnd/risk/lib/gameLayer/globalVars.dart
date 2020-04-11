@@ -25,6 +25,9 @@ void attack(var button1, var button2) {
     button2.color = button1.color;
     button2.armyNum = 5;
   }
+  //Needs testing
+  locator<GameState>().board.tiles[button1.widget.x * locator<GameState>().board.dimensions + button1.widget.y].power = button1.armyNum;
+  locator<GameState>().board.tiles[button2.widget.x * locator<GameState>().board.dimensions + button2.widget.y].power = button2.armyNum;
   button1.widget.update();
   button2.widget.update();
   selected1 = null;
