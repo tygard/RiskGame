@@ -1,8 +1,6 @@
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:risk/gameLayer/Tile.dart';
 import 'package:risk/gameLayer/globalVars.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
@@ -15,76 +13,52 @@ import 'Tile.dart';
 class GameBoard extends StatefulWidget {
   GameBoard({Key key, this.title}) : super(key: key);
   final String title;
-  static int dimensions = new Random().nextInt(9) + 7;
-  List<t.Tile> tiles;
+  int dimensions = new Random().nextInt(9) + 7;
+
+  ValueNotifier<GameState> gameState = ValueNotifier(locator<GameState>());
+  gb.GameBoard board = locator<GameState>().board;
   @override
   _GameBoard createState() => _GameBoard();
 }
 
 class _GameBoard extends State<GameBoard> {
-  GameBoardViewModel game;
-
-  _GameBoard({this.game});
 
   void createBoard() {
-    gb.GameBoard board = locator<GameState>().board;
-    if (board == null) {
-      int dim = GameBoard.dimensions;
-      widget.tiles = new List();
-      for (int i = 0; i < dim * dim; i++) {
-        for (int j = 0; j < dim; j++) {
-          t.Tile tile = new t.Tile(i, j);
-          tile.ownership = -1;
-          tile.power = 10;
-          if (i == 0 && j == 0)
-          {
-            tile.ownership = 0;
-            tile.power = 20;
-            widget.tiles.add(tile);
-          }
-          else if (i == dim - 1 && j == 0)
-          {
-            tile.ownership = 3;
-            tile.power = 20;
-            widget.tiles.add(tile);
-          }
-          else if (i == 0 && j == dim - 1)
-          {
-            tile.ownership = 2;
-            tile.power = 20;
-            widget.tiles.add(tile);
-          }
-          else if (i == dim - 1 && j == dim - 1)
-          {
-            tile.ownership = 1;
-            widget.tiles.add(tile);
-          }
-          else {
-            widget.tiles.add(tile);
-          }
-        }
+    if (locator<GameState>().board == null) {
+      int dim = widget.dimensions;
+      List<t.Tile> tiles = new List();
+      widget.board = gb.GameBoard(widget.dimensions, tiles);
+      widget.board.tiles = tiles;
+      widget.board.tiles[0].power = 20;
+      widget.board.tiles[0].ownership = 0;
+      widget.board.tiles[dim - 1].power = 20;
+      widget.board.tiles[dim - 1].ownership = 3;
+      widget.board.tiles[dim * dim - 1].power = 20;
+      widget.board.tiles[dim * dim - 1].ownership = 1;
+      widget.board.tiles[dim * dim - dim ].power = 20;
+      widget.board.tiles[dim * dim - dim ].ownership = 2;
+      locator<GameState>().turn = 0;
+      locator<GameState>().board = widget.board;
       }
-      locator<GameState>().board = gb.GameBoard(dim, widget.tiles);
     }
-  }
+
 
   void updateBoard() {
-    //Provider.of<GameBoardViewModel>(context, listen: true).getGameBoard();
     setState(() {});
+    locator<GameState>().board = gb.GameBoard(widget.dimensions, widget.board.tiles);
+    locator<GameState>().fromGameState(locator<GameState>());
   }
 
   @override
   void initState() {
-    if (game == null)
-      {
-        createBoard();
-        widget.tiles = locator<GameState>().board.tiles;
-        locator<GameState>().turn = 0;
-      }
-    else{
-      Provider.of<GameBoardViewModel>(context, listen: true).getGameBoard();
-    }
+    createBoard();
+    widget.gameState.addListener(() => parseGameState());
+  }
 
+  void parseGameState()
+  {
+    widget.dimensions = locator<GameState>().board.dimensions;
+    widget.board.tiles = locator<GameState>().board.tiles;
   }
 
 
@@ -94,19 +68,19 @@ class _GameBoard extends State<GameBoard> {
       body: new SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: new SizedBox(
-          width: GameBoard.dimensions * 130.0,
+          width: widget.dimensions * 130.0,
           child: new ListView.builder(
-            cacheExtent: locator<GameState>().board.dimensions * 130.0,
+            cacheExtent: widget.dimensions * 130.0,
             //Important to update so flutter doesn't try to constantly reload the buttons. 7 - 16 is the items in a row, 125 is the height
-            itemCount: locator<GameState>().board.dimensions,
+            itemCount: widget.dimensions,
             //Creates variable rows
             itemBuilder: (BuildContext context, int i) {
               return new Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: new List.generate(locator<GameState>().board.dimensions, (int j) {
-                  if (widget.tiles[i * locator<GameState>().board.dimensions + j].ownership != -1)
+                children: new List.generate(widget.dimensions, (int j) {
+                  if (widget.board.tiles[i * widget.dimensions + j].ownership != -1)
                   {
-                    return Tile(updateBoard, NumToColor(widget.tiles[i * locator<GameState>().board.dimensions + j].ownership), locator<GameState>().initArmyNum, i, j);
+                    return Tile(updateBoard, NumToColor(widget.board.tiles[i * widget.dimensions + j].ownership), locator<GameState>().initArmyNum, i, j);
                   }
                   else
                     return Tile(updateBoard, Colors.grey, locator<GameState>().initAINum, i, j);
@@ -120,14 +94,5 @@ class _GameBoard extends State<GameBoard> {
   }
 }
 
-class GameBoardViewModel extends ChangeNotifier{
 
-  GameBoard game;
-  GameBoardViewModel({this.game});
-  Future<void> getGameBoard()
-  {
-    game.tiles = locator<GameState>().board.tiles;
-    GameBoard.dimensions = locator<GameState>().board.dimensions;
-    notifyListeners();
-  }
-}
+
