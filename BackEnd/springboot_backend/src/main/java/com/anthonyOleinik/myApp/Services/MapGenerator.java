@@ -12,9 +12,9 @@ public class MapGenerator {
 
     public float dimensions;
 
-    List<Float> makeSphere(){
+    List<Float> makeCircle(){
         List<Float> tmp = new ArrayList<>();
-        int center = 63;
+        int center = (int)dimensions/2;
 
         //Since we are using a square board, we can get O(n) by using modulo here.
         for (int i = 0; i < dimensions * dimensions; i++) {

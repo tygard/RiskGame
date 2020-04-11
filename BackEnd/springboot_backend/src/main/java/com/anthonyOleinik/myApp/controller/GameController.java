@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.socket.WebSocketSession;
 
 import static com.ea.async.Async.await;
 import static java.util.concurrent.CompletableFuture.completedFuture;
@@ -28,6 +29,7 @@ public class GameController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     HashMap<Integer, GameState> activeGames = new HashMap<Integer, GameState>();
+    public HashMap<Integer, ArrayList<WebSocketSession>> gameSessions = new HashMap<>();
     public List<InGameUser> waitingPlayers = new ArrayList<InGameUser>();
 
     @Autowired
@@ -107,7 +109,7 @@ public class GameController {
 
     //After X amount of players are in the waitlist we create a new game
     //and add it the the activeGames list
-    public CompletableFuture<GameState> AddGame() throws InterruptedException {
+    public CompletableFuture<GameState> AddGame(){
 
         int numPlayers = GameSize();
         List<InGameUser> gamePlayers = await(GroupPlayers(numPlayers));
@@ -125,7 +127,7 @@ public class GameController {
         return completedFuture(tmp);
     }
 
-    public CompletableFuture<List<InGameUser>> GroupPlayers(int gameSize) throws InterruptedException {
+    public CompletableFuture<List<InGameUser>> GroupPlayers(int gameSize){
         //ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
         List<InGameUser> tmp = new ArrayList<InGameUser>(waitingPlayers.subList(0, gameSize));
@@ -146,7 +148,7 @@ public class GameController {
 
 
     //quick function to determine game size from 4-8
-    Integer GameSize() {
+    public Integer GameSize() {
         if(waitingPlayers.size()%8 < 4)
             return 8;
         if(waitingPlayers.size()%6 < 4)
