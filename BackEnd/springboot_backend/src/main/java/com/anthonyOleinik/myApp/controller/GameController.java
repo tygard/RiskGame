@@ -1,18 +1,22 @@
 package com.anthonyOleinik.myApp.controller;
 
+import com.anthonyOleinik.myApp.Repositories.ConnectionsRepository;
 import com.anthonyOleinik.myApp.Repositories.UserRepository;
 import com.anthonyOleinik.myApp.entities.GameState.GameBoard;
 import com.anthonyOleinik.myApp.entities.GameState.GameState;
 import com.anthonyOleinik.myApp.entities.GameState.InGameUser;
 import com.anthonyOleinik.myApp.entities.GameState.Tile;
+import com.anthonyOleinik.myApp.entities.UserEntity;
 import com.anthonyOleinik.myApp.sockets.GameSocketHandler;
 import com.anthonyOleinik.myApp.sockets.LobbySocketHandler;
+import com.sun.applet2.AppletParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.WebSocketSession;
@@ -24,16 +28,22 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+@Component
 @RestController
 public class GameController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    HashMap<Integer, GameState> activeGames = new HashMap<Integer, GameState>();
+    HashMap<Integer, GameState> activeGames = new HashMap<>();
+
     public HashMap<Integer, ArrayList<WebSocketSession>> gameSessions = new HashMap<>();
-    public List<InGameUser> waitingPlayers = new ArrayList<InGameUser>();
+
+    List<String> waitingPlayers = new ArrayList<>();
 
     @Autowired
     UserRepository userRepo;
+
+    @Autowired
+    ConnectionsRepository connRepo;
 
     @Autowired
     GameSocketHandler gameSockets;
@@ -78,27 +88,24 @@ public class GameController {
 
     //Ignore this code for now. Working on asynchronously grouping players
     //Using EAs completableFutures plugin
-    public void JoinLobby(InGameUser player) throws InterruptedException {
-        waitingPlayers.add(player);
-        GameState ret = await(AddGame());
-        if (ret == null) {
-            //send the numbers of players in queue to lobby endpoint
-            //sockets;
-
-        }
-        //send the gamestate to the lobby endpoint
-        //sockets;
+    public void JoinLobby(String user){
+        waitingPlayers.add(user);
+    }
+    public void LeaveLobby(String user){
+        waitingPlayers.remove(user);
     }
 
     @RequestMapping(path = "/lobbyt/")
     public ResponseEntity<GameState> JoinLobbyTest() throws InterruptedException {
-        waitingPlayers.add(new InGameUser());
-        waitingPlayers.add(new InGameUser());
-        waitingPlayers.add(new InGameUser());
-        waitingPlayers.add(new InGameUser());
-        waitingPlayers.add(new InGameUser());
-        waitingPlayers.add(new InGameUser());
-        waitingPlayers.add(new InGameUser());
+        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+
         Thread.sleep(500);
         GameState ret = await(AddGame());
         if (ret == null) {
@@ -130,9 +137,10 @@ public class GameController {
     public CompletableFuture<List<InGameUser>> GroupPlayers(int gameSize){
         //ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
-        List<InGameUser> tmp = new ArrayList<InGameUser>(waitingPlayers.subList(0, gameSize));
-
+        List<String> group = new ArrayList<String>(waitingPlayers.subList(0, gameSize));
+        List<InGameUser> tmp = new ArrayList<>();
         for(int i = 0; i < tmp.size() ;i++){
+            tmp.add(new InGameUser(group.get(i)));
             tmp.get(i).setTurnID(i);
         }
         waitingPlayers.removeAll(tmp);
