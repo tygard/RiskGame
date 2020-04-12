@@ -9,7 +9,6 @@ import com.anthonyOleinik.myApp.entities.GameState.Tile;
 import com.anthonyOleinik.myApp.entities.UserEntity;
 import com.anthonyOleinik.myApp.sockets.GameSocketHandler;
 import com.anthonyOleinik.myApp.sockets.LobbySocketHandler;
-import com.sun.applet2.AppletParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
