@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'globalVars.dart';
 
-class Tile extends StatefulWidget {
+
+
+class Tile extends StatefulWidget{
   Function update;
   int x;
   int y;
   int armyNum;
   bool isSelected = false;
   Color c;
-  Tile(Function updateGameboard, Color color, int armyNum, int x, int y) {
+  Tile (Function updateGameboard, Color color, int armyNum, int x, int y)
+  {
     update = updateGameboard;
     c = color;
     this.armyNum = armyNum;
@@ -18,7 +21,8 @@ class Tile extends StatefulWidget {
     this.y = y;
   }
 
-  _Tile createState() => _Tile();
+
+  _Tile createState() =>  _Tile();
 }
 
 class _Tile extends State<Tile> {
@@ -39,26 +43,29 @@ class _Tile extends State<Tile> {
         if (isSelected) {
           if (selected1 != null && selected1 == this) {
             selected1 = null;
-          } else if (selected2 != null && selected2 == this) {
+            selectedTile = null;
+          }
+          else if (selected2 != null && selected2 == this) {
             selected2 = null;
           }
           isSelected = false;
-        } else if (!isSelected) {
+        }
+        else if (!isSelected) {
           if (selected1 != null) {
             if (selected1.color != color) {
               isSelected = true;
             }
-          } else {
+          }
+          else {
             isSelected = true;
           }
         }
         if (isSelected == true && selected1 == null) {
           selected1 = this;
           selectedTile = widget;
-        } else if (selected1 != null &&
-            selected1 != this &&
-            selected2 == null &&
-            selected1.color != color) {
+        }
+        else if (selected1 != null && selected1 != this && selected2 == null && selected1.color != color)
+        {
           selected2 = this;
         }
       }
@@ -67,8 +74,7 @@ class _Tile extends State<Tile> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight]);
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
       child: Material(
@@ -77,8 +83,7 @@ class _Tile extends State<Tile> {
         child: new MaterialButton(
           onPressed: graySelect,
           child: new Text(armyNum.toString(), style: TextStyle(fontSize: 30)),
-          shape: Border.all(
-              color: isSelected ? Colors.white : Colors.black, width: 5),
+          shape: Border.all(color: isSelected ? Colors.white : Colors.black, width: 5),
           color: color,
           height: 125,
           minWidth: 125,

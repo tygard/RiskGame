@@ -24,43 +24,16 @@ class PassivesScreen extends StatefulWidget {
 }
 
 class _PassivesScreenState extends State<PassivesScreen> {
-  List<Passive> passivesList = List<Passive>();
-  List<Active> activesList = List<Active>();
+  List<Passive> passivesList = new List<Passive>();
+  List<Active> activesList = new List<Active>();
   _TileState.Tile prevtWidget;
   _TileState.Tile tWidget;
   tileObject.Tile sTile;
+  int curTurn;
+  int pTurn;
 
-  @override
-  void initState() {
-    // ---- still doesn't handle a widget being unselected but otherwise tile selection works
-
-    // if the previous widget that opened the passiveScreen is the same as the current widget, keep the same state
-    // if the previous widget is not the same as the current widget, reset the state of the passivesScreen
-    if (prevtWidget == null) {
-      prevtWidget = tWidget;
-    } else if (prevtWidget != tWidget) {
-      widget.createState();
-    }
-
-    // if the number of users is 0 there will be nothing to base the passives tab around
-    if (locator<GameState>().users.length != 0) {
-      passivesList = locator<GameState>()
-          .users
-          .elementAt(locator<GameState>().currPlayer)
-          .ownedPassives;
-
-      // generate 5 random passives to their respective lists
-      for (int i = 0; i < 5; i++) {
-        passivesList.add(new Passive());
-      }
-    }
-    //--------------FOR TESTING-------------
-    // widget.sTile = new Tile(5, 5);
-    // widget.sTile.purchaseActive(new Active());
-    //--------------------------------------
-
-    tWidget = selectedTile;
-    // if there is a tile widget where tileState = selected, find the tileObject that is represented by that tile widget
+  void locateTile() {
+    // if there is a selected tileWidget, find the tileObject that is represented by that tile widget
     if (tWidget != null) {
       loop:
       for (int i = 0; i < locator<GameState>().board.tiles.length; i++) {
@@ -71,13 +44,68 @@ class _PassivesScreenState extends State<PassivesScreen> {
         }
       }
     }
+  }
+
+  void resetState() {
+    passivesList = new List<Passive>();
+    activesList = new List<Active>();
+    makeState();
+  }
+
+  void makeState() {
+    locateTile();
     if (sTile != null) {
-      activesList = sTile.activesList;
+      // --------------------- 
+      // need to add something to not add duplicates to the activesList, 
+      // also somthing else that i cant remember
+      activesList.insertAll(0, sTile.activesList);
 
       // generate 5 random actives to their respective lists
       for (int i = 0; i < 5; i++) {
         activesList.add(new Active());
       }
+    }
+
+    // if the number of users is 0 there will be nothing to base the passives tab around
+    // otherwise we can create the passivesList
+    if (locator<GameState>().users.length != 0) {
+      passivesList.insertAll(
+          0,
+          locator<GameState>()
+              .users
+              .elementAt(locator<GameState>().currPlayer)
+              .ownedPassives);
+
+      // generate 5 random passives to their respective lists
+      for (int i = 0; i < 5; i++) {
+        passivesList.add(new Passive());
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    tWidget = selectedTile;
+    curTurn = locator<GameState>().turn;
+
+    // if the previous widget that opened the passiveScreen is the same as the current widget, keep the same state
+    // if the previous widget is not the same as the current widget, recreate the state of the passivesScreen
+    // if there was a previous widget and it is the same as the current widget, do nothing
+    if (prevtWidget == null) {
+      prevtWidget = tWidget;
+      makeState();
+    } else if (prevtWidget != tWidget) {
+      resetState();
+    }
+
+    // if there was a previous turn where passivesScreen was created
+    // if the previous turn was a different turn we need to recreate the state of the screen
+    // if there was a previous turn and it is still that turn, do nothing
+    if (pTurn == null) {
+      pTurn = curTurn;
+      makeState();
+    } else if (pTurn != curTurn) {
+      resetState();
     }
   }
 
