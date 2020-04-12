@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:risk/models/freezedClasses/lobbyState.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -15,12 +16,13 @@ class SocketManager {
   StreamController<GameState> gameStateStream = StreamController();
   StreamController<LobbyState> lobbyStream = StreamController();
 
-  SocketManager({String channelUrl = "DEFAULT"}) {
+  SocketManager({String channelUrl = "DEFAULT", Map<String, String> headers}) {
     //allows the override of the channel to other channels. just in case.
     if (channelUrl == "DEFAULT") {
       channelUrl = "ws://${locator<Config>().getEndpoint()}/chat";
     }
-    channel = IOWebSocketChannel.connect(channelUrl);
+    debugPrint("connecting to $channelUrl");
+    channel = IOWebSocketChannel.connect(channelUrl, headers: headers ?? {});
     _beginDelegation();
   }
 
@@ -43,6 +45,7 @@ class SocketManager {
   //it delegates out the messages to every other delegator.
   void _mainDelegator() async {
     channel.stream.listen((input) {
+      print("message recieved: $input");
       Map<String, dynamic> inputMap = json.decode(input);
       if (inputMap.containsKey("type") && inputMap["type"] == "chat") {
         chatStream.add(Chat.fromJson(inputMap));

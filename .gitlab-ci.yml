@@ -2,6 +2,8 @@ stages:
  - mavenbuild
  - maventest
  - autodeploy
+ - fluttertest
+# - flutterbuild
 
 maven-build:
  stage: mavenbuild
@@ -49,3 +51,29 @@ auto-deploy3:
  - sudo mv target/*.jar /target/web-demo.jar
  - sudo systemctl stop web-demo
  - sudo systemctl start web-demo
+ 
+
+flutter-test:
+ stage: fluttertest
+ before_script:
+ - export PATH=$PATH:/home/gitlab-runner/flutter/flutter/bin/
+ tags:
+  - flutter
+ script:
+  - cd FrontEnd/risk/
+  - flutter test
+  
+ 
+#flutter-build:
+# stage: flutterbuild
+# before_script:
+# - export ANDROID_HOME=/home/gitlab-runner/android-sdk
+# - export PATH=$PATH:/home/gitlab-runner/flutter/flutter/bin/
+# - export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+# tags:
+# - flutter
+# script:
+# - cd FrontEnd/risk
+# - flutter pub get && flutter clean && flutter build apk -debug
+# - sudo mv build/app/outputs/apk/release/app-release.apk /target/app.apk
+

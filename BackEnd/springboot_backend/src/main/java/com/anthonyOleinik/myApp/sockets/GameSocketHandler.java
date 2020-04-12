@@ -16,7 +16,9 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.BiConsumer;
 
 @Component
 public class GameSocketHandler extends TextWebSocketHandler {
@@ -28,26 +30,23 @@ public class GameSocketHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message)
             throws InterruptedException, IOException {
-        for(Object webSocketObject : sessions) {
-            WebSocketSession WSSession = (WebSocketSession)webSocketObject;
-            try{
-                Gson g = new Gson();
-                GameStateWrapper gameStateWrapper = g.fromJson(message.getPayload(), GameStateWrapper.class);
-                //GET GAMESTATE USING gameStateWrapper.gameState;
-                //then pass it to wherever you need it to go.
-                //for example, you probably want to put it into a
-                //function, like handleGameState(gameStateWrapper.gameState);
-                game.HandlePacket(gameStateWrapper.getState().getGameID(), gameStateWrapper.getState());
-            } catch (JsonParseException e){
-                //resends the message. this makes it
-                //so that any message other than a gamestate
-                //just gets sent back as a message.
-                WSSession.sendMessage(message);
+        Gson g = new Gson();
+        for(WebSocketSession webSocketObject : sessions) {
+            Map<String, String> map = g.fromJson(message.getPayload(), Map.class);
+            if (map.containsKey("type")){
+                if (map.get("type").equals("chat")) {
+                    webSocketObject.sendMessage(message);
+                } else if (map.get("type").equals("gamestate")) {
+                    GameStateWrapper gameStateWrapper = g.fromJson(message.getPayload(), GameStateWrapper.class);
+                    game.HandlePacket(gameStateWrapper.getState().getGameID(), gameStateWrapper.getState());
+                }
+            } else {
+                throw new NoSuchFieldError("No type field in message. each message must have type field.");
             }
         }
     }
 
-    public String sendGameState(@DestinationVariable String id, @DestinationVariable GameState gameState) {
+    public String sendGameState(String id, GameState gameState) {
         Gson gson = new Gson();
         JsonElement jsonElement = gson.toJsonTree(gameState);
         jsonElement.getAsJsonObject().addProperty("type", "gamestate");
@@ -56,8 +55,6 @@ public class GameSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        //SEND NEW GAMESTATE
-
         sessions.add(session);
     }
 

@@ -1,5 +1,6 @@
 package com.anthonyOleinik.myApp.controller;
 
+import com.anthonyOleinik.myApp.Repositories.ConnectionsRepository;
 import com.anthonyOleinik.myApp.Repositories.UserRepository;
 import com.anthonyOleinik.myApp.entities.GameState.GameBoard;
 import com.anthonyOleinik.myApp.entities.GameState.GameState;
@@ -7,60 +8,70 @@ import com.anthonyOleinik.myApp.entities.GameState.InGameUser;
 import com.anthonyOleinik.myApp.entities.GameState.Tile;
 import com.anthonyOleinik.myApp.entities.UserEntity;
 import com.anthonyOleinik.myApp.sockets.GameSocketHandler;
+import com.anthonyOleinik.myApp.sockets.LobbySocketHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.socket.WebSocketSession;
 
 import static com.ea.async.Async.await;
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import java.util.ArrayList;
-import java.util.HashMap;
+
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
-
+@Component
 @RestController
 public class GameController {
-    HashMap<Integer, GameState> activeGames = new HashMap<Integer, GameState>();
-    List<InGameUser> waitingPlayers = new ArrayList<InGameUser>();
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    HashMap<Integer, GameState> activeGames = new HashMap<>();
+
+    public HashMap<Integer, ArrayList<WebSocketSession>> gameSessions = new HashMap<>();
+
+    List<String> waitingPlayers = new ArrayList<>();
 
     @Autowired
     UserRepository userRepo;
 
     @Autowired
-    GameSocketHandler sockets;
+    ConnectionsRepository connRepo;
+
+    @Autowired
+    GameSocketHandler gameSockets;
+
+    @Autowired
+    LobbySocketHandler lobbySockets;
 
     @GetMapping("/games/{id}/")
-    GameState FindGame(@PathVariable("id") Integer id){
+    GameState FindGame(@PathVariable("id") Integer id) {
         return activeGames.get(id);
     }
 
-    //send player to this function, players get added to wait list
-    @PostMapping("/lobby/join/" )
-    String AddWaiting(UserEntity player){
-        InGameUser tmp = new InGameUser(player);
-        waitingPlayers.add(tmp);
-        return "GroupPlayers";
-    }
 
-    public void HandlePacket(@DestinationVariable String id, @DestinationVariable GameState data){
+    public void HandlePacket(@DestinationVariable String id, @DestinationVariable GameState data) {
         //this probably works, I have no idea how spring does websockets
         //
         activeGames.replace(Integer.parseInt(id), data);
-        sockets.sendGameState(id, data);
+        gameSockets.sendGameState(id, data);
     }
 
     @GetMapping("/game/template/")
-    public GameState GameTemplate(){
+    public GameState GameTemplate() {
         RestTemplate rtemp = new RestTemplate();
-        GameState game = rtemp.getForObject("http://localhost:8080/game/placeholder/", GameState.class);
+        GameState game = rtemp.getForObject("http://localhost:8080/lobbyt/", GameState.class);
         return game;
     }
 
     @GetMapping("/game/placeholder/")
-    public GameState DefaultGame(){
+    public GameState DefaultGame() {
         List<InGameUser> tmp = new ArrayList<InGameUser>();
         tmp.add(new InGameUser());
         tmp.add(new InGameUser());
@@ -68,58 +79,76 @@ public class GameController {
         tmp.add(new InGameUser());
         GameBoard tmpBoard = new GameBoard();
         tmpBoard.getTile(0).setOwner(tmp.get(0));
-        tmpBoard.getTile(tmpBoard.getTiles().size()*2/5).setOwner(tmp.get(1));
-        tmpBoard.getTile(tmpBoard.getTiles().size()*3/5).setOwner(tmp.get(2));
-        tmpBoard.getTile(tmpBoard.getTiles().size()-1).setOwner(tmp.get(3));
+        tmpBoard.getTile(tmpBoard.getTiles().size() * 2 / 5).setOwner(tmp.get(1));
+        tmpBoard.getTile(tmpBoard.getTiles().size() * 3 / 5).setOwner(tmp.get(2));
+        tmpBoard.getTile(tmpBoard.getTiles().size() - 1).setOwner(tmp.get(3));
         return new GameState(tmp, tmpBoard, "0");
     }
 
     //Ignore this code for now. Working on asynchronously grouping players
     //Using EAs completableFutures plugin
+    public void JoinLobby(String user){
+        waitingPlayers.add(user);
+    }
+    public void LeaveLobby(String user){
+        waitingPlayers.remove(user);
+    }
+
+    @RequestMapping(path = "/lobbyt/")
+    public ResponseEntity<GameState> JoinLobbyTest() throws InterruptedException {
+        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+
+        Thread.sleep(500);
+        GameState ret = await(AddGame());
+        if (ret == null) {
+            return ResponseEntity.status(408).body(null);
+        }
+        return ResponseEntity.ok().body(ret);
+    }
 
     //After X amount of players are in the waitlist we create a new game
     //and add it the the activeGames list
-    public CompletableFuture<String> AddGame(){
+    public CompletableFuture<GameState> AddGame(){
+
         int numPlayers = GameSize();
         List<InGameUser> gamePlayers = await(GroupPlayers(numPlayers));
-        if(await(GroupPlayers(numPlayers)) == null){
-            return completedFuture("GroupPlayers");
+        if (gamePlayers == null) {
+            return completedFuture(null);
         }
         GameState tmp = new GameState(gamePlayers, new GameBoard(), Integer.toString(activeGames.size()));
         //
-        tmp.setUsers(await(GroupPlayers(numPlayers)));
-
         //always ensure board is an odd num of tiles
-        tmp.getBoard().setDimensions((numPlayers + (new Random().nextInt(3)*2+1)));
-        int tmpArea = tmp.getBoard().getDimensions() * tmp.getBoard().getDimensions();
-        for(int i = 0; i < tmpArea; i++){
-            int mod = tmp.getBoard().getDimensions() * i;
-            //not quite finished. need to check edges to set player ownership.
-            if(tmpArea % mod != 0){
-
-            }
-            tmp.getBoard().AddTile(new Tile());
-        }
+        tmp.setBoard(InitializeBoard(tmp));
 
         //store game ID in gamestate class, might be redundant due to hashmapping
         activeGames.put(activeGames.size(), tmp);
-        return completedFuture("GameScreen");
+        logger.info(String.format("\nSuccessfully added game ID: %1s \n[%2s ] players: %3s", tmp.getGameID(),tmp.getUsers().size(),tmp.getUsers()));
+        return completedFuture(tmp);
     }
 
     public CompletableFuture<List<InGameUser>> GroupPlayers(int gameSize){
+        //ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
-        if(await(CheckWaiting(gameSize))) {
-            List<InGameUser> tmp = null;
-            tmp.addAll(waitingPlayers.subList(0, gameSize));
-            waitingPlayers.removeAll(tmp);
-            return completedFuture(tmp);
+        List<String> group = new ArrayList<String>(waitingPlayers.subList(0, gameSize));
+        List<InGameUser> tmp = new ArrayList<>();
+        for(int i = 0; i < tmp.size() ;i++){
+            tmp.add(new InGameUser(group.get(i)));
+            tmp.get(i).setTurnID(i);
         }
-        return completedFuture(null);
+        waitingPlayers.removeAll(tmp);
+        return completedFuture(tmp);
     }
 
 
-    public CompletableFuture<Boolean> CheckWaiting(int gameSize){
-        if(waitingPlayers.size() < gameSize){
+    public CompletableFuture<Boolean> CheckWaiting(int gameSize) {
+        if (waitingPlayers.size() < gameSize) {
             return completedFuture(false);
         }
         return completedFuture(true);
@@ -127,11 +156,75 @@ public class GameController {
 
 
     //quick function to determine game size from 4-8
-    Integer GameSize(){
-        int i = 4;
-        while(waitingPlayers.size() % i <= 3 && i < 8){
-            i += 2;
+    public Integer GameSize() {
+        if(waitingPlayers.size()%8 < 4)
+            return 8;
+        if(waitingPlayers.size()%6 < 4)
+            return 6;
+
+        return 4;
+    }
+
+    //
+    GameBoard InitializeBoard(GameState tmp) {
+        int numPlayers = tmp.getUsers().size();
+        GameBoard board = new GameBoard();
+        board.setDimensions((numPlayers + (new Random().nextInt(3) * 2 + 1)));
+        final int mod = board.getDimensions();
+        final int tmpArea = board.getDimensions() * board.getDimensions();
+        final int mid = board.getDimensions() / 2;
+        int tmpPlayer = 0;
+
+        final List<Tile> corners = new ArrayList<>();
+        corners.add(new Tile(0,0));
+        corners.add(new Tile(0, mod-1));
+        corners.add(new Tile(mod-1, 0));
+        corners.add(new Tile(mod-1,mod-1));
+
+        final List<Tile> midSidePoints = new ArrayList<>();
+        midSidePoints.add(new Tile(0, mid));
+        midSidePoints.add(new Tile(mod-1, mid));
+
+        final List<Tile> midTopPoints = new ArrayList<>();
+        midTopPoints.add(new Tile(mid,0));
+        midTopPoints.add(new Tile(mid, mod-1));
+
+        for (int i = 0; i < tmpArea; ++i) {
+            int x = Math.abs(i % mod);
+            int y = Math.abs(i / mod);
+            Tile tmpTile = new Tile(x,y);
+            //not quite finished. need to check edges to set player ownership.
+            tmpTile.setTroops(5);
+            if(tmpTile.x == mid && tmpTile.y == mid){
+                tmpTile.setTroops(100);
+            }
+            if(numPlayers == 8) {
+                if (corners.contains(tmpTile) || midTopPoints.contains(tmpTile) || midSidePoints.contains(tmpTile)) {
+                    tmpTile.setOwner(tmp.getUsers().get(tmpPlayer));
+                    tmpTile.setTroops(tmp.getInitTroop());
+                    tmpTile.setTroopGeneration(tmp.getInitTroopGen());
+                    tmpTile.setMoneyGeneration(tmp.getInitMoneyGen());
+                    ++tmpPlayer;
+                }
+            }else if(numPlayers == 6){
+                if(corners.contains(tmpTile) || midTopPoints.contains(tmpTile)){
+                    tmpTile.setOwner(tmp.getUsers().get(tmpPlayer));
+                    tmpTile.setTroops(tmp.getInitTroop());
+                    tmpTile.setTroopGeneration(tmp.getInitTroopGen());
+                    tmpTile.setMoneyGeneration(tmp.getInitMoneyGen());
+                    ++tmpPlayer;
+                }
+            }else {
+                if (corners.contains(tmpTile)) {
+                    tmpTile.setOwner(tmp.getUsers().get(tmpPlayer));
+                    tmpTile.setTroops(tmp.getInitTroop());
+                    tmpTile.setTroopGeneration(tmp.getInitTroopGen());
+                    tmpTile.setMoneyGeneration(tmp.getInitMoneyGen());
+                    ++tmpPlayer;
+                }
+            }
+            board.AddTile(tmpTile);
         }
-        return i;
+        return board;
     }
 }

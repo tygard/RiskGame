@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:risk/models/freezedClasses/lobbyState.dart';
 import 'package:risk/models/freezedClasses/user.dart';
@@ -20,7 +22,7 @@ class _QueueScreenState extends State<QueueScreen> {
   @override
   void initState() {
     sm = SocketManager(
-        channelUrl: "ws://${locator<Config>().getEndpoint()}/lobby");
+        channelUrl: "ws://${locator<Config>().getEndpoint()}/lobby", headers: {"user": json.encode(locator<User>().email)});
     locator<User>().inGamePlayerNumber = null;
     _beginListeningToLobby();
     super.initState();
