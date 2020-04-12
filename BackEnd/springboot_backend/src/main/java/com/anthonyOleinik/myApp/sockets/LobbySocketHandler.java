@@ -3,8 +3,10 @@ package com.anthonyOleinik.myApp.sockets;
 import com.anthonyOleinik.myApp.controller.GameController;
 import com.anthonyOleinik.myApp.entities.GameState.GameState;
 import com.anthonyOleinik.myApp.entities.GameState.InGameUser;
+import com.anthonyOleinik.myApp.entities.UserEntity;
 import com.anthonyOleinik.myApp.sockets.socketMessages.LobbyMessage;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
 public class LobbySocketHandler extends TextWebSocketHandler {
-    private final Gson GSON = new Gson();
+    private final Gson gson = new GsonBuilder().serializeNulls().create();
     final int PLAYERS_IN_GAME = 4;
 
 
@@ -32,7 +34,7 @@ public class LobbySocketHandler extends TextWebSocketHandler {
     ArrayList<Integer> sessionToLobbyNum = new ArrayList<>();
 
     @Autowired
-    GameController game;
+    GameController game = new GameController();
 
     @Override
     public void handleTextMessage(WebSocketSession ___, TextMessage __){
@@ -47,7 +49,8 @@ public class LobbySocketHandler extends TextWebSocketHandler {
         int numPlayersInLobby = sessionToLobbyNum.size();
         sessionToLobbyNum.add(numPlayersInLobby);
         sessions.add(session);
-        game.waitingPlayers.add(GSON.fromJson(session.getHandshakeHeaders().get("player").toString(), InGameUser.class));
+        System.out.println(session.getHandshakeHeaders().get("user").toString().replace("\"", ""));
+        game.JoinLobby(session.getHandshakeHeaders().get("user").toString().replace("\"", ""));
         playerCountUpdated();
         //+ 1  cause we just added one
         System.out.println("Player joined. new num of players in lobby: " + (numPlayersInLobby + 1));
@@ -58,7 +61,7 @@ public class LobbySocketHandler extends TextWebSocketHandler {
         sessionToLobbyNum.remove(sessions.indexOf(session));
         int playerIndex = sessions.indexOf(session);
         //remove player from the waitingPlayers list in game controller.
-        game.waitingPlayers.remove(playerIndex);
+        game.LeaveLobby(session.getHandshakeHeaders().get("user").toString());
         sessions.remove(session);
         playerCountUpdated();
         System.out.println("Player left. new num of players in lobby: " + sessions.size());
@@ -71,7 +74,7 @@ public class LobbySocketHandler extends TextWebSocketHandler {
             int playerNum = sessionToLobbyNum.get(sessions.indexOf(session));
             LobbyMessage message = new LobbyMessage(sessionToLobbyNum.size(), playerNum);
             //send the proper message to each player in the lobby
-            session.sendMessage(new TextMessage(GSON.toJson(message)));
+            session.sendMessage(new TextMessage(gson.toJson(message)));
         }
 
         //if we have atleast the required numbe of players,
@@ -82,7 +85,7 @@ public class LobbySocketHandler extends TextWebSocketHandler {
     }
 
     private void sendGameState() throws IOException {
-            //TODO: FIGURE OUT HOW we generate the gamestate, and send the 4 players the gamestate.
+            //TODO: FIGURE OUT HOW we generate the gamestate, and send the X players the gamestate.
             //GET THE GAMESTATE HERE!!!
             //Adds game from
             GameState gameState = await(game.AddGame());
@@ -93,7 +96,7 @@ public class LobbySocketHandler extends TextWebSocketHandler {
             game.gameSessions.put(Integer.parseInt(gameState.getGameID()), tmp);
 
             for(WebSocketSession session : tmp){
-                session.sendMessage(new TextMessage(GSON.toJson(gameState)));
+                session.sendMessage(new TextMessage(gson.toJson(gameState)));
             }
             //the client should break the connection, so no need to remove them
             //from arrays manually.

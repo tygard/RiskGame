@@ -46,7 +46,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
         }
     }
 
-    public String sendGameState(@DestinationVariable String id, @DestinationVariable GameState gameState) {
+    public String sendGameState(String id, GameState gameState) {
         Gson gson = new Gson();
         JsonElement jsonElement = gson.toJsonTree(gameState);
         jsonElement.getAsJsonObject().addProperty("type", "gamestate");

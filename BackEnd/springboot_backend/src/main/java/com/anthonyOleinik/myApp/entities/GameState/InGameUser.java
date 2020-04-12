@@ -26,6 +26,10 @@ public class InGameUser {
     public InGameUser() {
     }
 
+    public InGameUser(String username) {
+        this.username = username;
+    }
+
     public InGameUser(UserEntity _user) {
         this.username = _user.getUsername();
         this.role = _user.getRole().getRoleName();
