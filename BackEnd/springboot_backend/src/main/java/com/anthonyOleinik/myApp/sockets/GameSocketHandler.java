@@ -49,11 +49,13 @@ public class GameSocketHandler extends TextWebSocketHandler {
         }
     }
 
-    public String sendGameState(String id, GameState gameState) {
+    public void sendGameState(String id, GameState gameState) throws IOException {
         Gson gson = new Gson();
         JsonElement jsonElement = gson.toJsonTree(gameState);
         jsonElement.getAsJsonObject().addProperty("type", "gamestate");
-        return gson.toJson(jsonElement);
+        for(WebSocketSession session : game.gameSessions.get(Integer.parseInt(id))){
+            session.sendMessage(new TextMessage(gson.toJson(jsonElement)));
+        }
     }
 
     @Override

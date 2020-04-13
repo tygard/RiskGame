@@ -49,7 +49,6 @@ public class LobbySocketHandler extends TextWebSocketHandler {
         int numPlayersInLobby = sessionToLobbyNum.size();
         sessionToLobbyNum.add(numPlayersInLobby);
         sessions.add(session);
-        System.out.println(session.getHandshakeHeaders().get("user").toString().replace("\"", ""));
         game.JoinLobby(session.getHandshakeHeaders().get("user").toString().replace("\"", ""));
         playerCountUpdated();
         //+ 1  cause we just added one.
@@ -84,21 +83,22 @@ public class LobbySocketHandler extends TextWebSocketHandler {
         }
     }
 
-    void sendGameState() throws IOException {
-            System.out.println("Got here");
-            GameState gameState = await(game.AddGame());
-            int numPlayers = gameState.getUsers().size();
-            //create a temporary array of sessions in here using number of players in lobby
-            ArrayList<WebSocketSession> tmp = new ArrayList<WebSocketSession>(sessions.subList(0, numPlayers));
-            //add the tmp array in game controller to keep track of players in the game
-            game.gameSessions.put(Integer.parseInt(gameState.getGameID()), tmp);
+    private void sendGameState() throws IOException {
+            //TODO: FIGURE OUT HOW we generate the gamestate, and send the X players the gamestate.
+            GameState res = game.AddGame();
 
-            for(WebSocketSession session : tmp){
-                session.sendMessage(new TextMessage(gson.toJson(gameState)));
+                JsonElement jsonElement = gson.toJsonTree(res);
+                jsonElement.getAsJsonObject().addProperty("type", "gamestate");
+                int numPlayers = res.getUsers().size();
+                //create a temporary array of sessions in here using number of players in lobby
+                ArrayList<WebSocketSession> tmp = new ArrayList<WebSocketSession>(sessions.subList(0, numPlayers));
+                //add the tmp array in game controller to keep track of players in the game
+                game.gameSessions.put(Integer.parseInt(res.getGameID()), tmp);
+
+                for(WebSocketSession session : tmp){
+                        session.sendMessage(new TextMessage(gson.toJson(jsonElement)));
+                }
+
             }
-            //the client should break the connection, so no need to remove them
-            //from arrays manually.
-
-    }
 }
 

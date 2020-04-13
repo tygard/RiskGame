@@ -119,14 +119,14 @@ public class UserController {
     //Queries the connections repo for the gogole id, uses that to query user repo for
     //the user, other wise return null
     @GetMapping(path = "/users/goog/{token}")
-    public ResponseEntity<UserEntity> queryGoogleId(@PathVariable("token") String id) {
+    public UserEntity queryGoogleId(@PathVariable("token") String id) {
         try{
             UserEntity user = userRepo.findById(connectionsRepo.FindByGID(id).
                     orElseThrow(() -> new IllegalArgumentException()).getUserId()).get();
             if(user != null){
-                return ResponseEntity.ok(user);
+                return user;
             }else{
-                return ResponseEntity.notFound().build();
+                return null;
             }
         }catch(Exception e){
             logger.info("User doesn't exist.");
