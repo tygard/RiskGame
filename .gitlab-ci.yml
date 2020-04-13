@@ -3,7 +3,7 @@ stages:
  - maventest
  - autodeploy
  - fluttertest
-# - flutterbuild
+ - flutterbuild
 
 maven-build:
  stage: mavenbuild
@@ -64,16 +64,17 @@ flutter-test:
   - flutter test
   
  
-#flutter-build:
-# stage: flutterbuild
-# before_script:
-# - export ANDROID_HOME=/home/gitlab-runner/android-sdk
-# - export PATH=$PATH:/home/gitlab-runner/flutter/flutter/bin/
-# - export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
-# tags:
-# - flutter
-# script:
-# - cd FrontEnd/risk
-# - flutter pub get && flutter clean && flutter build apk -debug
-# - sudo mv build/app/outputs/apk/release/app-release.apk /target/app.apk
+flutter-build:
+ stage: flutterbuild
+ before_script:
+ - export ANDROID_HOME=/home/gitlab-runner/android-sdk
+ - export PATH=$PATH:/home/gitlab-runner/flutter/flutter/bin/
+ - export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+ tags:
+ - flutter
+ script:
+ - cd FrontEnd/risk
+ - flutter pub get && flutter clean && flutter build apk --debug --target-platform android-arm,android-arm64 --split-per-abi
+ - sudo mv build/app/outputs/apk/debug/app-arm64-v8a-debug.apk /target/app-arm64.apk
+ - sudo mv build/app/outputs/apk/debug/app-armeabi-v7a-debug.apk /target/app-armeabi.apk
 
