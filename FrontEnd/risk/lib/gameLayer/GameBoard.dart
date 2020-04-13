@@ -14,11 +14,11 @@ class GameBoard extends StatefulWidget {
   GameBoard({Key key, this.title}) : super(key: key);
   final String title;
   int dimensions = new Random().nextInt(9) + 7;
-
   ValueNotifier<GameState> gameState = ValueNotifier(locator<GameState>());
   gb.GameBoard board = locator<GameState>().board;
   @override
   _GameBoard createState() => _GameBoard();
+
 }
 
 class _GameBoard extends State<GameBoard> {
