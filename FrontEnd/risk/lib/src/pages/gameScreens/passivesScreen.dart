@@ -88,7 +88,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
         s = "changed tile and turn";
         resetState();
       }
-      if (tWidget != null) {
+      if (sTile != null) {
         prevtWidget =
             new _TileState.Tile(null, null, null, tWidget.x, tWidget.y);
       }
