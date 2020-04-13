@@ -81,6 +81,7 @@ public class InGameUser {
     public int getGeneratedMoney() {
         return generatedMoney;
     }
+    public int getTurnID(){return turnID;}
 
     public float getMultiplierTroops() {
         return multiplierTroops;

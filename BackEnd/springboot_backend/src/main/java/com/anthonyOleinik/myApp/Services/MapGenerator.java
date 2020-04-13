@@ -3,12 +3,14 @@ package com.anthonyOleinik.myApp.Services;
 import com.anthonyOleinik.myApp.entities.GameState.GameBoard;
 import com.anthonyOleinik.myApp.entities.GameState.GameState;
 import com.anthonyOleinik.myApp.entities.GameState.Tile;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MapGenerator {
+@Service
+public class MapGenerator{
 
     public float dimensions;
 
