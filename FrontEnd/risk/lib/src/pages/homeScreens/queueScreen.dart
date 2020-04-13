@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:risk/dataLayer/riskHttp.dart';
 import 'package:risk/models/freezedClasses/lobbyState.dart';
 import 'package:risk/models/freezedClasses/user.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
@@ -45,8 +47,7 @@ class _QueueScreenState extends State<QueueScreen> {
               padding: const EdgeInsets.all(8.0),
               child: FloatingActionButton(
                 heroTag: "game",
-                onPressed: () =>
-                    Navigator.of(context).pushReplacementNamed("/game"),
+                onPressed: _toGameWithState,
                 child: Icon(
                   Icons.cake,
                   color: Colors.white,
@@ -111,5 +112,12 @@ class _QueueScreenState extends State<QueueScreen> {
         yourPlaceInLobby = locator<User>().inGamePlayerNumber + 1;
       });
     });
+  }
+
+  void _toGameWithState() async  {
+   Response response = await RiskHttp.makePostRequest("/game/placeholder/");
+   locator<GameState>().fromGameState(GameState.fromJson(response.data));
+   print(response.data);
+   Navigator.of(context).pushReplacementNamed("/game");
   }
 }

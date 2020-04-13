@@ -18,7 +18,7 @@ class InGameUser {
   int genMoney;
   String userName;
   String faction;
-  int id;
+  int id; // <- also used for turn id
   String role;
 
   InGameUser(
