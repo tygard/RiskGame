@@ -1,4 +1,3 @@
-/*
 package com.anthonyOleinik.myApp;
 
 import org.springframework.context.annotation.Bean;
@@ -21,5 +20,3 @@ public class SpringFoxConfig {
                 .build();
     }
 }
-
- */
