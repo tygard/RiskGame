@@ -59,7 +59,7 @@ class _GameBoard extends State<GameBoard> {
   {
     widget.dimensions = locator<GameState>().board.dimensions;
     widget.board.tiles = locator<GameState>().board.tiles;
-    updateBoard();
+    setState(() {});
   }
 
 
