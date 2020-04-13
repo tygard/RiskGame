@@ -53,6 +53,7 @@ class InGameUser {
     if (canAfford(p) && !p.isActive()) {
       p.purchase(currUser);
       ownedPassives.add(p);
+      money -= p.getCost();
     }
   }
 

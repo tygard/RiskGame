@@ -43,6 +43,7 @@ class _Tile extends State<Tile> {
         if (isSelected) {
           if (selected1 != null && selected1 == this) {
             selected1 = null;
+            selectedTile = null;
           }
           else if (selected2 != null && selected2 == this) {
             selected2 = null;
@@ -61,6 +62,7 @@ class _Tile extends State<Tile> {
         }
         if (isSelected == true && selected1 == null) {
           selected1 = this;
+          selectedTile = widget;
         }
         else if (selected1 != null && selected1 != this && selected2 == null && selected1.color != color)
         {
