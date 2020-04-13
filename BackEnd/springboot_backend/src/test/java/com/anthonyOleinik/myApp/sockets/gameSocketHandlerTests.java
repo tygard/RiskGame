@@ -28,7 +28,6 @@ public class gameSocketHandlerTests {
         GameSocketHandler gameSocketHandler = new GameSocketHandler();
         //connect the socket to the handler
         gameSocketHandler.sessions.add(session);
-
         gameSocketHandler.handleTextMessage(session, textMsg);
 
         //verify the message WAS sent back.

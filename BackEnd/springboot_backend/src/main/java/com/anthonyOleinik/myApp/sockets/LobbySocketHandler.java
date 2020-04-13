@@ -39,7 +39,7 @@ public class LobbySocketHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession ___, TextMessage __){
         //Lobby delegator does not take input messages, only output!
-        System.out.println("did recieve message. shouldnt have doe");
+        System.out.println("did recieve message. shouldnt have though");
         return;
     }
 
@@ -52,7 +52,7 @@ public class LobbySocketHandler extends TextWebSocketHandler {
         System.out.println(session.getHandshakeHeaders().get("user").toString().replace("\"", ""));
         game.JoinLobby(session.getHandshakeHeaders().get("user").toString().replace("\"", ""));
         playerCountUpdated();
-        //+ 1  cause we just added one
+        //+ 1  cause we just added one.
         System.out.println("Player joined. new num of players in lobby: " + (numPlayersInLobby + 1));
     }
 
@@ -69,7 +69,7 @@ public class LobbySocketHandler extends TextWebSocketHandler {
 
     /// called when a new player joins the lobby.
     // delegates out the proper lobby message to each user.
-    private void playerCountUpdated() throws IOException {
+    protected void playerCountUpdated() throws IOException {
         for (WebSocketSession session : sessions){
             int playerNum = sessionToLobbyNum.get(sessions.indexOf(session));
             LobbyMessage message = new LobbyMessage(sessionToLobbyNum.size(), playerNum);
@@ -84,10 +84,7 @@ public class LobbySocketHandler extends TextWebSocketHandler {
         }
     }
 
-    private void sendGameState() throws IOException {
-            //TODO: FIGURE OUT HOW we generate the gamestate, and send the X players the gamestate.
-            //GET THE GAMESTATE HERE!!!
-            //Adds game from
+    void sendGameState() throws IOException {
             System.out.println("Got here");
             GameState gameState = await(game.AddGame());
             int numPlayers = gameState.getUsers().size();
