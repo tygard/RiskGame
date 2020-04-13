@@ -37,7 +37,7 @@ public class GameController {
 
     public HashMap<Integer, ArrayList<WebSocketSession>> gameSessions = new HashMap<>();
 
-    List<String> waitingPlayers = new ArrayList<>();
+    public List<String> waitingPlayers = new ArrayList<>();
 
     @Autowired
     UserRepository userRepo;
@@ -52,7 +52,7 @@ public class GameController {
     LobbySocketHandler lobbySockets;
 
     @GetMapping("/games/{id}/")
-    GameState FindGame(@PathVariable("id") Integer id) {
+    public GameState FindGame(@PathVariable("id") Integer id) {
         return activeGames.get(id);
     }
 
@@ -144,7 +144,7 @@ public class GameController {
         List<InGameUser> tmp = new ArrayList<>();
         for(int i = 0; i < group.size() ;i++){
             tmp.add(new InGameUser(group.get(i)));
-            waitingPlayers.remove(i);
+            waitingPlayers.remove(group.get(i));
             tmp.get(i).setTurnID(i);
         }
         return tmp;
