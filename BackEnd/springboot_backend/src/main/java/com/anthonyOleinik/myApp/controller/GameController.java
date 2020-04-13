@@ -59,6 +59,12 @@ public class GameController {
 
     public void HandlePacket(String id, GameState data) throws IOException {
         //this probably works, I have no idea how spring does websockets
+        //increments turn if all players have taken their turn
+        if(data.getUsers().size() % data.getCurrPlayer()+1 ==1){
+            data.setTurn( data.getTurn()+1);
+            data.setCurrPlayer(0);
+        }
+        data.setCurrPlayer(data.getCurrPlayer()+1);
         activeGames.replace(Integer.parseInt(id), data);
         gameSockets.sendGameState(id, data);
     }
