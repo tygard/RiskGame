@@ -14,7 +14,7 @@ import 'package:risk/models/gameStateObjects/tile.dart' as tileObject;
    * along with any passives that the current user owns
    * 
    * if given a selectedTile then 5 random actives and the actives owned by
-   * that tile are displayed under the actives tab
+   * that tile are displayed under the actives tab, along with any actives that the current tile owns
    */
 class PassivesScreen extends StatefulWidget {
   PassivesScreen();
@@ -24,16 +24,84 @@ class PassivesScreen extends StatefulWidget {
 }
 
 class _PassivesScreenState extends State<PassivesScreen> {
-  List<Passive> passivesList = new List<Passive>();
-  List<Active> activesList = new List<Active>();
-  _TileState.Tile prevtWidget;
-  _TileState.Tile tWidget;
   tileObject.Tile sTile;
+  String s = "";
   int curTurn;
-  int pTurn;
+  int c = 0;
+  @override
+  void initState() {
+    super.initState();
+    tWidget = selectedTile;
+    curTurn = locator<GameState>().turn;
+
+    /* state options:
+    1: this is the first time the screen is inited, previous tWidget == null, previous turn == null, pTurn ==
+        - just resetState()
+    b: this is not the first time the screen is inited, previous tWidget == null,         previous == turn
+        - just locateTile(), setActives()
+    2: this is not the first time the screen is inited, previous tWidget == this tWidget, previous == turn
+        - maintain all modifiers, dont change state
+    3: this is not the first time the screen is inited, previous tWidget != this tWidget, previous == turn
+        - maintain all modifiers,
+        - must be applied to a new tile, locateTile(), setActives()
+    4: this is not the first time the screen is inited, previous tWidget == this tWidget, previous != turn
+        - this is a new turn, resetState()
+    5: this is not the first time the screen is inited, previous tWidget != this tWidget, previous != turn
+        - this is a new turn, resetState()
+*/
+    print(
+        "before:\ns: \"$s\", prevtW: $prevtWidget, pTurn: $pTurn, cTurn: $curTurn\n\n----------------------------------->>>>>");
+
+    if (pTurn == -1) {
+      c++;
+      s = "state $c";
+      resetState();
+    } else {
+      if ((prevtWidget == null) && (pTurn == curTurn) && (tWidget == null)) {
+        s = "new entry no tile";
+      } else if ((prevtWidget == null) &&
+          (pTurn == curTurn) &&
+          (tWidget != null)) {
+        locateTile();
+        setActives();
+        s = "new tile";
+      } else if ((prevtWidget != null) &&
+          (pTurn == curTurn) &&
+          (tWidget == null)) {
+        s = "old tile gone, no new tile";
+      } else if ((prevtWidget.x == tWidget.x && prevtWidget.y == tWidget.y) &&
+          (pTurn == curTurn)) {
+        // dont change state
+        locateTile();
+        s = "no change";
+      } else if (!(prevtWidget.x == tWidget.x && prevtWidget.y == tWidget.y) &&
+          (pTurn == curTurn)) {
+        s = "changed tile";
+        locateTile();
+        setActives();
+      } else if ((prevtWidget.x == tWidget.x && prevtWidget.y == tWidget.y) &&
+          (pTurn != curTurn)) {
+        s = "changed turn";
+        resetState();
+      } else if (!(prevtWidget.x == tWidget.x && prevtWidget.y == tWidget.y) &&
+          (pTurn != curTurn)) {
+        s = "changed tile and turn";
+        resetState();
+      }
+      if (tWidget != null) {
+        prevtWidget =
+            new _TileState.Tile(null, null, null, tWidget.x, tWidget.y);
+      }
+    }
+
+    print(
+        "after:\ns: \"$s\", prevtW: $prevtWidget, pTurn: $pTurn, cTurn: $curTurn\n\n----------------------------------->>>>>");
+
+    pTurn = curTurn;
+  }
 
   void locateTile() {
-    // if there is a selected tileWidget, find the tileObject that is represented by that tile widget
+    // if there is a selected tileWidget, find the tileObject that is represented by that tile widget, set sTile = to the object
     if (tWidget != null) {
       loop:
       for (int i = 0; i < locator<GameState>().board.tiles.length; i++) {
@@ -46,25 +114,22 @@ class _PassivesScreenState extends State<PassivesScreen> {
     }
   }
 
-  void resetState() {
-    passivesList = new List<Passive>();
+  void setActives() {
     activesList = new List<Active>();
-    makeState();
-  }
 
-  void makeState() {
-    locateTile();
+    // if the sTile is null there will be nothing to base the actives tab around
     if (sTile != null) {
-      // --------------------- 
-      // need to add something to not add duplicates to the activesList, 
-      // also somthing else that i cant remember
       activesList.insertAll(0, sTile.activesList);
 
-      // generate 5 random actives to their respective lists
+      // generate 5 random actives and add to the list to be displayed
       for (int i = 0; i < 5; i++) {
         activesList.add(new Active());
       }
     }
+  }
+
+  void setPassives() {
+    passivesList = new List<Passive>();
 
     // if the number of users is 0 there will be nothing to base the passives tab around
     // otherwise we can create the passivesList
@@ -76,37 +141,22 @@ class _PassivesScreenState extends State<PassivesScreen> {
               .elementAt(locator<GameState>().currPlayer)
               .ownedPassives);
 
-      // generate 5 random passives to their respective lists
+      // generate 5 random passives and add to the list to be displayed
       for (int i = 0; i < 5; i++) {
         passivesList.add(new Passive());
       }
     }
   }
 
-  @override
-  void initState() {
-    tWidget = selectedTile;
-    curTurn = locator<GameState>().turn;
-
-    // if the previous widget that opened the passiveScreen is the same as the current widget, keep the same state
-    // if the previous widget is not the same as the current widget, recreate the state of the passivesScreen
-    // if there was a previous widget and it is the same as the current widget, do nothing
-    if (prevtWidget == null) {
-      prevtWidget = tWidget;
-      makeState();
-    } else if (prevtWidget != tWidget) {
-      resetState();
-    }
-
-    // if there was a previous turn where passivesScreen was created
-    // if the previous turn was a different turn we need to recreate the state of the screen
-    // if there was a previous turn and it is still that turn, do nothing
-    if (pTurn == null) {
-      pTurn = curTurn;
-      makeState();
-    } else if (pTurn != curTurn) {
-      resetState();
-    }
+  /**
+   * re initializes the modifier lists, sets sTile to the selected tile object, adds the current user and tile modifiers to the lists
+   */
+  void resetState() {
+    passivesList = new List<Passive>();
+    activesList = new List<Active>();
+    locateTile();
+    setActives();
+    setPassives();
   }
 
   /**
@@ -149,8 +199,9 @@ class _PassivesScreenState extends State<PassivesScreen> {
             centerTitle: true,
             title: Text("Modifiers"),
             leading: BackButton(
-              onPressed: () => Navigator.pop(context),
-            ),
+                onPressed: () => {
+                      Navigator.pop(context),
+                    }),
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(10),
               child: Container(

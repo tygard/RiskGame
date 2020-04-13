@@ -29,7 +29,10 @@ class ButtonStack extends StatelessWidget {
           child: FloatingActionButton(
             onPressed: () {
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => PassivesScreen()));
+                MaterialPageRoute(
+                  builder: (context) => new PassivesScreen(),
+                ),
+              );
             },
             child: Icon(Icons.attach_money),
           ),
@@ -39,11 +42,10 @@ class ButtonStack extends StatelessWidget {
           child: FloatingActionButton(
               heroTag: "end turn btn",
               onPressed: () {
-                if (selected1 == null && selected2 == null)
-                {
-                  Toaster.errorToast("Please select a valid territory to attack and a territory to attack it");
-                }
-                else {
+                if (selected1 == null && selected2 == null) {
+                  Toaster.errorToast(
+                      "Please select a valid territory to attack and a territory to attack it");
+                } else {
                   isTurnOver = true;
                   attack(selected1, selected2);
                 }

@@ -1,10 +1,19 @@
 library globals;
 
 import 'package:flutter/material.dart';
+import 'package:risk/models/gameStateObjects/active.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
+import 'package:risk/models/gameStateObjects/passive.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
+import 'Tile.dart';
 
-var selectedTile;
+List<Passive> passivesList = new List<Passive>();
+List<Active> activesList = new List<Active>();
+Tile selectedTile;
+Tile prevtWidget;
+Tile tWidget;
+int pTurn = -1;
+
 var selected1;
 var selected2;
 Color turn = Colors.red;
@@ -27,8 +36,16 @@ void attack(var button1, var button2) {
     button2.armyNum = 5;
   }
   //Needs testing
-  locator<GameState>().board.tiles[button1.widget.x * locator<GameState>().board.dimensions + button1.widget.y].power = button1.armyNum;
-  locator<GameState>().board.tiles[button2.widget.x * locator<GameState>().board.dimensions + button2.widget.y].power = button2.armyNum;
+  locator<GameState>()
+      .board
+      .tiles[button1.widget.x * locator<GameState>().board.dimensions +
+          button1.widget.y]
+      .power = button1.armyNum;
+  locator<GameState>()
+      .board
+      .tiles[button2.widget.x * locator<GameState>().board.dimensions +
+          button2.widget.y]
+      .power = button2.armyNum;
   button1.widget.update();
   button2.widget.update();
   selected1 = null;
