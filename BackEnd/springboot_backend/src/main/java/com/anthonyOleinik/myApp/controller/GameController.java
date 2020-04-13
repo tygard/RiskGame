@@ -106,7 +106,7 @@ public class GameController {
         waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
 
         Thread.sleep(500);
-        GameState ret = await(AddGame());
+        GameState ret = AddGame();
         if (ret == null) {
             return ResponseEntity.status(408).body(null);
         }
@@ -115,35 +115,33 @@ public class GameController {
 
     //After X amount of players are in the waitlist we create a new game
     //and add it the the activeGames list
-    public CompletableFuture<GameState> AddGame(){
+    public GameState AddGame(){
 
         int numPlayers = GameSize();
-        List<InGameUser> gamePlayers = await(GroupPlayers(numPlayers));
-        if (gamePlayers == null) {
-            return completedFuture(null);
-        }
-        GameState tmp = new GameState(gamePlayers, new GameBoard(), Integer.toString(activeGames.size()));
-        //
-        //always ensure board is an odd num of tiles
-        tmp.setBoard(InitializeBoard(tmp));
 
-        //store game ID in gamestate class, might be redundant due to hashmapping
-        activeGames.put(activeGames.size(), tmp);
-        logger.info(String.format("\nSuccessfully added game ID: %1s \n[%2s ] players: %3s", tmp.getGameID(),tmp.getUsers().size(),tmp.getUsers()));
-        return completedFuture(tmp);
+        List<InGameUser> gamePlayers = GroupPlayers(numPlayers);
+            GameState tmp = new GameState(gamePlayers, new GameBoard(), Integer.toString(activeGames.size()));
+            //
+            //always ensure board is an odd num of tiles
+            tmp.setBoard(InitializeBoard(tmp));
+
+            //store game ID in gamestate class, might be redundant due to hashmapping
+            activeGames.put(activeGames.size(), tmp);
+            logger.info(String.format("\nSuccessfully added game ID: %1s \n[%2s ] players: %3s", tmp.getGameID(),tmp.getUsers().size(),tmp.getUsers()));
+        return tmp;
     }
 
-    public CompletableFuture<List<InGameUser>> GroupPlayers(int gameSize){
+    public List<InGameUser> GroupPlayers(int gameSize){
         //ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
         List<String> group = new ArrayList<String>(waitingPlayers.subList(0, gameSize));
         List<InGameUser> tmp = new ArrayList<>();
-        for(int i = 0; i < tmp.size() ;i++){
+        for(int i = 0; i < group.size() ;i++){
             tmp.add(new InGameUser(group.get(i)));
+            waitingPlayers.remove(i);
             tmp.get(i).setTurnID(i);
         }
-        waitingPlayers.removeAll(tmp);
-        return completedFuture(tmp);
+        return tmp;
     }
 
 
