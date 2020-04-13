@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:risk/dataLayer/googleSignIn/googleSignIn.dart';
 import 'package:risk/src/pages/homeScreens/homeScreenBoiler.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,30 +14,41 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: HomeScreenBoiler(
-        child: Column(
-                  children: <Widget>[
-                    _buildButton(
-                        function: () => Navigator.of(context).pushReplacementNamed("/queue"),
-                        text: Text(
-                          "Play RISK",
-                          style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20),
-                          textAlign: TextAlign.center,
-                        ),
-                        background: Theme.of(context).accentColor),
-                  ],
-                )
-      ),
+          child: Column(
+        children: <Widget>[
+          _buildButton(
+              function: () =>
+                  Navigator.of(context).pushReplacementNamed("/queue"),
+              text: Text(
+                "Play RISK",
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor, fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+              background: Theme.of(context).accentColor),
+          _buildButton(
+            function: () => signOut(),
+            text: Text(
+              "Log out",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+            background: Colors.red,
+          )
+        ],
+      )),
     );
   }
 
-  Widget _buildButton({Image image, Text text, Color background, Function function}) {
+  Widget _buildButton(
+      {Image image, Text text, Color background, Function function}) {
     return Padding(
         padding: const EdgeInsets.only(top: 20, left: 30, right: 30),
         child: ConstrainedBox(
           constraints: BoxConstraints(
             maxWidth: 500,
           ),
-                  child: Container(
+          child: Container(
             width: double.infinity,
             child: Material(
               color: background,

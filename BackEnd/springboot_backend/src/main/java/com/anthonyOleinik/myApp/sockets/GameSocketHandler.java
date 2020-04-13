@@ -34,13 +34,16 @@ public class GameSocketHandler extends TextWebSocketHandler {
         for(WebSocketSession webSocketObject : sessions) {
             Map<String, String> map = g.fromJson(message.getPayload(), Map.class);
             if (map.containsKey("type")){
+                System.out.println("has type...");
                 if (map.get("type").equals("chat")) {
                     webSocketObject.sendMessage(message);
                 } else if (map.get("type").equals("gamestate")) {
                     GameStateWrapper gameStateWrapper = g.fromJson(message.getPayload(), GameStateWrapper.class);
                     game.HandlePacket(gameStateWrapper.getState().getGameID(), gameStateWrapper.getState());
+
                 }
             } else {
+                System.out.println("We DONT have a type");
                 throw new NoSuchFieldError("No type field in message. each message must have type field.");
             }
         }
