@@ -23,6 +23,7 @@ import org.springframework.web.socket.WebSocketSession;
 import static com.ea.async.Async.await;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -56,9 +57,8 @@ public class GameController {
     }
 
 
-    public void HandlePacket(@DestinationVariable String id, @DestinationVariable GameState data) {
+    public void HandlePacket(String id, GameState data) throws IOException {
         //this probably works, I have no idea how spring does websockets
-        //
         activeGames.replace(Integer.parseInt(id), data);
         gameSockets.sendGameState(id, data);
     }
