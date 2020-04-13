@@ -141,8 +141,10 @@ public class GameController {
         List<String> group = new ArrayList<String>(waitingPlayers.subList(0, gameSize));
         List<InGameUser> tmp = new ArrayList<>();
         for(int i = 0; i < group.size() ;i++){
-            tmp.add(new InGameUser(group.get(i)));
-            waitingPlayers.remove(group.get(i));
+            InGameUser tmpUser = new InGameUser(group.get(i));
+            tmpUser.setTurnID(i);
+            tmp.add(tmpUser);
+            waitingPlayers.remove(tmpUser.getUsername());
             tmp.get(i).setTurnID(i);
         }
         return tmp;
