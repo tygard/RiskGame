@@ -88,6 +88,7 @@ public class LobbySocketHandler extends TextWebSocketHandler {
             //TODO: FIGURE OUT HOW we generate the gamestate, and send the X players the gamestate.
             //GET THE GAMESTATE HERE!!!
             //Adds game from
+            System.out.println("Got here");
             GameState gameState = await(game.AddGame());
             int numPlayers = gameState.getUsers().size();
             //create a temporary array of sessions in here using number of players in lobby
