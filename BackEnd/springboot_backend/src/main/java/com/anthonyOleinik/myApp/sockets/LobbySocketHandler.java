@@ -84,7 +84,6 @@ public class LobbySocketHandler extends TextWebSocketHandler {
     }
 
     private void sendGameState() throws IOException {
-            //TODO: FIGURE OUT HOW we generate the gamestate, and send the X players the gamestate.
             GameState res = game.AddGame();
 
                 JsonElement jsonElement = gson.toJsonTree(res);

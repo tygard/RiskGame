@@ -19,8 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.WebSocketSession;
-
-import static com.ea.async.Async.await;
+import com.anthonyOleinik.myApp.Services.MapGenerator;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
 import java.io.IOException;
@@ -58,10 +57,9 @@ public class GameController {
 
 
     public void HandlePacket(String id, GameState data) throws IOException {
-        //this probably works, I have no idea how spring does websockets
-        //increments turn if all players have taken their turn
+        //This if statement checks if the modulo resets to 1, indicating all players have taken turn
         if(data.getUsers().size() % data.getCurrPlayer()+1 ==1){
-            data.setTurn( data.getTurn()+1);
+            data.setTurn(data.getTurn()+1);
             data.setCurrPlayer(0);
         }
         data.setCurrPlayer(data.getCurrPlayer()+1);
@@ -109,7 +107,6 @@ public class GameController {
         waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
         waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
         waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
-        waitingPlayers.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
 
         Thread.sleep(500);
         GameState ret = AddGame();
@@ -129,6 +126,7 @@ public class GameController {
             GameState tmp = new GameState(gamePlayers, new GameBoard(), Integer.toString(activeGames.size()));
             //
             //always ensure board is an odd num of tiles
+
             tmp.setBoard(InitializeBoard(tmp));
 
             //store game ID in gamestate class, might be redundant due to hashmapping
