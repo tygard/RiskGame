@@ -115,7 +115,7 @@ class _QueueScreenState extends State<QueueScreen> {
   }
 
   void _toGameWithState() async  {
-   Response response = await RiskHttp.makePostRequest("/game/placeholder/");
+   Response response = await RiskHttp.makePostRequest("/game/template/");
    locator<GameState>().fromGameState(GameState.fromJson(response.data));
    print(response.data);
    Navigator.of(context).pushReplacementNamed("/game");
