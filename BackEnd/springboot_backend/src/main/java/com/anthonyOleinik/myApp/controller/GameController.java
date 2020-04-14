@@ -145,7 +145,6 @@ public class GameController {
             tmpUser.setTurnID(i);
             tmp.add(tmpUser);
             waitingPlayers.remove(tmpUser.getUsername());
-            tmp.get(i).setTurnID(i);
         }
         return tmp;
     }
