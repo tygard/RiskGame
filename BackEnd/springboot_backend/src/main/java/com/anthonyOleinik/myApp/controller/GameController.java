@@ -124,8 +124,6 @@ public class GameController {
 
         List<InGameUser> gamePlayers = GroupPlayers(numPlayers);
             GameState tmp = new GameState(gamePlayers, new GameBoard(), Integer.toString(activeGames.size()));
-            //
-            //always ensure board is an odd num of tiles
 
             tmp.setBoard(InitializeBoard(tmp));
 
@@ -150,14 +148,6 @@ public class GameController {
     }
 
 
-    public CompletableFuture<Boolean> CheckWaiting(int gameSize) {
-        if (waitingPlayers.size() < gameSize) {
-            return completedFuture(false);
-        }
-        return completedFuture(true);
-    }
-
-
     //quick function to determine game size from 4-8
     public Integer GameSize() {
         if(waitingPlayers.size()%8 < 4)
@@ -171,7 +161,8 @@ public class GameController {
     //
     GameBoard InitializeBoard(GameState tmp) {
         int numPlayers = tmp.getUsers().size();
-        GameBoard board = new GameBoard();
+        System.out.println("[init board]players in game:"+numPlayers);
+        GameBoard board = tmp.getBoard();
         board.setDimensions((numPlayers + (new Random().nextInt(3) * 2 + 1)));
         final int mod = board.getDimensions();
         final int tmpArea = board.getDimensions() * board.getDimensions();
@@ -203,11 +194,12 @@ public class GameController {
             }
             if(numPlayers == 8) {
                 if (corners.contains(tmpTile) || midTopPoints.contains(tmpTile) || midSidePoints.contains(tmpTile)) {
+                    System.out.println("[init board] Setting tile owner.");
                     tmpTile.setOwner(tmp.getUsers().get(tmpPlayer));
                     tmpTile.setTroops(tmp.getInitTroop());
                     tmpTile.setTroopGeneration(tmp.getInitTroopGen());
                     tmpTile.setMoneyGeneration(tmp.getInitMoneyGen());
-                    ++tmpPlayer;
+                    tmpPlayer++;
                 }
             }else if(numPlayers == 6){
                 if(corners.contains(tmpTile) || midTopPoints.contains(tmpTile)){
@@ -215,7 +207,7 @@ public class GameController {
                     tmpTile.setTroops(tmp.getInitTroop());
                     tmpTile.setTroopGeneration(tmp.getInitTroopGen());
                     tmpTile.setMoneyGeneration(tmp.getInitMoneyGen());
-                    ++tmpPlayer;
+                    tmpPlayer++;
                 }
             }else {
                 if (corners.contains(tmpTile)) {
@@ -223,7 +215,7 @@ public class GameController {
                     tmpTile.setTroops(tmp.getInitTroop());
                     tmpTile.setTroopGeneration(tmp.getInitTroopGen());
                     tmpTile.setMoneyGeneration(tmp.getInitMoneyGen());
-                    ++tmpPlayer;
+                    tmpPlayer++;
                 }
             }
             board.AddTile(tmpTile);
