@@ -13,7 +13,7 @@ import 'Tile.dart';
 class GameBoard extends StatefulWidget {
   GameBoard({Key key, this.title}) : super(key: key);
   final String title;
-  int dimensions = new Random().nextInt(9) + 7;
+  int dimensions = locator<GameState>().board.dimensions;
   ValueNotifier<GameState> gameState = ValueNotifier(locator<GameState>());
   gb.GameBoard board = locator<GameState>().board;
   @override
@@ -24,22 +24,23 @@ class GameBoard extends StatefulWidget {
 class _GameBoard extends State<GameBoard> {
 
   void createBoard() {
-    if (locator<GameState>().board == null) {
-      int dim = widget.dimensions;
-      List<t.Tile> tiles = new List();
-      widget.board = gb.GameBoard(widget.dimensions, tiles);
-      widget.board.tiles = tiles;
-      widget.board.tiles[0].power = 20;
-      widget.board.tiles[0].ownership = 0;
-      widget.board.tiles[dim - 1].power = 20;
-      widget.board.tiles[dim - 1].ownership = 3;
-      widget.board.tiles[dim * dim - 1].power = 20;
-      widget.board.tiles[dim * dim - 1].ownership = 1;
-      widget.board.tiles[dim * dim - dim ].power = 20;
-      widget.board.tiles[dim * dim - dim ].ownership = 2;
-      locator<GameState>().turn = 0;
-      locator<GameState>().board = widget.board;
-      }
+    if (locator<GameState>().board.dimensions == null) {
+      locator<GameState>().board.dimensions = widget.dimensions;
+    }
+    int dim = locator<GameState>().board.dimensions;
+    List<t.Tile> tiles = new List();
+    widget.board = gb.GameBoard(dim, tiles);
+    widget.board.tiles = tiles;
+    widget.board.tiles[0].power = 20;
+    widget.board.tiles[0].ownership = 0;
+    widget.board.tiles[dim - 1].power = 20;
+    widget.board.tiles[dim - 1].ownership = 3;
+    widget.board.tiles[dim * dim - 1].power = 20;
+    widget.board.tiles[dim * dim - 1].ownership = 1;
+    widget.board.tiles[dim * dim - dim ].power = 20;
+    widget.board.tiles[dim * dim - dim ].ownership = 2;
+    locator<GameState>().turn = 0;
+    locator<GameState>().board = widget.board;
     }
 
 
