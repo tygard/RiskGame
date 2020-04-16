@@ -49,26 +49,29 @@ class _RiskOverlayState extends State<RiskOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.brown,
-      drawer: Container(
-        width: MediaQuery.of(context).size.width * 0.40,
-        child: Drawer(
-          child: _buildChatroom(),
+    return GestureDetector(
+      onTap: () {FocusScope.of(context).requestFocus(FocusNode());},
+          child: Scaffold(
+        backgroundColor: Colors.brown,
+        drawer: Container(
+          width: MediaQuery.of(context).size.width * 0.40,
+          child: Drawer(
+            child: _buildChatroom(),
+          ),
         ),
-      ),
-      body: Stack(
-        children: <Widget>[
-          widget.child,
-          SafeArea(
-            child: Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: ButtonStack(),
-                )),
-          )
-        ],
+        body: Stack(
+          children: <Widget>[
+            widget.child,
+            SafeArea(
+              child: Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: ButtonStack(),
+                  )),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -86,14 +89,16 @@ class _RiskOverlayState extends State<RiskOverlay> {
                 itemBuilder: (context, index) => _buildChat(index),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                  child: TextField(
-                decoration: InputDecoration(hintText: "chat"),
-                controller: _textController,
-                onSubmitted: _sendChat,
-              )),
+            SingleChildScrollView(
+                          child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                    child: TextField(
+                  decoration: InputDecoration(hintText: "chat"),
+                  controller: _textController,
+                  onSubmitted: _sendChat,
+                )),
+              ),
             )
           ],
         ),
@@ -154,7 +159,9 @@ class _RiskOverlayState extends State<RiskOverlay> {
   void _beginListeningToChat() {
     sm.chatDelegator().listen((chat) {
       if (chat.name == locator<User>().name) {
-        chat.name = locator<User>().name;
+        chat.name = "You";
+        _addItem(chat);
+      } else {
         _addItem(chat);
       }
     });

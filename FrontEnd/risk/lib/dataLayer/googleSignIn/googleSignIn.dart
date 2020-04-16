@@ -5,6 +5,7 @@ import 'package:risk/models/freezedClasses/user.dart';
 import 'package:risk/src/utils/routeGenerator.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
 
+import '../fileSystem.dart';
 import '../riskHttp.dart';
 
 GoogleSignIn _googleSignIn = new GoogleSignIn(
@@ -13,8 +14,9 @@ GoogleSignIn _googleSignIn = new GoogleSignIn(
   ],
 );
 
-signOut() {
+signOut() async {
   _googleSignIn.disconnect();
+  deleteFile("user.json");
 }
 
 initLogin() {
@@ -23,8 +25,10 @@ initLogin() {
     if (account != null) {
       locator<User>().googleID = account.id;
       locator<RouteGenerator>().generateRouteNamed("/home");
+      return true;
     } else {
       locator<RouteGenerator>().generateRouteNamed("/login");
+      return false;
     }
   });
   _googleSignIn.signInSilently();

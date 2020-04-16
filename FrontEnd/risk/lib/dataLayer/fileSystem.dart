@@ -24,3 +24,8 @@ Future<String> readContentFromFileSystem(String name) async {
     String contents = await file.readAsString();
     return contents;
 }
+
+void deleteFile(String name) async {
+    final file = await _localFile(name);
+    file.delete();
+}
