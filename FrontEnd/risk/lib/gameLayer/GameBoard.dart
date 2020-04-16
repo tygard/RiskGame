@@ -7,6 +7,7 @@ import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
 import 'package:risk/models/gameStateObjects/gameBoard.dart' as gb;
 import 'package:risk/models/gameStateObjects/tile.dart' as t;
+import 'package:risk/src/utils/toaster.dart';
 import 'Tile.dart';
 
 
@@ -54,6 +55,7 @@ class _GameBoard extends State<GameBoard> {
   void initState() {
     createBoard();
     widget.gameState.addListener(() => parseGameState());
+    Toaster.successToast("Turn is: " + ColorToString(turn));
   }
 
   void parseGameState()
