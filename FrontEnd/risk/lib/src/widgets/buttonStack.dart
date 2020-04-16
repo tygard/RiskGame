@@ -50,7 +50,7 @@ class ButtonStack extends StatelessWidget {
                   attack(selected1, selected2);
                 }
               },
-              backgroundColor: (true) ? Colors.red : Colors.grey,
+              backgroundColor: Colors.red,
               child: Text(
                 "End Turn",
                 textAlign: TextAlign.center,
