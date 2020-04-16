@@ -5,6 +5,7 @@ import 'package:risk/models/gameStateObjects/active.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/models/gameStateObjects/passive.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
+import 'package:risk/src/utils/toaster.dart';
 import 'Tile.dart';
 
 List<Passive> passivesList = new List<Passive>();
@@ -51,6 +52,7 @@ void attack(var button1, var button2) {
   selected1 = null;
   selected2 = null;
   turn = moveTurn(turn);
+  Toaster.successToast("Turn is: " + ColorToString(turn));
   locator<GameState>().turn = ColorToNum(turn);
 }
 
@@ -81,6 +83,22 @@ int ColorToNum(Color turn) {
   }
   if (turn == Colors.yellow) {
     return 1;
+  }
+}
+
+String ColorToString(Color turn)
+{
+  if (turn == Colors.red) {
+    return "Red";
+  }
+  if (turn == Colors.blue) {
+    return "Blue";
+  }
+  if (turn == Colors.green) {
+    return "Green";
+  }
+  if (turn == Colors.yellow) {
+    return "Yellow";
   }
 }
 
