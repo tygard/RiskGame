@@ -45,7 +45,7 @@ class _LoadScreenState extends State<LoadScreen> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       User user;
       try {
-        user = User.fromJson(json.decode(await readContentFromFileSystem("user.json")));
+        user = User.fromJson(json.decode(await readContentFromFileSystem("user.json").timeout(const Duration(seconds: 5))));
       } catch (e) {
         print(e);
         locator<RouteGenerator>().key.currentState.pushReplacementNamed("/login");

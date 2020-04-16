@@ -34,8 +34,8 @@ public class GameSocketHandler extends TextWebSocketHandler {
         for(WebSocketSession webSocketObject : sessions) {
             Map<String, String> map = g.fromJson(message.getPayload(), Map.class);
             if (map.containsKey("type")){
-                System.out.println("has type...");
                 if (map.get("type").equals("chat")) {
+                    System.out.println("sent chat to a connection");
                     webSocketObject.sendMessage(message);
                 } else if (map.get("type").equals("gamestate")) {
                     GameStateWrapper gameStateWrapper = g.fromJson(message.getPayload(), GameStateWrapper.class);
