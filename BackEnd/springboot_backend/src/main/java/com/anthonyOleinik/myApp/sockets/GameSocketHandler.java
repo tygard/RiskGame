@@ -38,6 +38,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
                     System.out.println("sent chat to a connection");
                     webSocketObject.sendMessage(message);
                 } else if (map.get("type").equals("gamestate")) {
+                    System.out.println("got gamestate");
                     GameStateWrapper gameStateWrapper = g.fromJson(message.getPayload(), GameStateWrapper.class);
                     game.HandlePacket(gameStateWrapper.getState().getGameID(), gameStateWrapper.getState());
 
@@ -51,6 +52,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
 
     public void sendGameState(String id, GameState gameState) throws IOException {
         Gson gson = new Gson();
+        System.out.println("attempting to send gamestate");
         JsonElement jsonElement = gson.toJsonTree(gameState);
         jsonElement.getAsJsonObject().addProperty("type", "gamestate");
         for(WebSocketSession session : game.gameSessions.get(Integer.parseInt(id))){
