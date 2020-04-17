@@ -19,7 +19,6 @@ class GameBoard extends StatefulWidget {
   gb.GameBoard board = locator<GameState>().board;
   @override
   _GameBoard createState() => _GameBoard();
-
 }
 
 class _GameBoard extends State<GameBoard> {
@@ -46,9 +45,11 @@ class _GameBoard extends State<GameBoard> {
 
 
   void updateBoard() {
+    debugPrint("Board updating");
     setState(() {});
     locator<GameState>().board = gb.GameBoard(widget.dimensions, widget.board.tiles);
     locator<GameState>().fromGameState(locator<GameState>());
+    debugPrint(locator<GameState>().board.tiles[1].power.toString());
   }
 
   @override
@@ -60,6 +61,7 @@ class _GameBoard extends State<GameBoard> {
 
   void parseGameState()
   {
+    debugPrint("Is Parsing");
     widget.dimensions = locator<GameState>().board.dimensions;
     widget.board.tiles = locator<GameState>().board.tiles;
     setState(() {});

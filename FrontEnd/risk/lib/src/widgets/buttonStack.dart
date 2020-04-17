@@ -6,6 +6,7 @@ import 'package:risk/gameLayer/globalVars.dart';
 import 'package:risk/src/utils/providers/socketProvider.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
 import 'package:risk/src/utils/toaster.dart';
+import 'package:risk/src/utils/turnManager.dart';
 
 class ButtonStack extends StatelessWidget {
   @override
@@ -48,13 +49,15 @@ class ButtonStack extends StatelessWidget {
                 if (selected1 == null && selected2 == null) {
                   Toaster.errorToast(
                       "Please select a valid territory to attack and a territory to attack it");
+                } else if (!isCurrentTurn()) {
+                  Toaster.errorToast("Not your turn!");
                 } else {
                   isTurnOver = true;
                   attack(selected1, selected2, context);
                   SocketProvider.of(context).socketManager.sendGameState(locator<GameState>());
                 }
               },
-              backgroundColor: Colors.red,
+              backgroundColor: endButtonColor(),
               child: Text(
                 "End Turn",
                 textAlign: TextAlign.center,
@@ -63,5 +66,13 @@ class ButtonStack extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+Color endButtonColor() {
+  if (isCurrentTurn()) {
+    return Colors.red;
+  } else {
+    return Colors.grey;
   }
 }

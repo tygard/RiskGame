@@ -4,6 +4,7 @@ import com.anthonyOleinik.myApp.controller.GameController;
 import com.anthonyOleinik.myApp.entities.GameState.GameState;
 import com.anthonyOleinik.myApp.sockets.socketMessages.GameStateWrapper;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import java.util.function.BiConsumer;
 @Component
 public class GameSocketHandler extends TextWebSocketHandler {
     List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
-
+    Gson gson = new GsonBuilder().serializeNulls().create();
     @Autowired
     GameController game;
 
@@ -31,7 +32,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage message)
             throws InterruptedException, IOException {
         Gson g = new Gson();
-        for(WebSocketSession webSocketObject : sessions) {
+        for (WebSocketSession webSocketObject : sessions) {
             Map<String, String> map = g.fromJson(message.getPayload(), Map.class);
             System.out.println("[Game Socket Handler] recieved message");
             if (map.containsKey("type")){
@@ -53,16 +54,35 @@ public class GameSocketHandler extends TextWebSocketHandler {
 
     public void sendGameState(String id, GameState gameState) throws IOException {
         Gson gson = new Gson();
-        System.out.println("attempting to send gamestate");
         JsonElement jsonElement = gson.toJsonTree(gameState);
         jsonElement.getAsJsonObject().addProperty("type", "gamestate");
-        for(WebSocketSession session : game.gameSessions.get(Integer.parseInt(id))){
+        for (WebSocketSession session : game.gameSessions.get(Integer.parseInt(id))) {
             session.sendMessage(new TextMessage(gson.toJson(jsonElement)));
         }
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        //After connecting to gamesocket we need to send a header containing which game id
+        //we are connecting to, and which user it is so we can add their session to
+        //{gameSessions} respective to the game's id
+        int gameid = Integer.parseInt(session.getHandshakeHeaders().get("gameID")
+                .toString().replace("\"", ""));
+        String user = session.getHandshakeHeaders().get("user")
+                .toString().replace("\"", "");
+        //goes through all users in game to see where the username matches the sent header
+        game.FindGame(gameid).getUsers().forEach((i) -> {
+            if (i.getUsername() == user) {
+                JsonElement jsonElement = gson.toJsonTree(i);
+                jsonElement.getAsJsonObject().addProperty("type", "ingame");
+                try {
+                    session.sendMessage(new TextMessage(gson.toJson(jsonElement)));
+                    game.gameSessions.get(gameid).add(session);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         sessions.add(session);
     }
 
