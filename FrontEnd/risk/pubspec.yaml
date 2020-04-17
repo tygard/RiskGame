@@ -28,6 +28,7 @@ dependencies:
   json_annotation: ^3.0.1
   path_provider: ^1.6.5
   provider: ^3.1.0+1
+  after_init: ^0.1.2
   
   #frontend
   fluttertoast: ^4.0.0

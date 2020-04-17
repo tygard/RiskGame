@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:risk/models/gameStateObjects/active.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/models/gameStateObjects/passive.dart';
+import 'package:risk/src/utils/providers/socketProvider.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
+import 'package:risk/src/utils/socketManager.dart';
 import 'package:risk/src/utils/toaster.dart';
 import 'Tile.dart';
 
@@ -22,7 +24,7 @@ bool isTurnOver = false;
 
 void setupLocator() {}
 
-void attack(var button1, var button2) {
+void attack(var button1, var button2, BuildContext context) {
   button1.armyNum > button2.armyNum
       ? button2.armyNum -= 5
       : button1.armyNum -= 5;
@@ -54,6 +56,7 @@ void attack(var button1, var button2) {
   turn = moveTurn(turn);
   Toaster.successToast("Turn is: " + ColorToString(turn));
   locator<GameState>().turn = ColorToNum(turn);
+  SocketProvider.of(context).socketManager.sendGameState(locator<GameState>());
 }
 
 Color moveTurn(Color turn) {

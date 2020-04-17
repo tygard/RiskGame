@@ -33,6 +33,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
         Gson g = new Gson();
         for(WebSocketSession webSocketObject : sessions) {
             Map<String, String> map = g.fromJson(message.getPayload(), Map.class);
+            System.out.println("[Game Socket Handler] recieved message");
             if (map.containsKey("type")){
                 if (map.get("type").equals("chat")) {
                     System.out.println("sent chat to a connection");

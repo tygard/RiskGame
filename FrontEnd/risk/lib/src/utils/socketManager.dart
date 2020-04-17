@@ -78,12 +78,14 @@ class SocketManager {
   }
 
   void sendChat(Chat chat) {
+    print("attempting send");
     String message = json.encode(
         {"username": chat.name, "message": chat.message, "type": "chat"});
     channel.sink.add(message);
   }
 
   void sendGameState(GameState state) {
+    print("attempting send");
     String message = json.encode({"type": "gamestate", "gamestate": state});
     channel.sink.add(message);
   }

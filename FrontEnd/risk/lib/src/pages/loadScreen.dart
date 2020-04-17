@@ -53,6 +53,7 @@ class _LoadScreenState extends State<LoadScreen> {
       }
       locator<User>().fromUser(user);
       initLogin();
+            locator<RouteGenerator>().generateRouteNamed("/login");
     });
   }
 }
