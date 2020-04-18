@@ -21,5 +21,4 @@ void registerServices({bool production = false}){
   locator.registerLazySingleton<RouteGenerator>(() =>  RouteGenerator());
   locator.registerLazySingleton<GameState>(() =>  GameState.empty());
   locator.registerLazySingleton<User>(() =>  User());
-  locator.registerLazySingleton<SocketManager>(() => SocketManager());
   }

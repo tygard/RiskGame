@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'package:after_init/after_init.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:risk/models/freezedClasses/chat.dart';
 import 'package:risk/models/gameStateObjects/inGameUser.dart';
 import 'package:risk/src/utils/providers/globalsProvider.dart';
+import 'package:risk/src/utils/providers/socketProvider.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
 import 'package:risk/src/utils/socketManager.dart';
 import 'package:risk/src/widgets/buttonStack.dart';
@@ -20,7 +22,7 @@ class RiskOverlay extends StatefulWidget {
   _RiskOverlayState createState() => _RiskOverlayState();
 }
 
-class _RiskOverlayState extends State<RiskOverlay> {
+class _RiskOverlayState extends State<RiskOverlay> with AfterInitMixin<RiskOverlay>{
   int numChats = 0;
   TextEditingController _textController;
   ScrollController _scrollController;
@@ -29,16 +31,15 @@ class _RiskOverlayState extends State<RiskOverlay> {
 
   @override
   void initState() {
-    sm = SocketManager(headers: {
-      "player": json.encode(InGameUser(
-          id: locator<User>().inGamePlayerNumber,
-          userName: locator<User>().email)),
-    });
-    _beginListeningToChat();
     _textController = TextEditingController();
     _scrollController = ScrollController(initialScrollOffset: 0);
     chats = new List<Chat>();
     super.initState();
+  }
+
+  void didInitState(){
+    sm = SocketProvider.of(context).socketManager;
+    _beginListeningToChat();
   }
 
   @override

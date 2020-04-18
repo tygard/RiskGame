@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/src/pages/gameScreens/passivesScreen.dart';
 import 'package:risk/gameLayer/globalVars.dart';
+import 'package:risk/src/utils/providers/socketProvider.dart';
+import 'package:risk/src/utils/serviceProviders.dart';
 import 'package:risk/src/utils/toaster.dart';
 import 'package:risk/src/utils/turnManager.dart';
 
@@ -50,7 +53,8 @@ class ButtonStack extends StatelessWidget {
                   Toaster.errorToast("Not your turn!");
                 } else {
                   isTurnOver = true;
-                  attack(selected1, selected2);
+                  attack(selected1, selected2, context);
+                  SocketProvider.of(context).socketManager.sendGameState(locator<GameState>());
                 }
               },
               backgroundColor: endButtonColor(),

@@ -14,6 +14,13 @@ class GameState {
   int turn;
   int currPlayer;
 
+  final int tileGrowthPercent = 5; //percent out of 100
+  final int secondsPerTurn = 60;
+  final int initArmyNum = 20;
+
+  final int AITileGrowth = 5; //percent out of 100
+  final int initAINum = 10;
+
   GameState.empty();
   GameState(this.users, this.board, this.gameID);
 
@@ -24,13 +31,6 @@ class GameState {
     turn = state.turn;
     currPlayer = state.currPlayer;
   }
-
-  final int tileGrowthPercent = 5; //percent out of 100
-  final int secondsPerTurn = 60;
-  final int initArmyNum = 20;
-
-  final int AITileGrowth = 5; //percent out of 100
-  final int initAINum = 10;
 
     factory GameState.fromJson(Map<String, dynamic> json) => _$GameStateFromJson(json);
     Map<String, dynamic> toJson() => _$GameStateToJson(this);
