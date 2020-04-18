@@ -32,15 +32,7 @@ class RouteGenerator {
         return NoAnimationMaterialPageRoute(builder: (_) => SelectTeam());
       case "/game": //returns a SocketProvider -> RiskOverlay
         return NoAnimationMaterialPageRoute(
-            builder: (_) => SocketProvider(
-                child: RiskOverlay(child: GameBoard(title: "Filler")),
-                socketManager: SocketManager(
-                  headers: {
-                    "player": json.encode(InGameUser(
-                        id: locator<User>().inGamePlayerNumber,
-                        userName: locator<User>().email))
-                  },
-                )));
+            builder: (_) => RiskOverlay(child: GameBoard(title: "Filler")));
       default:
         throw ErrorDescription("route is unknown.");
     }
