@@ -16,12 +16,13 @@ class SocketManager {
   StreamController<GameState> gameStateStream = StreamController();
   StreamController<LobbyState> lobbyStream = StreamController();
 
-  SocketManager({String channelUrl = "DEFAULT", Map<String, String> headers}) {
+  SocketManager({String channelUrl = "DEFAULT", Map<String, dynamic> headers}) {
     //allows the override of the channel to other channels. just in case.
     if (channelUrl == "DEFAULT") {
       channelUrl = "ws://${locator<Config>().getEndpoint()}/chat";
     }
     debugPrint("connecting to $channelUrl");
+    debugPrint("headers: $headers");
     channel = IOWebSocketChannel.connect(channelUrl, headers: headers ?? {});
     _beginDelegation();
   }
@@ -35,6 +36,7 @@ class SocketManager {
   }
 
   void dispose() {
+    print("disposed");
     this.channel.sink.close();
     chatStream.close();
     gameStateStream.close();
@@ -78,15 +80,16 @@ class SocketManager {
   }
 
   void sendChat(Chat chat) {
-    print("attempting send");
+        print("attempting send of $chat");
     String message = json.encode(
         {"username": chat.name, "message": chat.message, "type": "chat"});
     channel.sink.add(message);
   }
 
   void sendGameState(GameState state) {
-    print("attempting send");
-    String message = json.encode({"type": "gamestate", "gamestate": state});
+    print("attempting send of $state");
+    String message = json.encode({"type": "gamestate", "gamestate": state.toJson()});
     channel.sink.add(message);
+    print("message completed of length ${message.length}");
   }
 }

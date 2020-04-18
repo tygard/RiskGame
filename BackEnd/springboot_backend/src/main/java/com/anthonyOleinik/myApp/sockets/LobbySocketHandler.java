@@ -49,7 +49,12 @@ public class LobbySocketHandler extends TextWebSocketHandler {
         int numPlayersInLobby = sessionToLobbyNum.size();
         sessionToLobbyNum.add(numPlayersInLobby);
         sessions.add(session);
-        game.JoinLobby(session.getHandshakeHeaders().get("user").toString().replace("\"", ""));
+        if (session.getHandshakeHeaders().get("user") != null){
+            game.JoinLobby(session.getHandshakeHeaders().get("user").toString().replace("\"", ""));
+        } else {
+            game.JoinLobby("Anon");
+        }
+
         playerCountUpdated();
         //+ 1  cause we just added one.
         System.out.println("Player joined. new num of players in lobby: " + (numPlayersInLobby + 1));

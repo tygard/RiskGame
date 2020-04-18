@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:risk/models/freezedClasses/chat.dart';
+import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/models/gameStateObjects/inGameUser.dart';
 import 'package:risk/src/utils/providers/globalsProvider.dart';
 import 'package:risk/src/utils/providers/socketProvider.dart';
@@ -22,7 +23,8 @@ class RiskOverlay extends StatefulWidget {
   _RiskOverlayState createState() => _RiskOverlayState();
 }
 
-class _RiskOverlayState extends State<RiskOverlay> with AfterInitMixin<RiskOverlay>{
+class _RiskOverlayState extends State<RiskOverlay>
+    with AfterInitMixin<RiskOverlay> {
   int numChats = 0;
   TextEditingController _textController;
   ScrollController _scrollController;
@@ -37,8 +39,15 @@ class _RiskOverlayState extends State<RiskOverlay> with AfterInitMixin<RiskOverl
     super.initState();
   }
 
-  void didInitState(){
-    sm = SocketProvider.of(context).socketManager;
+  void didInitState() {
+    sm = SocketManager(
+      headers: {
+        "gameID": locator<GameState>().gameID,
+        "user": json.encode(InGameUser(
+            id: locator<User>().inGamePlayerNumber,
+            userName: locator<User>().email))
+      },
+    );
     _beginListeningToChat();
   }
 
@@ -51,8 +60,10 @@ class _RiskOverlayState extends State<RiskOverlay> with AfterInitMixin<RiskOverl
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {FocusScope.of(context).requestFocus(FocusNode());},
-          child: Scaffold(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
         backgroundColor: Colors.brown,
         drawer: Container(
           width: MediaQuery.of(context).size.width * 0.40,
@@ -60,18 +71,21 @@ class _RiskOverlayState extends State<RiskOverlay> with AfterInitMixin<RiskOverl
             child: _buildChatroom(),
           ),
         ),
-        body: Stack(
-          children: <Widget>[
-            widget.child,
-            SafeArea(
-              child: Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: ButtonStack(),
-                  )),
-            )
-          ],
+        body: SocketProvider(
+          socketManager: sm,
+                  child: Stack(
+            children: <Widget>[
+              widget.child,
+              SafeArea(
+                child: Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: ButtonStack(),
+                    )),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -91,7 +105,7 @@ class _RiskOverlayState extends State<RiskOverlay> with AfterInitMixin<RiskOverl
               ),
             ),
             SingleChildScrollView(
-                          child: Align(
+              child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
                     child: TextField(

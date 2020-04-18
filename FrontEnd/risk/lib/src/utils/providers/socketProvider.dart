@@ -11,6 +11,7 @@ class SocketProvider extends InheritedWidget {
 
   final SocketManager socketManager;
 
+
   static SocketProvider of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<SocketProvider>();
   }

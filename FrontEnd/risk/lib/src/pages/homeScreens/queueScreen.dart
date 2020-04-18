@@ -6,6 +6,7 @@ import 'package:risk/dataLayer/riskHttp.dart';
 import 'package:risk/models/freezedClasses/lobbyState.dart';
 import 'package:risk/models/freezedClasses/user.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
+import 'package:risk/models/gameStateObjects/inGameUser.dart';
 import 'package:risk/src/utils/config/config.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
 import 'package:risk/src/utils/socketManager.dart';
@@ -24,7 +25,7 @@ class _QueueScreenState extends State<QueueScreen> {
   @override
   void initState() {
     sm = SocketManager(
-        channelUrl: "ws://${locator<Config>().getEndpoint()}/lobby", headers: {"user": json.encode(locator<User>().email)});
+        channelUrl: "ws://${locator<Config>().getEndpoint()}/lobby", headers: {"user": locator<User>().email});
     locator<User>().inGamePlayerNumber = null;
     _beginListeningToLobby();
     super.initState();
@@ -121,3 +122,4 @@ class _QueueScreenState extends State<QueueScreen> {
    Navigator.of(context).pushReplacementNamed("/game");
   }
 }
+

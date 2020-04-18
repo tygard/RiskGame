@@ -31,21 +31,21 @@ public class GameSocketHandler extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage message)
             throws InterruptedException, IOException {
         Gson g = new Gson();
+        System.out.println("[Game Socket Handler] recieved message: " + message.getPayload());
         for(WebSocketSession webSocketObject : sessions) {
             Map<String, String> map = g.fromJson(message.getPayload(), Map.class);
-            System.out.println("[Game Socket Handler] recieved message");
             if (map.containsKey("type")){
                 if (map.get("type").equals("chat")) {
-                    System.out.println("sent chat to a connection");
+                    System.out.println("[Game Socket Handler] message type determined: chat");
                     webSocketObject.sendMessage(message);
                 } else if (map.get("type").equals("gamestate")) {
-                    System.out.println("got gamestate");
-                    GameStateWrapper gameStateWrapper = g.fromJson(message.getPayload(), GameStateWrapper.class);
+                    System.out.println("[Game Socket Handler] message type determined: gameState");
+                    GameStateWrapper gameStateWrapper = g.fromJson(message.getPayload(), GameStateWrapper.class);;
                     game.HandlePacket(gameStateWrapper.getState().getGameID(), gameStateWrapper.getState());
 
                 }
             } else {
-                System.out.println("We DONT have a type");
+                System.out.println("[Game Socket Handler] message type NOT determined");
                 throw new NoSuchFieldError("No type field in message. each message must have type field.");
             }
         }
@@ -63,6 +63,9 @@ public class GameSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        System.out.println("previous max message was: " + session.getTextMessageSizeLimit());
+        System.out.println("set to 15000");
+        session.setTextMessageSizeLimit(100000);
         sessions.add(session);
     }
 
