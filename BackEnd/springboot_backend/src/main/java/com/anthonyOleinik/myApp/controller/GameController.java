@@ -150,9 +150,9 @@ public class GameController {
 
     //quick function to determine game size from 4-8
     public Integer GameSize() {
-        if(waitingPlayers.size()%8 < 4)
+        if(waitingPlayers.size()%8 < 4 && waitingPlayers.size()>4)
             return 8;
-        if(waitingPlayers.size()%6 < 4)
+        if(waitingPlayers.size()%6 < 4 && waitingPlayers.size()>4)
             return 6;
 
         return 4;
