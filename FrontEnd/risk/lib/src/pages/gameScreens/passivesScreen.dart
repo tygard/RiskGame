@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:risk/models/freezedClasses/user.dart';
 import 'package:risk/models/gameStateObjects/active.dart';
+import 'package:risk/models/gameStateObjects/game.dart';
 import 'package:risk/models/gameStateObjects/passive.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
@@ -28,11 +30,14 @@ class _PassivesScreenState extends State<PassivesScreen> {
   String s = "";
   int curTurn;
   int c = 0;
+  InGameUser curUser;
   @override
   void initState() {
     super.initState();
     tWidget = selectedTile;
     curTurn = locator<GameState>().turn;
+    //curUser = locator<GameState>().users[locator<User>().inGamePlayerNumber];
+    curUser = findCurUser();
 
     /* state options:
     1: this is the first time the screen is inited, previous tWidget == null, previous turn == null, pTurn ==
@@ -49,9 +54,9 @@ class _PassivesScreenState extends State<PassivesScreen> {
     5: this is not the first time the screen is inited, previous tWidget != this tWidget, previous != turn
         - this is a new turn, resetState()
 */
+    //curUser.ownedPassives = new List<Passive>();
     print(
-        "before:\ns: \"$s\", prevtW: $prevtWidget, pTurn: $pTurn, cTurn: $curTurn\n\n----------------------------------->>>>>");
-
+        "before:\ns: \"$s\", prevtW: $prevtWidget, pTurn: $pTurn, cTurn: $curTurn, \ncurUser: $curUser\n\n----------------------------------->>>>>");
     if (pTurn == -1) {
       c++;
       s = "state $c";
@@ -95,7 +100,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
     }
 
     print(
-        "after:\ns: \"$s\", prevtW: $prevtWidget, pTurn: $pTurn, cTurn: $curTurn\n\n----------------------------------->>>>>");
+        "after:\ns: \"$s\", prevtW: $prevtWidget, pTurn: $pTurn, cTurn: $curTurn, \ncurUser: $curUser\n\n----------------------------------->>>>>");
 
     pTurn = curTurn;
   }
@@ -134,12 +139,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
     // if the number of users is 0 there will be nothing to base the passives tab around
     // otherwise we can create the passivesList
     if (locator<GameState>().users.length != 0) {
-      passivesList.insertAll(
-          0,
-          locator<GameState>()
-              .users
-              .elementAt(locator<GameState>().currPlayer)
-              .ownedPassives);
+      passivesList.insertAll(0, curUser.ownedPassives);
 
       // generate 5 random passives and add to the list to be displayed
       for (int i = 0; i < 5; i++) {
@@ -157,6 +157,23 @@ class _PassivesScreenState extends State<PassivesScreen> {
     locateTile();
     setActives();
     setPassives();
+  }
+
+  InGameUser findCurUser() {
+    print("num users: ${locator<GameState>().users.length}");
+/*     for (InGameUser inGameUser in locator<GameState>().users)
+      if (inGameUser.id == locator<User>().inGamePlayerNumber) {
+        return inGameUser.id;
+      }
+    return null; */
+    for (int i = 0; i < locator<GameState>().users.length; i++) {
+      print(
+          "user $i id:${locator<GameState>().users[i].id}\tinGamePlayerNumber: ${locator<User>().inGamePlayerNumber}");
+      if (locator<GameState>().users[i].id ==
+          locator<User>().inGamePlayerNumber)
+        return locator<GameState>().users[i];
+    }
+    return null;
   }
 
   /**
@@ -245,8 +262,14 @@ class _PassivesScreenState extends State<PassivesScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "Troop Generation: ${locator<GameState>().users[locator<GameState>().currPlayer].genTroops}, " +
-                      "Money Generation: ${locator<GameState>().users[locator<GameState>().currPlayer].genMoney}, ",
+                  "Troop Generation: ${curUser.genTroops}, " +
+                      "Money Generation: ${curUser.genMoney}, "
+                          "Money: ${curUser.money}, "
+                          "Faction: ${curUser.faction}, "
+                          "Username: ${curUser.userName}, "
+                          "ID: ${curUser.id}, "
+                          "User color: ${locator<User>().color}, "
+                          "InGamePlayerNumber: ${locator<User>().inGamePlayerNumber}, ",
                   style: TextStyle(
                     fontSize: 14,
                   ),
