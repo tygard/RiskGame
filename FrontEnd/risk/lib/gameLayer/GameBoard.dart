@@ -140,6 +140,7 @@ class _GameBoard extends State<GameBoard> {
       setState(() {
         this.gameState = locator<GameState>();
       });
+      print("${gameState.currPlayer}");
     });
   }
 

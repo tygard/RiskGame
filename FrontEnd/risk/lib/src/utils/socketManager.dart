@@ -54,7 +54,9 @@ class SocketManager {
           inputMap["type"] == "gamestate") {
             debugPrint("[SocketManager] received gamestate");
         gameStateStream.add(GameState.fromJson(inputMap));
+        debugPrint("currPlayer from socket: ${GameState.fromJson(inputMap).currPlayer}");
         locator<GameState>().fromGameState(GameState.fromJson(inputMap));
+        gameStateStream.add(GameState.fromJson(inputMap));
       } else if (inputMap.containsKey("type") && inputMap["type"] == "lobby") {
         lobbyStream.add(LobbyState.fromJson(inputMap));
         print(inputMap);

@@ -33,18 +33,22 @@ public class GameSocketHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message)
             throws InterruptedException, IOException {
-        System.out.println("[Game Socket Handler] recieved message: " + message.getPayload());
             Map<String, String> map = gson.fromJson(message.getPayload(), Map.class);
             if (map.containsKey("type")){
                 if (map.get("type").equals("chat")) {
                     System.out.println("[Game Socket Handler] message type determined: chat");
                     sendToAllPlayers(message);
                 } else if (map.get("type").equals("gamestate")) {
-                    System.out.println("[Game Socket Handler] message type determined: gamestate");
                     GameState state = gson.fromJson(message.getPayload(), GameState.class);
-                    System.out.println(state);
                     state.increment();
-                    sendGameStateToAppropriatePlayers(state, message);
+
+                    //adds "type" property
+                    JsonElement gameStateMessage = gson.toJsonTree(state);
+                    gameStateMessage.getAsJsonObject().addProperty("type", "gamestate");
+                    TextMessage packagedGamestate = new TextMessage(gson.toJson(gameStateMessage));
+
+                    //sends gamestate
+                    sendGameStateToAppropriatePlayers(state, packagedGamestate);
                 }
             } else {
                 System.out.println("[Game Socket Handler] message type NOT determined");
@@ -65,9 +69,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
     }
 
     private void sendMessageToId(int id, TextMessage message) throws IOException {
-        System.out.println("[lobbySocketManager] attempting to send message to player with id " + id);
         if (playerIDtoSession.get(id) == null){ //safeguard just in case the player leaves
-            System.out.println("[lobbySocketManager] no player found with id " + id);
             return;
         }
         playerIDtoSession.get(id).sendMessage(message);
@@ -77,7 +79,6 @@ public class GameSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         session.setTextMessageSizeLimit(100000);
         Integer newPlayerId = Integer.parseInt(session.getHandshakeHeaders().get("id").get(0));
-        System.out.println("added new player id " + newPlayerId);
         sessions.add(session);
         playerIDtoSession.put(newPlayerId, session);
     }
