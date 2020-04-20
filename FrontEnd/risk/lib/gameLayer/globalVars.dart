@@ -11,12 +11,12 @@ import 'package:risk/src/utils/toaster.dart';
 import 'Tile.dart';
 
 
-/*
+
 List<Passive> passivesList = new List<Passive>();
 List<Active> activesList = new List<Active>();
-Tile selectedTile;
-Tile prevtWidget;
-Tile tWidget;
+TileDisplay selectedTile;
+TileDisplay prevtWidget;
+TileDisplay tWidget;
 int pTurn = -1;
 
 var selected1;
@@ -111,4 +111,3 @@ Color NumToColor(int num) {
   if (num == 2) return Colors.green;
   if (num == 3) return Colors.blue;
 }
-*/
