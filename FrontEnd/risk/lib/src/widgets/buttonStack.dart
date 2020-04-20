@@ -17,12 +17,15 @@ class ButtonStack extends StatelessWidget {
     return Column(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: new Container(
-            color: mapPlayerNumToColor(locator<User>().inGamePlayerNumber),
-            child: Text("Your color is: " + mapPlayerNumToColorName(locator<User>().inGamePlayerNumber), style: TextStyle(fontSize: 20),)
-          )
-        ),
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: new Container(
+                color: mapPlayerNumToColor(locator<User>().inGamePlayerNumber),
+                child: Text(
+                  "Your color is: " +
+                      mapPlayerNumToColorName(
+                          locator<User>().inGamePlayerNumber),
+                  style: TextStyle(fontSize: 20),
+                ))),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: new FloatingActionButton(
@@ -57,7 +60,8 @@ class ButtonStack extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: FloatingActionButton(
               heroTag: "end turn btn",
-              onPressed: locator<AttackService>().attackDidHappen.notifyListeners,
+              onPressed:
+                  locator<AttackService>().attackDidHappen.notifyListeners,
               backgroundColor: endButtonColor(),
               child: Text(
                 "End Turn",

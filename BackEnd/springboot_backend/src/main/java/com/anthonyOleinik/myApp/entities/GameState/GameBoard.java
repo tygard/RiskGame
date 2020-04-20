@@ -48,4 +48,12 @@ public class GameBoard {
         }
         throw new IndexOutOfBoundsException("Tile index out of bounds");
     }
+
+    public void setTiles(List<Tile> tiles) {
+        this.tiles = tiles;
+    }
+
+    public void setDimensions(int dimensions) {
+        this.dimensions = dimensions;
+    }
 }

@@ -8,7 +8,7 @@ public class Tile {
 
     //an int from -2 to 3 inclusive, with -2 being an immovable tile and -1 being a uncaptured tile.
     private int terrain = 0;
-    private int troops = 0;
+    private int troops;
     private int power = 0;
     private int defense = 0;
 
@@ -115,4 +115,9 @@ public class Tile {
         return this.x == c.x
                 && this.y == c.y;
     }
+
+    public void addTroops(int initTroopGen) {
+        this.troops += initTroopGen;
+    }
+
 }
