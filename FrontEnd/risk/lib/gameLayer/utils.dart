@@ -4,8 +4,10 @@ import 'package:risk/models/gameStateObjects/game.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
 
 String mapPlayerNumToColorName(int playerNum) {
-  assert(playerNum >= 0 && playerNum <= 4);
+  assert(playerNum >= -2 && playerNum <= 4);
   switch (playerNum) {
+    case -2:
+      return "black";
     case -1:
       return "grey";
     case 0:
@@ -15,7 +17,7 @@ String mapPlayerNumToColorName(int playerNum) {
     case 2:
       return "green";
     case 3:
-      return "blue";
+      return "yellow";
   }
     throw Exception("how the fuck dude");
 }
@@ -34,7 +36,7 @@ Color mapPlayerNumToColor(int playerNum) {
     case 2:
       return Colors.green;
     case 3:
-      return Colors.blue;
+      return Colors.yellow;
   }
   throw Exception("how the fuck dude");
 }
