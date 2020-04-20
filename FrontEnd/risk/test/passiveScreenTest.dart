@@ -13,6 +13,7 @@ class MockActive extends Mock implements Active {}
 
 
 
+/*
 void main() {
   test('call passive functions', () async {
     Passive mockP = MockPassive();
@@ -21,3 +22,4 @@ void main() {
     verify(mockP.getCost()).called(1);
   });
 }
+*/

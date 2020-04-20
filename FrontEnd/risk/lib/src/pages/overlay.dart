@@ -42,10 +42,7 @@ class _RiskOverlayState extends State<RiskOverlay>
   void didInitState() {
     sm = SocketManager(
       headers: {
-        "gameID": locator<GameState>().gameID,
-        "user": json.encode(InGameUser(
-            id: locator<User>().inGamePlayerNumber,
-            userName: locator<User>().email))
+        "id": locator<User>().inGamePlayerNumber,
       },
     );
     _beginListeningToChat();

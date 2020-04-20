@@ -14,6 +14,7 @@ public class MapGenerator{
 
     public float dimensions;
 
+    /*
     List<Float> makeCircle(){
         List<Float> tmp = new ArrayList<>();
         int center = (int)dimensions/2;
@@ -95,4 +96,6 @@ public class MapGenerator{
         }
         return board;
     }
+
+     */
 }

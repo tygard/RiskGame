@@ -10,6 +10,8 @@ import 'package:risk/src/utils/socketManager.dart';
 import 'package:risk/src/utils/toaster.dart';
 import 'Tile.dart';
 
+
+/*
 List<Passive> passivesList = new List<Passive>();
 List<Active> activesList = new List<Active>();
 Tile selectedTile;
@@ -21,8 +23,6 @@ var selected1;
 var selected2;
 Color turn = Colors.red;
 bool isTurnOver = false;
-
-void setupLocator() {}
 
 void attack(var button1, var button2, BuildContext context) {
   button1.armyNum > button2.armyNum
@@ -111,3 +111,4 @@ Color NumToColor(int num) {
   if (num == 2) return Colors.green;
   if (num == 3) return Colors.blue;
 }
+*/

@@ -13,17 +13,18 @@ public class InGameUser {
     private String faction = "Red";
     private int turnID;
 
-    private ArrayList<Passive> passives = new ArrayList<Passive>();
+    private ArrayList<Passive> ownedPassives = new ArrayList<Passive>();
     private ArrayList<Tile> ownedTiles = new ArrayList<Tile>();
 
     private int money = 0;
-    private int generatedTroops = 0;
-    private int generatedMoney = 0;
+    private int genTroops = 0;
+    private int genMoney = 0;
 
-    private Float multiplierTroops = 1.0f;
-    private Float multiplierMoney = 1.0f;
+    private Float troopMultiplier = 1.0f;
+    private Float moneyMultiplier = 1.0f;
 
-    public InGameUser() {
+    public InGameUser(int turnID) {
+        this.turnID = turnID;
     }
 
     public InGameUser(String username) {
@@ -36,114 +37,24 @@ public class InGameUser {
         this.faction = _user.getFaction().getFactionName();
     }
 
-    public InGameUser(UserEntity _user, ArrayList<Passive> _passives, ArrayList<Tile> _ownedTiles,
-                      int _money, Float multTroops, Float multMoney) {
-        this.username = _user.getUsername();
-        this.role = _user.getRole().getRoleName();
-        this.faction = _user.getFaction().getFactionName();
-
-        passives = _passives == null ? passives : _passives;
-        ownedTiles = _ownedTiles == null ? ownedTiles : _ownedTiles;
-        multiplierTroops = multTroops.isNaN() ? multiplierTroops : multTroops;
-        multiplierMoney = multMoney.isNaN() ? multiplierMoney : multTroops;
-    }
-
-
-    //region Getters
-    public String getFaction() {
-        return faction;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public ArrayList<Passive> getPassives() {
-        return passives;
-    }
-
-    public ArrayList<Tile> getOwnedTiles() {
-        return ownedTiles;
-    }
-
-    public int getMoney() {
-        return money;
-    }
-
-    public int getGeneratedTroops() {
-        return generatedTroops;
-    }
-
-    public int getGeneratedMoney() {
-        return generatedMoney;
-    }
-    public int getTurnID(){return turnID;}
-
-    public float getMultiplierTroops() {
-        return multiplierTroops;
-    }
-
-    public float getMultiplierMoney() {
-        return multiplierMoney;
-    }
-    //endregion
-
-    //region Setters
-    public void addOwnedTile(Tile tile) {
-        ownedTiles.add(tile);
-    }
-
-    public void setFaction(String faction) {
-        this.faction = faction;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setTurnID(int id) {
-        this.turnID = id;
-    }
-
-    public void setPassives(ArrayList<Passive> _passives) {
-        passives = _passives;
-    }
-
-    public void setOwnedTiles(ArrayList<Tile> _tiles) {
-        ownedTiles = _tiles;
-    }
-
-    public void setMoney(int _money) {
-        money = _money;
-    }
-
-    public void setGeneratedTroops(int _genTroops) {
-        generatedTroops = _genTroops;
-    }
-
-    public void setGeneratedMoney(int _genMoney) {
-        generatedMoney = _genMoney;
-    }
-
-    public void setMultiplierTroops(float _multTroops) {
-        multiplierTroops = _multTroops;
-    }
-
-    public void setMultiplierMoney(float _multMoney) {
-        multiplierTroops = _multMoney;
-    }
-    //endregion
-
     @Override
     public String toString() {
         return "\n" + username;
+    }
+
+    public int getTurnID() {
+        return this.turnID;
+    }
+
+    public int getMoney(){
+        return this.money;
+    }
+
+    public void setMoney(int m){
+        this.money = m;
+    }
+
+    public void addMoney(int m){
+        this.money += m;
     }
 }

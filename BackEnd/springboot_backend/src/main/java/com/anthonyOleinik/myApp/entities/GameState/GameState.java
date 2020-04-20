@@ -9,7 +9,7 @@ public class GameState {
     private String gameID;
 
     private int turn = 0;
-    private int currPlayer = 0;
+    private int currPlayer;
 
     private final int initTroop = 20;
     private final int initTroopGen = 5;
@@ -19,23 +19,42 @@ public class GameState {
     private final int initAITroopGen = 1;
     private final int initAIMoneyGen = 0;
 
-    public GameState(){super();}
+    public GameState(ArrayList<Integer> playerIds){
+        this.currPlayer = playerIds.get(0);
+        for (int playerId : playerIds){
+            System.out.println("added new player with player id " + playerId);
+            this.users.add(new InGameUser(playerId));
+        }
 
-    public GameState(List<InGameUser> users, GameBoard board, String gameID, int turn,
-                     int currPlayer){
-        this.users = users;
-        this.board = board;
-        this.gameID = gameID;
-        this.turn = turn;
-        this.currPlayer = currPlayer;
-
+        this.board = new GameBoard(playerIds, initTroop, initAITroop);
     }
 
-    public GameState(List<InGameUser> _users, GameBoard _board, String id){
-        users = _users;
-        board = _board;
-        gameID = id;
+    public void increment(){
+        //grow all troops
+        int i = 0;
+        for (Tile tile : this.board.getTiles()){
+            if (tile.getOwner() != -1){
+                tile.setTroops(tile.getTroops() + initTroopGen);
+                System.out.println("setting a tile to a new troup count " + tile.getTroops() + initTroopGen);
+            } else {
+                tile.setTroops(tile.getTroops() + initAITroopGen);
+                System.out.println("setting a tile to a new troup count " + tile.getTroops() + initTroopGen);
+            }
+        }
+        //incriment current turn
+
+
+        //increase money of current player,
+        for (InGameUser user : this.getUsers()){
+            if (user.getTurnID() == this.currPlayer){
+                user.addMoney(initMoneyGen);
+            }
+        }
+
+        //increiment the rest
+        turn++;
     }
+
 
     public GameBoard getBoard() {
         return board;

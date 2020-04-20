@@ -7,17 +7,17 @@ import 'package:risk/models/gameStateObjects/passive.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
 import 'package:risk/gameLayer/globalVars.dart';
-import 'package:risk/gameLayer/Tile.dart' as _TileState;
-import 'package:risk/models/gameStateObjects/tile.dart' as tileObject;
+import 'package:risk/gameLayer/Tile.dart' as tileDisplay;
+import 'package:risk/models/gameStateObjects/tile.dart' as tileEntity;
+/** 
 
-/**
    * a passives screen takes an optional tile parameter
    * it displays 5 randomly generated passive objects under the passives tab
    * along with any passives that the current user owns
    * 
    * if given a selectedTile then 5 random actives and the actives owned by
    * that tile are displayed under the actives tab, along with any actives that the current tile owns
-   */
+   
 class PassivesScreen extends StatefulWidget {
   PassivesScreen();
 
@@ -26,7 +26,7 @@ class PassivesScreen extends StatefulWidget {
 }
 
 class _PassivesScreenState extends State<PassivesScreen> {
-  tileObject.Tile sTile;
+  tileEntity.Tile sTile;
   String s = "";
   int curTurn;
   int c = 0;
@@ -51,55 +51,49 @@ class _PassivesScreenState extends State<PassivesScreen> {
         - this is a new turn, resetState()
     5: this is not the first time the screen is inited, previous tWidget != this tWidget, previous != turn
         - this is a new turn, resetState()
-*/
-    //curUser = locator<GameState>().users[locator<User>().inGamePlayerNumber];
-    curUser = findCurUser();
-    //curUser.ownedPassives = new List<Passive>();
-    if (curUser != null) {
-      print(
-          "before:\ns: \"$s\", prevtW: $prevtWidget, pTurn: $pTurn, cTurn: $curTurn, \ncurUser: $curUser\n\n----------------------------------->>>>>");
-      if (pTurn == -1) {
-        c++;
-        s = "state $c";
+
+    print(
+        "before:\ns: \"$s\", prevtW: $prevtWidget, pTurn: $pTurn, cTurn: $curTurn\n\n----------------------------------->>>>>");
+
+    if (pTurn == -1) {
+      c++;
+      s = "state $c";
+      resetState();
+    } else {
+      if ((prevtWidget == null) && (pTurn == curTurn) && (tWidget == null)) {
+        s = "new entry no tile";
+      } else if ((prevtWidget == null) &&
+          (pTurn == curTurn) &&
+          (tWidget != null)) {
+        locateTile();
+        setActives();
+        s = "new tile";
+      } else if ((prevtWidget != null) &&
+          (pTurn == curTurn) &&
+          (tWidget == null)) {
+        s = "old tile gone, no new tile";
+      } else if ((prevtWidget.position.dx == tWidget.position.dx && prevtWidget.position.dy == tWidget.position.dy) &&
+          (pTurn == curTurn)) {
+        // dont change state
+        locateTile();
+        s = "no change";
+      } else if (!(prevtWidget.position.dx == tWidget.position.dx && prevtWidget.position.dy == tWidget.position.dy) &&
+          (pTurn == curTurn)) {
+        s = "changed tile";
+        locateTile();
+        setActives();
+      } else if ((prevtWidget.position.dx == tWidget.position.dx && prevtWidget.position.dy == tWidget.position.dy) &&
+          (pTurn != curTurn)) {
+        s = "changed turn";
         resetState();
-      } else {
-        if ((prevtWidget == null) && (pTurn == curTurn) && (tWidget == null)) {
-          s = "new entry no tile";
-        } else if ((prevtWidget == null) &&
-            (pTurn == curTurn) &&
-            (tWidget != null)) {
-          locateTile();
-          setActives();
-          s = "new tile";
-        } else if ((prevtWidget != null) &&
-            (pTurn == curTurn) &&
-            (tWidget == null)) {
-          s = "old tile gone, no new tile";
-        } else if ((prevtWidget.x == tWidget.x && prevtWidget.y == tWidget.y) &&
-            (pTurn == curTurn)) {
-          // dont change state
-          locateTile();
-          s = "no change";
-        } else if (!(prevtWidget.x == tWidget.x &&
-                prevtWidget.y == tWidget.y) &&
-            (pTurn == curTurn)) {
-          s = "changed tile";
-          locateTile();
-          setActives();
-        } else if ((prevtWidget.x == tWidget.x && prevtWidget.y == tWidget.y) &&
-            (pTurn != curTurn)) {
-          s = "changed turn";
-          resetState();
-        } else if (!(prevtWidget.x == tWidget.x &&
-                prevtWidget.y == tWidget.y) &&
-            (pTurn != curTurn)) {
-          s = "changed tile and turn";
-          resetState();
-        }
-        if (sTile != null) {
-          prevtWidget =
-              new _TileState.Tile(null, null, null, tWidget.x, tWidget.y);
-        }
+      } else if (!(prevtWidget.position.dx == tWidget.position.dx && prevtWidget.position.dy == tWidget.position.dy) &&
+          (pTurn != curTurn)) {
+        s = "changed tile and turn";
+        resetState();
+      }
+      if (sTile != null) {
+        prevtWidget =
+            new tileDisplay.Tile(tWidget.position.dx, tWidget.position.dy);
       }
     }
 
@@ -110,12 +104,12 @@ class _PassivesScreenState extends State<PassivesScreen> {
   }
 
   void locateTile() {
-    // if there is a selected tileWidget, find the tileObject that is represented by that tile widget, set sTile = to the object
+    // if there is a selected tileWidget, find the tileEntity that is represented by that tile widget, set sTile = to the object
     if (tWidget != null) {
       loop:
       for (int i = 0; i < locator<GameState>().board.tiles.length; i++) {
-        if (locator<GameState>().board.tiles.elementAt(i).x == tWidget.x &&
-            locator<GameState>().board.tiles.elementAt(i).y == tWidget.y) {
+        if (locator<GameState>().board.tiles.elementAt(i).position.dx == tWidget.position.dx &&
+            locator<GameState>().board.tiles.elementAt(i).position.dy == tWidget.position.dy) {
           sTile = locator<GameState>().board.tiles.elementAt(i);
           break loop;
         }
@@ -154,7 +148,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
 
   /**
    * re initializes the modifier lists, sets sTile to the selected tile object, adds the current user and tile modifiers to the lists
-   */
+   
   void resetState() {
     passivesList = new List<Passive>();
     activesList = new List<Active>();
@@ -209,7 +203,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
 /**
  * calls the chosen tiles purchase 
  */
-  void purchaseActive(Active a, tileObject.Tile selTile) {
+  void purchaseActive(Active a, tileEntity.Tile selTile) {
     setState(() {
       for (int i = 0; i < locator<GameState>().board.tiles.length; i++) {
         if (locator<GameState>().board.tiles.elementAt(i) == selTile) {
@@ -276,7 +270,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
 
   /**
    * creates a list of passives to be displayed to the user
-   */
+   
   Widget _createPassivesList(List<Passive> mList) {
     if (locator<GameState>().users.length == 0) {
       return Center(
@@ -336,7 +330,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
    * creates a list of actives to be displayed to the user
    * if there is no selected tile and this list is for the active objects
    * display a message to select a tile to view actives
-   */
+
   Widget _createActivesList(List<Active> mList) {
     if (sTile == null) {
       return Center(
@@ -356,7 +350,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "X: ${sTile.x}, Y: ${sTile.y}, " +
+                  "X: ${sTile.position.dx}, Y: ${sTile.position.dy}, " +
                       "Power: ${sTile.power}, Defense: ${sTile.defense}\n",
                   style: TextStyle(
                     fontSize: 14,
@@ -399,7 +393,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
 
     /*  ---------------------------------------------------------------------------------------
     FOR TESTING: the second expression is commented out bc the server is not currently running
-    --------------------------------------------------------------------------------------- */
+    --------------------------------------------------------------------------------------- 
 
     if (!listItem.isActive() && listItem.getCost() < curUser.money) {
       return Colors.green;
@@ -408,3 +402,5 @@ class _PassivesScreenState extends State<PassivesScreen> {
     }
   }
 }
+
+*/*/*/*/*/*/

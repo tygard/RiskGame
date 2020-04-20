@@ -4,6 +4,7 @@ import 'package:risk/models/freezedClasses/user.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/src/pages/gameScreens/passivesScreen.dart';
 import 'package:risk/gameLayer/globalVars.dart';
+import 'package:risk/src/utils/attackService.dart';
 import 'package:risk/src/utils/providers/socketProvider.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
 import 'package:risk/src/utils/toaster.dart';
@@ -36,6 +37,7 @@ class ButtonStack extends StatelessWidget {
             ),
           ),
         ),
+        /*
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: FloatingActionButton(
@@ -49,22 +51,12 @@ class ButtonStack extends StatelessWidget {
             child: Icon(Icons.attach_money),
           ),
         ),
+        */
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: FloatingActionButton(
               heroTag: "end turn btn",
-              onPressed: () {
-                if (selected1 == null && selected2 == null) {
-                  Toaster.errorToast(
-                      "Please select a valid territory to attack and a territory to attack it");
-                } else if (!isCurrentTurn()) {
-                  Toaster.errorToast("Not your turn!");
-                } else {
-                  isTurnOver = true;
-                  attack(selected1, selected2, context);
-                  SocketProvider.of(context).socketManager.sendGameState(locator<GameState>());
-                }
-              },
+              onPressed: locator<AttackService>().attackDidHappen.notifyListeners,
               backgroundColor: endButtonColor(),
               child: Text(
                 "End Turn",
