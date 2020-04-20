@@ -18,7 +18,8 @@ GameState _$GameStateFromJson(Map<String, dynamic> json) {
     json['gameID'] as String,
   )
     ..turn = json['turn'] as int
-    ..currPlayer = json['currPlayer'] as int;
+    ..currPlayer = json['currPlayer'] as int
+    ..type = json['type'] as String;
 }
 
 Map<String, dynamic> _$GameStateToJson(GameState instance) => <String, dynamic>{
@@ -27,4 +28,5 @@ Map<String, dynamic> _$GameStateToJson(GameState instance) => <String, dynamic>{
       'gameID': instance.gameID,
       'turn': instance.turn,
       'currPlayer': instance.currPlayer,
+      'type': instance.type,
     };

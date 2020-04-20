@@ -4,7 +4,7 @@ public class Tile {
     public int x;
     public int y;
 
-    private InGameUser owner = null;
+    private int ownership = -1;
 
     //an int from -2 to 3 inclusive, with -2 being an immovable tile and -1 being a uncaptured tile.
     private int terrain = 0;
@@ -16,18 +16,10 @@ public class Tile {
     int moneyGeneration = 0;
     int troopGeneration = 0;
 
-    public Tile(){}
-
-    public Tile(int _x, int _y){
+    public Tile(int _x, int _y, int troops){
         x= _x;
         y= _y;
-    }
-
-    public Tile(InGameUser _owner, int _troops, int moneyGen, int troopGen){
-        owner = _owner;
-        troops = _troops;
-        moneyGeneration = moneyGen;
-        troopGeneration = troopGen;
+        this.troops = troops;
     }
 
     public int getX() {
@@ -38,8 +30,8 @@ public class Tile {
         return y;
     }
 
-    public InGameUser getOwner() {
-        return owner;
+    public int getOwner() {
+        return ownership;
     }
 
     public int getDefense() {
@@ -78,8 +70,8 @@ public class Tile {
         this.power = power;
     }
 
-    public void setOwner(InGameUser owner) {
-        this.owner = owner;
+    public void setOwner(int owner) {
+        this.ownership = owner;
     }
 
     public void setTerrain(int terrain) {

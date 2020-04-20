@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:risk/models/gameStateObjects/tile.dart';
 
@@ -8,19 +9,9 @@ class GameBoard {
   int dimensions;
   List<Tile> tiles = new List();
 
-  GameBoard(this.dimensions, this.tiles) {
-    _createTiles();
-  }
+  GameBoard(this.dimensions, this.tiles);
 
   factory GameBoard.fromJson(Map<String, dynamic> json) =>
       _$GameBoardFromJson(json);
   Map<String, dynamic> toJson() => _$GameBoardToJson(this);
-
-  void _createTiles() {
-    for (int x = 0; x < this.dimensions; x++) {
-      for (int y = 0; y < this.dimensions; y++) {
-        tiles.add(new Tile(x, y));
-      }
-    }
-  }
 }

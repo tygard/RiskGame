@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'gameBoard.dart';
@@ -13,6 +14,10 @@ class GameState {
 
   int turn;
   int currPlayer;
+
+  String type = "gamestate";
+
+  ChangeNotifier gameStateDidChange = new ChangeNotifier();
 
   final int tileGrowthPercent = 5; //percent out of 100
   final int secondsPerTurn = 60;
@@ -30,6 +35,7 @@ class GameState {
     gameID = state.gameID;
     turn = state.turn;
     currPlayer = state.currPlayer;
+    gameStateDidChange.notifyListeners(); //looool imagine
   }
 
     factory GameState.fromJson(Map<String, dynamic> json) => _$GameStateFromJson(json);

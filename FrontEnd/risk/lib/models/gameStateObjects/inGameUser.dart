@@ -12,13 +12,13 @@ class InGameUser {
   List<Tile> ownedTiles = List<Tile>();
   int money;
   List<Passive> ownedPassives = List<Passive>();
-  int troopMultiplier;
-  int moneyMultiplier;
+  double troopMultiplier;
+  double moneyMultiplier;
   int genTroops;
   int genMoney;
   String userName;
   String faction;
-  int id; // <- also used for turn id
+  int turnID; // <- also used for turn id
   String role;
 
   InGameUser(
@@ -31,7 +31,7 @@ class InGameUser {
       @required this.genMoney,
       @required this.userName,
       @required this.faction,
-      @required this.id,
+      @required this.turnID,
       @required this.role});
 
   factory InGameUser.fromJson(Map<String, dynamic> json) =>

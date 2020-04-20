@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:risk/models/freezedClasses/lobbyState.dart';
+import 'package:risk/models/freezedClasses/user.dart';
 import 'package:web_socket_channel/io.dart';
 
 import '../../models/freezedClasses/chat.dart';
@@ -21,7 +22,6 @@ class SocketManager {
     if (channelUrl == "DEFAULT") {
       channelUrl = "ws://${locator<Config>().getEndpoint()}/chat";
     }
-    debugPrint("connecting to $channelUrl");
     debugPrint("headers: $headers");
     channel = IOWebSocketChannel.connect(channelUrl, headers: headers ?? {});
     _beginDelegation();
@@ -47,13 +47,14 @@ class SocketManager {
   //it delegates out the messages to every other delegator.
   void _mainDelegator() async {
     channel.stream.listen((input) {
-      print("message recieved: $input");
       Map<String, dynamic> inputMap = json.decode(input);
       if (inputMap.containsKey("type") && inputMap["type"] == "chat") {
         chatStream.add(Chat.fromJson(inputMap));
       } else if (inputMap.containsKey("type") &&
           inputMap["type"] == "gamestate") {
+            debugPrint("[SocketManager] received gamestate");
         gameStateStream.add(GameState.fromJson(inputMap));
+        locator<GameState>().fromGameState(GameState.fromJson(inputMap));
       } else if (inputMap.containsKey("type") && inputMap["type"] == "lobby") {
         lobbyStream.add(LobbyState.fromJson(inputMap));
         print(inputMap);
@@ -80,15 +81,14 @@ class SocketManager {
   }
 
   void sendChat(Chat chat) {
-        print("attempting send of $chat");
     String message = json.encode(
         {"username": chat.name, "message": chat.message, "type": "chat"});
     channel.sink.add(message);
   }
 
   void sendGameState(GameState state) {
-    print("attempting send of $state");
-    String message = json.encode({"type": "gamestate", "gamestate": state.toJson()});
+    state.type = "gamestate"; //Just in case!
+    String message = json.encode(state.toJson());
     channel.sink.add(message);
     print("message completed of length ${message.length}");
   }
