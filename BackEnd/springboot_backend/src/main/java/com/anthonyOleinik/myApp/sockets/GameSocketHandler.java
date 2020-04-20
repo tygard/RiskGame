@@ -33,7 +33,6 @@ public class GameSocketHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message)
             throws InterruptedException, IOException {
-        System.out.println("Input Message: " + message.getPayload());
             Map<String, String> map = gson.fromJson(message.getPayload(), Map.class);
             if (map.containsKey("type")){
                 if (map.get("type").equals("chat")) {
@@ -59,7 +58,6 @@ public class GameSocketHandler extends TextWebSocketHandler {
 
     private void sendGameStateToAppropriatePlayers(GameState state, TextMessage message) throws IOException {
         for (InGameUser user : state.getUsers()){
-            System.out.println("Output message:" + message.getPayload());
             sendMessageToId(user.getTurnID(), message);
         }
     }
