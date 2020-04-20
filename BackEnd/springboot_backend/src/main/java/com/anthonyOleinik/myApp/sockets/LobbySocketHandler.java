@@ -78,7 +78,6 @@ public class LobbySocketHandler extends TextWebSocketHandler {
         JsonElement gameStateMessage = gson.toJsonTree(newGameState);
         gameStateMessage.getAsJsonObject().addProperty("type", "gamestate");
         TextMessage packagedGamestate = new TextMessage(gson.toJson(gameStateMessage));
-        System.out.println("[Lobby Socket Handler] packaged: " + packagedGamestate.getPayload());
 
         for (int i = 0; i < 4; i++){
             sessions.get(i).sendMessage(packagedGamestate);

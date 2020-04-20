@@ -22,7 +22,6 @@ public class GameState {
     public GameState(ArrayList<Integer> playerIds){
         this.currPlayer = playerIds.get(0);
         for (int playerId : playerIds){
-            System.out.println("added new player with player id " + playerId);
             this.users.add(new InGameUser(playerId));
         }
 
@@ -31,18 +30,33 @@ public class GameState {
 
     public void increment(){
         //grow all troops
-        int i = 0;
         for (Tile tile : this.board.getTiles()){
             if (tile.getOwner() != -1){
-                tile.setTroops(tile.getTroops() + initTroopGen);
-                System.out.println("setting a tile to a new troup count " + tile.getTroops() + initTroopGen);
+                tile.addTroops(initTroopGen);
             } else {
-                tile.setTroops(tile.getTroops() + initAITroopGen);
-                System.out.println("setting a tile to a new troup count " + tile.getTroops() + initTroopGen);
+                tile.addTroops(initAITroopGen);
             }
         }
-        //incriment current turn
 
+        //increment current turn
+        boolean foundSelf = false;
+        boolean updatedSelf = false;
+        for (InGameUser user : this.getUsers()){
+            if (user.getTurnID() == this.currPlayer){
+                foundSelf = true;
+                continue;
+            }
+            if (foundSelf && !updatedSelf){
+                this.currPlayer = user.getTurnID();
+                updatedSelf = true;
+            }
+        }
+
+        if (!updatedSelf){
+            currPlayer = this.users.get(0).getTurnID();
+        }
+
+        System.out.println("new current player: " + currPlayer);
 
         //increase money of current player,
         for (InGameUser user : this.getUsers()){
