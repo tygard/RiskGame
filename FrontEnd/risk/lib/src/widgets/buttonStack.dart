@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:risk/models/freezedClasses/user.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/src/pages/gameScreens/passivesScreen.dart';
 import 'package:risk/gameLayer/globalVars.dart';
@@ -14,6 +15,13 @@ class ButtonStack extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: new Container(
+            color: NumToColor(locator<User>().inGamePlayerNumber),
+            child: Text("Your color is: " + ColorToString(NumToColor(locator<User>().inGamePlayerNumber)), style: TextStyle(fontSize: 20),)
+          )
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: new FloatingActionButton(

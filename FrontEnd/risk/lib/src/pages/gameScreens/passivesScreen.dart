@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:risk/models/freezedClasses/user.dart';
 import 'package:risk/models/gameStateObjects/active.dart';
+import 'package:risk/models/gameStateObjects/game.dart';
 import 'package:risk/models/gameStateObjects/passive.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
@@ -28,6 +30,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
   String s = "";
   int curTurn;
   int c = 0;
+  InGameUser curUser;
   @override
   void initState() {
     super.initState();
@@ -95,7 +98,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
     }
 
     print(
-        "after:\ns: \"$s\", prevtW: $prevtWidget, pTurn: $pTurn, cTurn: $curTurn\n\n----------------------------------->>>>>");
+        "after:\ns: \"$s\", prevtW: $prevtWidget, pTurn: $pTurn, cTurn: $curTurn, \ncurUser: $curUser\n\n----------------------------------->>>>>");
 
     pTurn = curTurn;
   }
@@ -134,12 +137,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
     // if the number of users is 0 there will be nothing to base the passives tab around
     // otherwise we can create the passivesList
     if (locator<GameState>().users.length != 0) {
-      passivesList.insertAll(
-          0,
-          locator<GameState>()
-              .users
-              .elementAt(locator<GameState>().currPlayer)
-              .ownedPassives);
+      passivesList.insertAll(0, curUser.ownedPassives);
 
       // generate 5 random passives and add to the list to be displayed
       for (int i = 0; i < 5; i++) {
@@ -157,6 +155,37 @@ class _PassivesScreenState extends State<PassivesScreen> {
     locateTile();
     setActives();
     setPassives();
+  }
+
+  InGameUser findCurUser() {
+    print("num users: ${locator<GameState>().users.length}");
+/*     for (InGameUser inGameUser in locator<GameState>().users)
+      if (inGameUser.id == locator<User>().inGamePlayerNumber) {
+        return inGameUser.id;
+      }
+    return null; */
+    for (int i = 0; i < locator<GameState>().users.length; i++) {
+      print(
+          "user $i id: ${locator<GameState>().users[i].id}\tinGamePlayerNumber: ${locator<User>().inGamePlayerNumber}");
+      print("user $i faction: ${locator<GameState>().users[i].faction}");
+      print("user $i money: ${locator<GameState>().users[i].money}");
+      print("user $i genMoney: ${locator<GameState>().users[i].genMoney}");
+      print("user $i genTroops: ${locator<GameState>().users[i].genTroops}");
+      print("user $i userName: ${locator<GameState>().users[i].userName}");
+      print(
+          "user $i troopMult: ${locator<GameState>().users[i].troopMultiplier}");
+      print(
+          "user $i moneyMult: ${locator<GameState>().users[i].moneyMultiplier}");
+      print("user $i role: ${locator<GameState>().users[i].role}");
+      print("user $i ownedTiles: ${locator<GameState>().users[i].ownedTiles}");
+      print(
+          "user $i ownedPassives: ${locator<GameState>().users[i].ownedPassives}\n---------------------------------------------------------------------------------------");
+
+      if (locator<GameState>().users[i].id ==
+          locator<User>().inGamePlayerNumber)
+        return locator<GameState>().users[i];
+    }
+    return null;
   }
 
   /**
@@ -213,10 +242,27 @@ class _PassivesScreenState extends State<PassivesScreen> {
               ),
             ),
           ),
-          body: TabBarView(children: [
-            _createPassivesList(passivesList),
-            _createActivesList(activesList),
-          ]),
+          body: Stack(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.topRight,
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  "Money: ${curUser.money}",
+                  style: TextStyle(
+                    color: Colors.yellow,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              TabBarView(
+                children: [
+                  _createPassivesList(passivesList),
+                  _createActivesList(activesList),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -241,12 +287,18 @@ class _PassivesScreenState extends State<PassivesScreen> {
             return new Column(
               children: <Widget>[
                 Text(
-                  "\nCurrent User Stats: ",
+                  "\nCurrent User Stats:\n",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "Troop Generation: ${locator<GameState>().users[locator<GameState>().currPlayer].genTroops}, " +
-                      "Money Generation: ${locator<GameState>().users[locator<GameState>().currPlayer].genMoney}, ",
+                  "Troop Generation: ${curUser.genTroops}, " +
+                      "Money Generation: ${curUser.genMoney}, "
+                          "Money: ${curUser.money}, "
+                          "Faction: ${curUser.faction}, "
+                          "Username: ${curUser.userName}, "
+                          "ID: ${curUser.id}, "
+                          "User color: ${locator<User>().color}, "
+                          "InGamePlayerNumber: ${locator<User>().inGamePlayerNumber}, ",
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -294,7 +346,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
             return new Column(
               children: <Widget>[
                 Text(
-                  "\nCurrent Tile Stats: ",
+                  "\nCurrent Tile Stats:\n",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
@@ -343,11 +395,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
     FOR TESTING: the second expression is commented out bc the server is not currently running
     --------------------------------------------------------------------------------------- 
 
-    if (!listItem
-            .isActive() /* &&
-        listItem.getCost() <
-            locator<GameState>().users[locator<GameState>().currPlayer].money */
-        ) {
+    if (!listItem.isActive() && listItem.getCost() < curUser.money) {
       return Colors.green;
     } else {
       return Colors.grey;
