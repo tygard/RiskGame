@@ -8,12 +8,8 @@ part of 'inGameUser.dart';
 
 InGameUser _$InGameUserFromJson(Map<String, dynamic> json) {
   return InGameUser(
-    ownedTiles: (json['ownedTiles'] as List)
-        ?.map(
-            (e) => e == null ? null : Tile.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
     money: json['money'] as int,
-    ownedPassives: (json['ownedPassives'] as List)
+    ownedPassives: (json['passives'] as List)
         ?.map((e) =>
             e == null ? null : Passive.fromJson(e as Map<String, dynamic>))
         ?.toList(),
@@ -21,25 +17,24 @@ InGameUser _$InGameUserFromJson(Map<String, dynamic> json) {
     moneyMultiplier: json['moneyMultiplier'] as int,
     genTroops: json['genTroops'] as int,
     genMoney: json['genMoney'] as int,
-    userName: json['userName'] as String,
+    userName: json['username'] as String,
     faction: json['faction'] as String,
-    id: json['id'] as int,
+    id: json['turnID'] as int,
     role: json['role'] as String,
   );
 }
 
 Map<String, dynamic> _$InGameUserToJson(InGameUser instance) =>
     <String, dynamic>{
-      'ownedTiles': instance.ownedTiles?.map((e) => e?.toJson())?.toList(),
       'money': instance.money,
-      'ownedPassives':
+      'passives':
           instance.ownedPassives?.map((e) => e?.toJson())?.toList(),
       'troopMultiplier': instance.troopMultiplier,
       'moneyMultiplier': instance.moneyMultiplier,
       'genTroops': instance.genTroops,
       'genMoney': instance.genMoney,
-      'userName': instance.userName,
+      'username': instance.userName,
       'faction': instance.faction,
-      'id': instance.id,
+      'turnID': instance.id,
       'role': instance.role,
     };

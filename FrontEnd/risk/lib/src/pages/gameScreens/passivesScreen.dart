@@ -36,8 +36,6 @@ class _PassivesScreenState extends State<PassivesScreen> {
     super.initState();
     tWidget = selectedTile;
     curTurn = locator<GameState>().turn;
-    //curUser = locator<GameState>().users[locator<User>().inGamePlayerNumber];
-    curUser = findCurUser();
 
     /* state options:
     1: this is the first time the screen is inited, previous tWidget == null, previous turn == null, pTurn ==
@@ -54,48 +52,54 @@ class _PassivesScreenState extends State<PassivesScreen> {
     5: this is not the first time the screen is inited, previous tWidget != this tWidget, previous != turn
         - this is a new turn, resetState()
 */
+    //curUser = locator<GameState>().users[locator<User>().inGamePlayerNumber];
+    curUser = findCurUser();
     //curUser.ownedPassives = new List<Passive>();
-    print(
-        "before:\ns: \"$s\", prevtW: $prevtWidget, pTurn: $pTurn, cTurn: $curTurn, \ncurUser: $curUser\n\n----------------------------------->>>>>");
-    if (pTurn == -1) {
-      c++;
-      s = "state $c";
-      resetState();
-    } else {
-      if ((prevtWidget == null) && (pTurn == curTurn) && (tWidget == null)) {
-        s = "new entry no tile";
-      } else if ((prevtWidget == null) &&
-          (pTurn == curTurn) &&
-          (tWidget != null)) {
-        locateTile();
-        setActives();
-        s = "new tile";
-      } else if ((prevtWidget != null) &&
-          (pTurn == curTurn) &&
-          (tWidget == null)) {
-        s = "old tile gone, no new tile";
-      } else if ((prevtWidget.x == tWidget.x && prevtWidget.y == tWidget.y) &&
-          (pTurn == curTurn)) {
-        // dont change state
-        locateTile();
-        s = "no change";
-      } else if (!(prevtWidget.x == tWidget.x && prevtWidget.y == tWidget.y) &&
-          (pTurn == curTurn)) {
-        s = "changed tile";
-        locateTile();
-        setActives();
-      } else if ((prevtWidget.x == tWidget.x && prevtWidget.y == tWidget.y) &&
-          (pTurn != curTurn)) {
-        s = "changed turn";
+    if (curUser != null) {
+      print(
+          "before:\ns: \"$s\", prevtW: $prevtWidget, pTurn: $pTurn, cTurn: $curTurn, \ncurUser: $curUser\n\n----------------------------------->>>>>");
+      if (pTurn == -1) {
+        c++;
+        s = "state $c";
         resetState();
-      } else if (!(prevtWidget.x == tWidget.x && prevtWidget.y == tWidget.y) &&
-          (pTurn != curTurn)) {
-        s = "changed tile and turn";
-        resetState();
-      }
-      if (sTile != null) {
-        prevtWidget =
-            new _TileState.Tile(null, null, null, tWidget.x, tWidget.y);
+      } else {
+        if ((prevtWidget == null) && (pTurn == curTurn) && (tWidget == null)) {
+          s = "new entry no tile";
+        } else if ((prevtWidget == null) &&
+            (pTurn == curTurn) &&
+            (tWidget != null)) {
+          locateTile();
+          setActives();
+          s = "new tile";
+        } else if ((prevtWidget != null) &&
+            (pTurn == curTurn) &&
+            (tWidget == null)) {
+          s = "old tile gone, no new tile";
+        } else if ((prevtWidget.x == tWidget.x && prevtWidget.y == tWidget.y) &&
+            (pTurn == curTurn)) {
+          // dont change state
+          locateTile();
+          s = "no change";
+        } else if (!(prevtWidget.x == tWidget.x &&
+                prevtWidget.y == tWidget.y) &&
+            (pTurn == curTurn)) {
+          s = "changed tile";
+          locateTile();
+          setActives();
+        } else if ((prevtWidget.x == tWidget.x && prevtWidget.y == tWidget.y) &&
+            (pTurn != curTurn)) {
+          s = "changed turn";
+          resetState();
+        } else if (!(prevtWidget.x == tWidget.x &&
+                prevtWidget.y == tWidget.y) &&
+            (pTurn != curTurn)) {
+          s = "changed tile and turn";
+          resetState();
+        }
+        if (sTile != null) {
+          prevtWidget =
+              new _TileState.Tile(null, null, null, tWidget.x, tWidget.y);
+        }
       }
     }
 
@@ -168,7 +172,21 @@ class _PassivesScreenState extends State<PassivesScreen> {
     return null; */
     for (int i = 0; i < locator<GameState>().users.length; i++) {
       print(
-          "user $i id:${locator<GameState>().users[i].id}\tinGamePlayerNumber: ${locator<User>().inGamePlayerNumber}");
+          "user $i id: ${locator<GameState>().users[i].id}\tinGamePlayerNumber: ${locator<User>().inGamePlayerNumber}");
+      print("user $i faction: ${locator<GameState>().users[i].faction}");
+      print("user $i money: ${locator<GameState>().users[i].money}");
+      print("user $i genMoney: ${locator<GameState>().users[i].genMoney}");
+      print("user $i genTroops: ${locator<GameState>().users[i].genTroops}");
+      print("user $i userName: ${locator<GameState>().users[i].userName}");
+      print(
+          "user $i troopMult: ${locator<GameState>().users[i].troopMultiplier}");
+      print(
+          "user $i moneyMult: ${locator<GameState>().users[i].moneyMultiplier}");
+      print("user $i role: ${locator<GameState>().users[i].role}");
+      print("user $i ownedTiles: ${locator<GameState>().users[i].ownedTiles}");
+      print(
+          "user $i ownedPassives: ${locator<GameState>().users[i].ownedPassives}\n---------------------------------------------------------------------------------------");
+
       if (locator<GameState>().users[i].id ==
           locator<User>().inGamePlayerNumber)
         return locator<GameState>().users[i];
@@ -230,10 +248,27 @@ class _PassivesScreenState extends State<PassivesScreen> {
               ),
             ),
           ),
-          body: TabBarView(children: [
-            _createPassivesList(passivesList),
-            _createActivesList(activesList),
-          ]),
+          body: Stack(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.topRight,
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  "Money: ${curUser.money}",
+                  style: TextStyle(
+                    color: Colors.yellow,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              TabBarView(
+                children: [
+                  _createPassivesList(passivesList),
+                  _createActivesList(activesList),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -258,7 +293,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
             return new Column(
               children: <Widget>[
                 Text(
-                  "\nCurrent User Stats: ",
+                  "\nCurrent User Stats:\n",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
@@ -317,7 +352,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
             return new Column(
               children: <Widget>[
                 Text(
-                  "\nCurrent Tile Stats: ",
+                  "\nCurrent Tile Stats:\n",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
@@ -366,11 +401,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
     FOR TESTING: the second expression is commented out bc the server is not currently running
     --------------------------------------------------------------------------------------- */
 
-    if (!listItem
-            .isActive() /* &&
-        listItem.getCost() <
-            locator<GameState>().users[locator<GameState>().currPlayer].money */
-        ) {
+    if (!listItem.isActive() && listItem.getCost() < curUser.money) {
       return Colors.green;
     } else {
       return Colors.grey;
