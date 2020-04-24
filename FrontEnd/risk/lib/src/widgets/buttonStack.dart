@@ -19,6 +19,16 @@ class ButtonStack extends StatelessWidget {
         Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
             child: new Container(
+                color: mapPlayerNumToColor(locator<GameState>().turn),
+                child: Text(
+                  "Current turn is: " +
+                      mapPlayerNumToColorName(
+                          locator<GameState>().turn),
+                  style: TextStyle(fontSize: 20),
+                ))),
+        Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: new Container(
                 color: mapPlayerNumToColor(locator<User>().inGamePlayerNumber),
                 child: Text(
                   "Your color is: " +
