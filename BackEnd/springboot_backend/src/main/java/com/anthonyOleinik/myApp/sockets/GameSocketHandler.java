@@ -56,6 +56,8 @@ public class GameSocketHandler extends TextWebSocketHandler {
         }
     }
 
+
+    //test
     private void sendGameStateToAppropriatePlayers(GameState state, TextMessage message) throws IOException {
         for (InGameUser user : state.getUsers()){
             sendMessageToId(user.getTurnID(), message);
