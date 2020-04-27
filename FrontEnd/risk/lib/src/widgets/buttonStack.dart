@@ -51,7 +51,6 @@ class ButtonStack extends StatelessWidget {
             ),
           ),
         ),
-        /*
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: FloatingActionButton(
@@ -65,7 +64,6 @@ class ButtonStack extends StatelessWidget {
             child: Icon(Icons.attach_money),
           ),
         ),
-        */
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: FloatingActionButton(

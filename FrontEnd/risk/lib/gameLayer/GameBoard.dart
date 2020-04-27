@@ -10,6 +10,7 @@ import 'package:risk/src/utils/providers/socketProvider.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
 import 'package:risk/src/utils/toaster.dart';
 import 'Tile.dart';
+import 'globalVars.dart';
 
 class GameBoard extends StatefulWidget {
   int maxDimension;
@@ -108,6 +109,7 @@ class _GameBoard extends State<GameBoard> {
         setState(() {
           clickedTiles.add(clickPosition);
         });
+        tOffset = clickPosition;
       } else {
         Toaster.warningToast("select a tile you own.");
       }
@@ -119,6 +121,7 @@ class _GameBoard extends State<GameBoard> {
       setState(() {
         clickedTiles.remove(clickPosition);
       });
+      tOffset = null;
       return;
     }
 

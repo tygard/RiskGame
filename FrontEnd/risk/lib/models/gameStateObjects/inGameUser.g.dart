@@ -9,7 +9,7 @@ part of 'inGameUser.dart';
 InGameUser _$InGameUserFromJson(Map<String, dynamic> json) {
   return InGameUser(
     money: json['money'] as int,
-    ownedPassives: (json['passives'] as List)
+    ownedPassives: (json['ownedPassives'] as List)
         ?.map((e) =>
             e == null ? null : Passive.fromJson(e as Map<String, dynamic>))
         ?.toList(),
@@ -27,7 +27,7 @@ InGameUser _$InGameUserFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$InGameUserToJson(InGameUser instance) =>
     <String, dynamic>{
       'money': instance.money,
-      'passives':
+      'ownedPassives':
           instance.ownedPassives?.map((e) => e?.toJson())?.toList(),
       'troopMultiplier': instance.troopMultiplier,
       'moneyMultiplier': instance.moneyMultiplier,
