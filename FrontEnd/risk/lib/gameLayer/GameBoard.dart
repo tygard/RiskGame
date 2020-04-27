@@ -28,6 +28,7 @@ class GameBoard extends StatefulWidget {
 }
 
 class _GameBoard extends State<GameBoard> {
+  DiagonalScrollViewController _scrollController;
   List<Offset> clickedTiles =
       []; //TODO create a class that is an "attack", that bundles offset1, offset2, power1, power2
   static const MAX_TILES_CLICKED = 2;
@@ -43,6 +44,8 @@ class _GameBoard extends State<GameBoard> {
 
   Widget build(BuildContext context) {
     return DiagonalScrollView(
+      onCreated: (DiagonalScrollViewController controller) {
+          _scrollController = controller;},
       maxWidth: widget.maxDimension.toDouble(),
       maxHeight: widget.maxDimension.toDouble(),
       child: Container(
@@ -149,6 +152,13 @@ class _GameBoard extends State<GameBoard> {
       setState(() {
         this.gameState = locator<GameState>();
       });
+      //TODO: maybe fix this, supposed to scroll to current player tile
+      for (Tile t in this.gameState.board.tiles) {
+        if (t.ownership == gameState.currPlayer) {
+          _scrollController.moveTo(location: Offset(t.x.toDouble() *125, t.y.toDouble()*125));
+          break;
+        }
+      }
       print("${gameState.currPlayer}");
     });
   }
