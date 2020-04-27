@@ -54,7 +54,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
      *    yes tile
      */
     print(
-        "before:\ns: \"$s\", pTurn: $pTurn, cTurn: $curTurn, tOffset: $tOffset, sTile: $sTile, \npList: $passivesList\naList: $activesList\n----------------------------------->>>>>");
+        "before:\ns: \"$s\", pTurn: $pTurn, cTurn: $curTurn, tOffset: $tOffset, sTile: $sTile, \npList: $passivesList\naList: $activesList\nownedPassives: ${curUser.ownedPassives}----------------------------------->>>>>");
     curUser.money += 100; //JUST TO TEST PURCHASING
 
     if (pTurn == curTurn) {
@@ -84,7 +84,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
     }
     pTurn = curTurn;
     print(
-        "after:\ns: \"$s\", pTurn: $pTurn, cTurn: $curTurn, tOffset: $tOffset, sTile: $sTile, \npList: $passivesList\naList: $activesList\n----------------------------------->>>>>");
+        "after:\ns: \"$s\", pTurn: $pTurn, cTurn: $curTurn, tOffset: $tOffset, sTile: $sTile, \npList: $passivesList\naList: $activesList\nownedPassives: ${locator<GameState>().users[locator<GameState>().currPlayer].ownedPassives}----------------------------------->>>>>");
   }
 
   /**
@@ -97,6 +97,9 @@ class _PassivesScreenState extends State<PassivesScreen> {
         if (b.tiles.elementAt(i).x == tOffset.dx &&
             b.tiles.elementAt(i).y == tOffset.dy) {
           sTile = b.tiles.elementAt(i);
+          if (sTile.activesList == null) {
+            sTile.activesList = new List<Active>();
+          }
         }
       }
     } else {
@@ -151,7 +154,10 @@ class _PassivesScreenState extends State<PassivesScreen> {
     _setActives();
     _setPassives();
   }
-
+/**
+ * I think this doesnt find the right user
+ * that or the ownedPassives gets set to null somewhere
+ */
   InGameUser _findCurUser() {
     for (int i = 0; i < locator<GameState>().users.length; i++) {
       if (locator<GameState>().users[i].turnID ==
