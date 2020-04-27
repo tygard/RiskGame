@@ -96,6 +96,12 @@ class _GameBoard extends State<GameBoard> {
       return;
     }
 
+    if (ownership < -1) {
+      Toaster.warningToast(
+          "This is an unselectable tile");
+      return;
+    }
+
     //if there are no clicked tiles, check if the tile is ours. if it is, we can leave.
     if (clickedTiles.isEmpty) {
       if (ownership == locator<User>().inGamePlayerNumber) {
