@@ -55,7 +55,9 @@ class _PassivesScreenState extends State<PassivesScreen> {
      */
     print(
         "before:\ns: \"$s\", pTurn: $pTurn, cTurn: $curTurn, tOffset: $tOffset, sTile: $sTile, \npList: $passivesList\naList: $activesList\nownedPassives: ${curUser.ownedPassives}----------------------------------->>>>>");
-    curUser.money += 100; //JUST TO TEST PURCHASING
+    curUser.money += 100; //JUST TO TEST PURCHASING------------------------------
+    //TODO: need to account for players having multiple tiles, only display the owned actives from the current tile, but maintain the 5 random tiles throughout 
+    //(the randoms probably have to be stored in gloabalVars.dart for this)
 
     if (pTurn == curTurn) {
       // same turn, check tile properties, not passives
