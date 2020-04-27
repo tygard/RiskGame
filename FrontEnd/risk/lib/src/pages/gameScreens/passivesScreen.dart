@@ -7,8 +7,9 @@ import 'package:risk/models/gameStateObjects/passive.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
 import 'package:risk/gameLayer/globalVars.dart';
-import 'package:risk/gameLayer/Tile.dart' as tileDisplay;
-import 'package:risk/models/gameStateObjects/tile.dart' as tileEntity;
+import 'package:risk/gameLayer/Tile.dart';
+import 'package:risk/models/gameStateObjects/tile.dart';
+
 /** 
 
    * a passives screen takes an optional tile parameter
@@ -17,7 +18,7 @@ import 'package:risk/models/gameStateObjects/tile.dart' as tileEntity;
    * 
    * if given a selectedTile then 5 random actives and the actives owned by
    * that tile are displayed under the actives tab, along with any actives that the current tile owns
-   
+   */
 class PassivesScreen extends StatefulWidget {
   PassivesScreen();
 
@@ -26,7 +27,7 @@ class PassivesScreen extends StatefulWidget {
 }
 
 class _PassivesScreenState extends State<PassivesScreen> {
-  tileEntity.Tile sTile;
+  Tile sTile;
   String s = "";
   int curTurn;
   int c = 0;
@@ -34,96 +35,88 @@ class _PassivesScreenState extends State<PassivesScreen> {
   @override
   void initState() {
     super.initState();
-    tWidget = selectedTile;
     curTurn = locator<GameState>().turn;
-
-    /* state options:
-    1: this is the first time the screen is inited, previous tWidget == null, previous turn == null, pTurn ==
-        - just resetState()
-    b: this is not the first time the screen is inited, previous tWidget == null,         previous == turn
-        - just locateTile(), setActives()
-    2: this is not the first time the screen is inited, previous tWidget == this tWidget, previous == turn
-        - maintain all modifiers, dont change state
-    3: this is not the first time the screen is inited, previous tWidget != this tWidget, previous == turn
-        - maintain all modifiers,
-        - must be applied to a new tile, locateTile(), setActives()
-    4: this is not the first time the screen is inited, previous tWidget == this tWidget, previous != turn
-        - this is a new turn, resetState()
-    5: this is not the first time the screen is inited, previous tWidget != this tWidget, previous != turn
-        - this is a new turn, resetState()
-
+    curUser = _findCurUser();
+    _setSTile();
+    /**
+     * first entry
+     *  no tile
+     *  yes tile
+     * not first entry
+     *  no tile
+     *  same turn
+      *    no tile 
+      *    yes tile
+      *      new tile
+      *      not new tile
+     *  diff turn
+     *    no tile
+     *    yes tile
+     */
     print(
-        "before:\ns: \"$s\", prevtW: $prevtWidget, pTurn: $pTurn, cTurn: $curTurn\n\n----------------------------------->>>>>");
+        "before:\ns: \"$s\", pTurn: $pTurn, cTurn: $curTurn, tOffset: $tOffset, sTile: $sTile, \npList: $passivesList\naList: $activesList\nownedPassives: ${curUser.ownedPassives}----------------------------------->>>>>");
+    curUser.money += 100; //JUST TO TEST PURCHASING
 
-    if (pTurn == -1) {
-      c++;
-      s = "state $c";
-      resetState();
-    } else {
-      if ((prevtWidget == null) && (pTurn == curTurn) && (tWidget == null)) {
-        s = "new entry no tile";
-      } else if ((prevtWidget == null) &&
-          (pTurn == curTurn) &&
-          (tWidget != null)) {
-        locateTile();
-        setActives();
-        s = "new tile";
-      } else if ((prevtWidget != null) &&
-          (pTurn == curTurn) &&
-          (tWidget == null)) {
-        s = "old tile gone, no new tile";
-      } else if ((prevtWidget.position.dx == tWidget.position.dx && prevtWidget.position.dy == tWidget.position.dy) &&
-          (pTurn == curTurn)) {
-        // dont change state
-        locateTile();
-        s = "no change";
-      } else if (!(prevtWidget.position.dx == tWidget.position.dx && prevtWidget.position.dy == tWidget.position.dy) &&
-          (pTurn == curTurn)) {
-        s = "changed tile";
-        locateTile();
-        setActives();
-      } else if ((prevtWidget.position.dx == tWidget.position.dx && prevtWidget.position.dy == tWidget.position.dy) &&
-          (pTurn != curTurn)) {
-        s = "changed turn";
-        resetState();
-      } else if (!(prevtWidget.position.dx == tWidget.position.dx && prevtWidget.position.dy == tWidget.position.dy) &&
-          (pTurn != curTurn)) {
-        s = "changed tile and turn";
-        resetState();
-      }
-      if (sTile != null) {
-        prevtWidget =
-            new tileDisplay.Tile(tWidget.position.dx, tWidget.position.dy);
-      }
-    }
-
-    print(
-        "after:\ns: \"$s\", prevtW: $prevtWidget, pTurn: $pTurn, cTurn: $curTurn, \ncurUser: $curUser\n\n----------------------------------->>>>>");
-
-    pTurn = curTurn;
-  }
-
-  void locateTile() {
-    // if there is a selected tileWidget, find the tileEntity that is represented by that tile widget, set sTile = to the object
-    if (tWidget != null) {
-      loop:
-      for (int i = 0; i < locator<GameState>().board.tiles.length; i++) {
-        if (locator<GameState>().board.tiles.elementAt(i).position.dx == tWidget.position.dx &&
-            locator<GameState>().board.tiles.elementAt(i).position.dy == tWidget.position.dy) {
-          sTile = locator<GameState>().board.tiles.elementAt(i);
-          break loop;
+    if (pTurn == curTurn) {
+      // same turn, check tile properties, not passives
+      s = "same turn: ";
+      if (tOffset == null) {
+        // no tile selected, set sTile to null
+        s += "no tile selected";
+        sTile = null;
+      } else {
+        // tile selected, locate this tile, check if actives were generated during a previous init
+        s += "tile selected, ";
+        _setSTile();
+        if (activesList == null || activesList.length == 0) {
+          // no actives list, set the actives
+          s += "no actives list, set new one";
+          _setActives();
+        } else {
+          // actives list already exists, dont set them
+          s += "already actives list, dont set new one";
         }
       }
+    } else {
+      // new turn, reset state
+      s += "new turn: reset state";
+      _resetState();
+    }
+    pTurn = curTurn;
+    print(
+        "after:\ns: \"$s\", pTurn: $pTurn, cTurn: $curTurn, tOffset: $tOffset, sTile: $sTile, \npList: $passivesList\naList: $activesList\nownedPassives: ${locator<GameState>().users[locator<GameState>().currPlayer].ownedPassives}----------------------------------->>>>>");
+  }
+
+  /**
+   * sets sTile to the widget represented by tOffset
+   */
+  void _setSTile() {
+    GameBoard b = locator<GameState>().board;
+    if (tOffset != null) {
+      for (int i = 0; i < b.tiles.length; i++) {
+        if (b.tiles.elementAt(i).x == tOffset.dx &&
+            b.tiles.elementAt(i).y == tOffset.dy) {
+          sTile = b.tiles.elementAt(i);
+          if (sTile.activesList == null) {
+            sTile.activesList = new List<Active>();
+          }
+        }
+      }
+    } else {
+      sTile = null;
     }
   }
 
-  void setActives() {
+  void _setActives() {
     activesList = new List<Active>();
 
     // if the sTile is null there will be nothing to base the actives tab around
     if (sTile != null) {
-      activesList.insertAll(0, sTile.activesList);
-
+      if (sTile.activesList != null) {
+        activesList.insertAll(0, sTile.activesList);
+      } else {
+        sTile.activesList = new List<Active>();
+      }
       // generate 5 random actives and add to the list to be displayed
       for (int i = 0; i < 5; i++) {
         activesList.add(new Active());
@@ -131,13 +124,20 @@ class _PassivesScreenState extends State<PassivesScreen> {
     }
   }
 
-  void setPassives() {
+  void _setPassives() {
     passivesList = new List<Passive>();
 
     // if the number of users is 0 there will be nothing to base the passives tab around
     // otherwise we can create the passivesList
-    if (locator<GameState>().users.length != 0) {
-      passivesList.insertAll(0, curUser.ownedPassives);
+    if (curUser != null) {
+      if (curUser.ownedPassives != null) {
+        print("curUser.ownedPassive != null");
+        passivesList.insertAll(0, curUser.ownedPassives);
+      } else {
+        print("curUser.ownedPassive == null");
+
+        curUser.ownedPassives = new List<Passive>();
+      }
 
       // generate 5 random passives and add to the list to be displayed
       for (int i = 0; i < 5; i++) {
@@ -148,40 +148,19 @@ class _PassivesScreenState extends State<PassivesScreen> {
 
   /**
    * re initializes the modifier lists, sets sTile to the selected tile object, adds the current user and tile modifiers to the lists
-   
-  void resetState() {
-    passivesList = new List<Passive>();
-    activesList = new List<Active>();
-    locateTile();
-    setActives();
-    setPassives();
+   */
+  void _resetState() {
+    _setSTile();
+    _setActives();
+    _setPassives();
   }
-
-  InGameUser findCurUser() {
-    print("num users: ${locator<GameState>().users.length}");
-/*     for (InGameUser inGameUser in locator<GameState>().users)
-      if (inGameUser.id == locator<User>().inGamePlayerNumber) {
-        return inGameUser.id;
-      }
-    return null; */
+/**
+ * I think this doesnt find the right user
+ * that or the ownedPassives gets set to null somewhere
+ */
+  InGameUser _findCurUser() {
     for (int i = 0; i < locator<GameState>().users.length; i++) {
-      print(
-          "user $i id: ${locator<GameState>().users[i].id}\tinGamePlayerNumber: ${locator<User>().inGamePlayerNumber}");
-      print("user $i faction: ${locator<GameState>().users[i].faction}");
-      print("user $i money: ${locator<GameState>().users[i].money}");
-      print("user $i genMoney: ${locator<GameState>().users[i].genMoney}");
-      print("user $i genTroops: ${locator<GameState>().users[i].genTroops}");
-      print("user $i userName: ${locator<GameState>().users[i].userName}");
-      print(
-          "user $i troopMult: ${locator<GameState>().users[i].troopMultiplier}");
-      print(
-          "user $i moneyMult: ${locator<GameState>().users[i].moneyMultiplier}");
-      print("user $i role: ${locator<GameState>().users[i].role}");
-      print("user $i ownedTiles: ${locator<GameState>().users[i].ownedTiles}");
-      print(
-          "user $i ownedPassives: ${locator<GameState>().users[i].ownedPassives}\n---------------------------------------------------------------------------------------");
-
-      if (locator<GameState>().users[i].id ==
+      if (locator<GameState>().users[i].turnID ==
           locator<User>().inGamePlayerNumber)
         return locator<GameState>().users[i];
     }
@@ -189,9 +168,9 @@ class _PassivesScreenState extends State<PassivesScreen> {
   }
 
   /**
-   * calls this users purchasePassive function with the Passive p
+   * calls this users _purchasePassive function with the Passive p
    */
-  void purchasePassive(Passive p) {
+  void _purchasePassive(Passive p) {
     setState(() {
       locator<GameState>()
           .users
@@ -203,7 +182,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
 /**
  * calls the chosen tiles purchase 
  */
-  void purchaseActive(Active a, tileEntity.Tile selTile) {
+  void _purchaseActive(Active a, Tile selTile) {
     setState(() {
       for (int i = 0; i < locator<GameState>().board.tiles.length; i++) {
         if (locator<GameState>().board.tiles.elementAt(i) == selTile) {
@@ -228,9 +207,8 @@ class _PassivesScreenState extends State<PassivesScreen> {
             centerTitle: true,
             title: Text("Modifiers"),
             leading: BackButton(
-                onPressed: () => {
-                      Navigator.pop(context),
-                    }),
+              onPressed: () => Navigator.pop(context),
+            ),
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(10),
               child: Container(
@@ -270,7 +248,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
 
   /**
    * creates a list of passives to be displayed to the user
-   
+   */
   Widget _createPassivesList(List<Passive> mList) {
     if (locator<GameState>().users.length == 0) {
       return Center(
@@ -296,7 +274,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
                           "Money: ${curUser.money}, "
                           "Faction: ${curUser.faction}, "
                           "Username: ${curUser.userName}, "
-                          "ID: ${curUser.id}, "
+                          "ID: ${curUser.turnID}, "
                           "User color: ${locator<User>().color}, "
                           "InGamePlayerNumber: ${locator<User>().inGamePlayerNumber}, ",
                   style: TextStyle(
@@ -317,7 +295,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
               clipBehavior: Clip.antiAlias,
               autofocus: false,
               color: _modifierButtonColor(mList[index]),
-              onPressed: () => purchasePassive(mList[index]),
+              onPressed: () => _purchasePassive(mList[index]),
               shape: RoundedRectangleBorder(),
             ),
           );
@@ -330,7 +308,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
    * creates a list of actives to be displayed to the user
    * if there is no selected tile and this list is for the active objects
    * display a message to select a tile to view actives
-
+*/
   Widget _createActivesList(List<Active> mList) {
     if (sTile == null) {
       return Center(
@@ -350,7 +328,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "X: ${sTile.position.dx}, Y: ${sTile.position.dy}, " +
+                  "X: ${sTile.x}, Y: ${sTile.y}, " +
                       "Power: ${sTile.power}, Defense: ${sTile.defense}\n",
                   style: TextStyle(
                     fontSize: 14,
@@ -370,7 +348,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
               clipBehavior: Clip.antiAlias,
               autofocus: false,
               color: _modifierButtonColor(mList[index]),
-              onPressed: () => purchaseActive(mList[index], sTile),
+              onPressed: () => _purchaseActive(mList[index], sTile),
               shape: RoundedRectangleBorder(),
             ),
           );
@@ -390,11 +368,6 @@ class _PassivesScreenState extends State<PassivesScreen> {
 
   Color _modifierButtonColor(dynamic listItem) {
     // if the passive isnt active and the current user has more money than the cost of the passive
-
-    /*  ---------------------------------------------------------------------------------------
-    FOR TESTING: the second expression is commented out bc the server is not currently running
-    --------------------------------------------------------------------------------------- 
-
     if (!listItem.isActive() && listItem.getCost() < curUser.money) {
       return Colors.green;
     } else {
@@ -402,5 +375,3 @@ class _PassivesScreenState extends State<PassivesScreen> {
     }
   }
 }
-
-*/*/*/*/*/*/
