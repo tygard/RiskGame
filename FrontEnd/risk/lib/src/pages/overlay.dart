@@ -1,12 +1,9 @@
-import 'dart:convert';
 
 import 'package:after_init/after_init.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:risk/models/freezedClasses/chat.dart';
-import 'package:risk/models/gameStateObjects/gameState.dart';
-import 'package:risk/models/gameStateObjects/inGameUser.dart';
 import 'package:risk/src/utils/providers/globalsProvider.dart';
 import 'package:risk/src/utils/providers/socketProvider.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
