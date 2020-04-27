@@ -55,8 +55,9 @@ class _PassivesScreenState extends State<PassivesScreen> {
      */
     print(
         "before:\ns: \"$s\", pTurn: $pTurn, cTurn: $curTurn, tOffset: $tOffset, sTile: $sTile, \npList: $passivesList\naList: $activesList\nownedPassives: ${curUser.ownedPassives}----------------------------------->>>>>");
-    curUser.money += 100; //JUST TO TEST PURCHASING------------------------------
-    //TODO: need to account for players having multiple tiles, only display the owned actives from the current tile, but maintain the 5 random tiles throughout 
+    curUser.money +=
+        100; //JUST TO TEST PURCHASING------------------------------
+    //TODO: need to account for players having multiple tiles, only display the owned actives from the current tile, but maintain the 5 random tiles throughout
     //(the randoms probably have to be stored in globalVars.dart for this)
 
     if (pTurn == curTurn) {
@@ -125,8 +126,6 @@ class _PassivesScreenState extends State<PassivesScreen> {
   }
 
   void _setPassives() {
-    passivesList = new List<Passive>();
-
     // if the number of users is 0 there will be nothing to base the passives tab around
     // otherwise we can create the passivesList
     if (curUser != null) {
@@ -151,9 +150,12 @@ class _PassivesScreenState extends State<PassivesScreen> {
    */
   void _resetState() {
     _setSTile();
+    activesList = new List<Active>();
     _setActives();
+    passivesList = new List<Passive>();
     _setPassives();
   }
+
 /**
  * I think this doesnt find the right user
  * that or the ownedPassives gets set to null somewhere
