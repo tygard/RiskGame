@@ -10,13 +10,9 @@ import 'package:risk/src/utils/socketManager.dart';
 import 'package:risk/src/utils/toaster.dart';
 import 'Tile.dart';
 
-
-/*
 List<Passive> passivesList = new List<Passive>();
 List<Active> activesList = new List<Active>();
-Tile selectedTile;
-Tile prevtWidget;
-Tile tWidget;
+Offset tOffset;
 int pTurn = -1;
 
 var selected1;
@@ -89,8 +85,7 @@ int ColorToNum(Color turn) {
   }
 }
 
-String ColorToString(Color turn)
-{
+String ColorToString(Color turn) {
   if (turn == Colors.red) {
     return "Red";
   }
@@ -111,4 +106,3 @@ Color NumToColor(int num) {
   if (num == 2) return Colors.green;
   if (num == 3) return Colors.blue;
 }
-*/
