@@ -105,6 +105,7 @@ public class MapGenerator{
             if(randomized.get(i) > .85){
                 tmpTile.setOwner(-2);
                 tmpTile.setTroops(0);
+                tmpTile.setTroopGeneration(0);
             }
             if(x == dimensions/2 && y == dimensions/2){
                 tmpTile.setOwner(-1);
