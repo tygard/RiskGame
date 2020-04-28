@@ -31,10 +31,27 @@ public class GameState {
     public void increment(){
         //grow all troops
         for (Tile tile : this.board.getTiles()){
-            if (tile.getOwner() != -1){
-                tile.addTroops(initTroopGen);
+            if (tile.getOwner() > -1){
+                users.get(currPlayer).getPassives().forEach((e)->{
+                    if(e.active) {
+                        if (e.modifiedValue == PassiveModifiers.attack) {
+                            tile.setPower(tile.getPower() * e.passiveValue);
+                        } else if (e.modifiedValue == PassiveModifiers.defense) {
+                            tile.setDefense(tile.getDefense() * e.passiveValue);
+                        } else if (e.modifiedValue == PassiveModifiers.moneyGeneration) {
+                            tile.setMoneyGeneration(tile.getMoneyGeneration() * e.passiveValue);
+                        } else if (e.modifiedValue == PassiveModifiers.troopGeneration) {
+                            tile.setTroopGeneration(tile.getTroopGeneration() * e.passiveValue);
+                        }
+                        e.duration--;
+                        if(e.duration <= 0){
+                            users.get(currPlayer).removePassive(e);
+                        }
+                    }
+                });
+                tile.addTroops(initTroopGen + tile.getTroopGeneration());
             } else {
-                tile.addTroops(initAITroopGen);
+                tile.addTroops(initAITroopGen + tile.getTroopGeneration());
             }
         }
 

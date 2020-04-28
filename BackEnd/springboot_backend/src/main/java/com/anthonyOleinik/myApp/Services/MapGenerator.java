@@ -6,6 +6,7 @@ import com.anthonyOleinik.myApp.entities.GameState.InGameUser;
 import com.anthonyOleinik.myApp.entities.GameState.Tile;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -28,7 +29,6 @@ public class MapGenerator{
     List<Float> makeCircleNoise(){
         List<Float> tmp = new ArrayList<>();
         int center = (int)dimensions/2;
-
         //Since we are using a square board, we can get O(n) by using modulo here.
         for (int i = 0; i < dimensions * dimensions; i++) {
             int x = Math.abs(i % dimensions);
@@ -36,15 +36,13 @@ public class MapGenerator{
                 //Simple squaring
                 float distanceX = (center - x) * (center - x);
                 float distanceY = (center - y) * (center - y);
-
+                DecimalFormat df = new DecimalFormat("0.00");
                 float distanceToCenter = (float)Math.sqrt(distanceX + distanceY);
-
                 //Divide by dimensions again to keep it in bounds ie. 0 < distance < 1
-                distanceToCenter = distanceToCenter / dimensions;
-                distanceToCenter =  1-distanceToCenter;
                 distanceToCenter *= (1-fNoise.GetSimplex(x, y));
-                System.out.println("[X:"+x+" Y:"+y+"]Noise value: " +distanceToCenter );
-                tmp.add(distanceToCenter);
+                distanceToCenter = distanceToCenter / dimensions;
+                System.out.println("[X:"+x+" Y:"+y+"]Noise value: " +df.format(distanceToCenter) );
+                tmp.add(Float.parseFloat(df.format(distanceToCenter)));
             }
         return tmp;
     }
@@ -82,10 +80,25 @@ public class MapGenerator{
             int y = Math.abs(i / mod);
             Tile tmpTile = new Tile(x,y, 5);
             //using the random noise in a circle around center
+            if(randomized.get(i) > 0){
+                tmpTile.setOwner(-3);
+                tmpTile.setTroops(0);
+                tmpTile.setTroopGeneration(0);
+            }
+            if(randomized.get(i) > 0.15){
+                tmpTile.setOwner(-1);
+                tmpTile.setTroops(2);
+                tmpTile.setTroopGeneration(1);
+            }
+            if(randomized.get(i) > 0.35){
+                tmpTile.setOwner(-1);
+                tmpTile.setTroops(3);
+                tmpTile.setTroopGeneration(2);
+            }
             if(randomized.get(i) > .7){
                 tmpTile.setOwner(-1);
-                tmpTile.setTroops(10);
-                tmpTile.setTroopGeneration(2);
+                tmpTile.setTroops(5);
+                tmpTile.setTroopGeneration(3);
             }
             //if the noise is great than .9
             //set terrain to impassable
@@ -93,7 +106,7 @@ public class MapGenerator{
                 tmpTile.setOwner(-2);
                 tmpTile.setTroops(0);
             }
-            if(i == dimensions/2){
+            if(x == dimensions/2 && y == dimensions/2){
                 tmpTile.setOwner(-1);
                 tmpTile.setTroops(50);
                 tmpTile.setTroopGeneration(4);
