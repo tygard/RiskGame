@@ -44,7 +44,7 @@ Color mapPlayerNumToColor(int playerNum) {
 //takes a turn ID and returns an index, to use with the previous functions.
 //ex if the playerID is 12, you can do Color color = mapPlayerNumToColor(getPlayerIndex(12));
 int getPlayerIndex(int playerID){
-  if (playerID == -1) return -1;
+  if (playerID < 0) return -1;
   List<InGameUser> users = locator<GameState>().users;
   for (int i = 0; i < users.length; i++){
     if (users[i].turnID == playerID){
