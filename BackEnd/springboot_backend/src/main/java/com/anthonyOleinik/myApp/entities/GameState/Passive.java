@@ -2,10 +2,10 @@ package com.anthonyOleinik.myApp.entities.GameState;
 
 public class Passive {
     private int cost;
-    private int duration;
-    private boolean active;
+    public int duration;
+    public boolean active;
 
-    private int passiveValue;
+    public int passiveValue;
     PassiveModifiers modifiedValue;
 
 }
