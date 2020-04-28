@@ -49,6 +49,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/logos/
+    - assets/tileTypes/
   fonts:
   - family: Digital
     fonts:

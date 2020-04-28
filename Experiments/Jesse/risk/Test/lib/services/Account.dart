@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:uuid/uuid.dart';
 
 class UserAccount {
   Future<bool> signedIn = Future.value(false);
@@ -26,6 +27,18 @@ class UserAccount {
     });
 
     _googleSignIn.signInSilently();
+
+    ///facebook login
+    ///
+    ///
+
+  }
+
+  Future<bool> createAccount(String email, String username) async{
+    var uid = Uuid().v5(email, "userdata");
+    String _username = username;
+
+
   }
 
    String getEmail(){
