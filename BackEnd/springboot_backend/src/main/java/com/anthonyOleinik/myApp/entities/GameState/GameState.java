@@ -32,7 +32,7 @@ public class GameState {
         //grow all troops
         for (Tile tile : this.board.getTiles()){
             if (tile.getOwner() > -1){
-                users.get(currPlayer).getPassives().forEach((e)->{
+            /*TODO: fix this    users.get(currPlayer).getPassives().forEach((e)->{
                     if(e.active) {
                         if (e.modifiedValue == PassiveModifiers.attack) {
                             tile.setPower(tile.getPower() * e.passiveValue);
@@ -48,7 +48,7 @@ public class GameState {
                             users.get(currPlayer).removePassive(e);
                         }
                     }
-                });
+                });*/
                 tile.addTroops(initTroopGen + tile.getTroopGeneration());
             } else {
                 tile.addTroops(initAITroopGen + tile.getTroopGeneration());
