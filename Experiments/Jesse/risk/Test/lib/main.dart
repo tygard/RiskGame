@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:risk/src/pages/homeScreen/homeScreenBoiler.dart';
-import 'package:risk/src/pages/homeScreen/LogoutScreen.dart';
+import 'package:risk/src/pages/screens/homeScreenBoiler.dart';
+import 'package:risk/src/pages/screens/LogoutScreen.dart';
 import 'package:risk/services/Account.dart';
 
 void main(){

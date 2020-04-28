@@ -72,6 +72,7 @@ class _GameBoard extends State<GameBoard> {
         position: tile_position,
         owner: tile.ownership,
         isSelected: clickedTiles.contains(tile_position),
+        troopGen: tile.troopGeneration,
       ));
     }
 
