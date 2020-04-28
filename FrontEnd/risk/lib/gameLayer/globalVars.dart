@@ -109,7 +109,6 @@ Color NumToColor(int num) {
 }
 
 String tileImage(int owner, int army){
-  print(army);
   Random rnd = new Random();
   if (owner == -2) return ("assets/tileTypes/m"+ (rnd.nextInt(2)+1).toString() +".png");
   if (owner == -3) return ("assets/tileTypes/l"+ (rnd.nextInt(1)+1).toString() +".png");
@@ -119,9 +118,9 @@ String tileImage(int owner, int army){
     }else if(army == 2){
       return ("assets/tileTypes/h2.png");
     }else if(army == 3){
-      return ("assets/tileTypes/v3.png");
+      return ("assets/tileTypes/h"+(rnd.nextInt(8)+1).toString() +".png");
     }else if(army > 3){
-      return ("assets/tileTypes/v"+(rnd.nextInt(1)+1).toString() +".png");
+      return ("assets/tileTypes/v"+(rnd.nextInt(2)+1).toString() +".png");
     }else{
       return ("assets/tileTypes/default.png");
     }
