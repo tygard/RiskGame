@@ -38,6 +38,14 @@ class Tile {
       this.moneyGeneration,
       this.troopGeneration}) {
     switch (this.ownership) {
+      case -3:
+        {
+          this.power = 0;
+          this.defense = 0;
+          this.moneyGeneration = 0;
+          this.troopGeneration = 0;
+        }
+        break;
       case -2:
         {
           this.power = 0;
@@ -52,7 +60,7 @@ class Tile {
           this.power = 1;
           this.defense = 1;
           this.moneyGeneration = locator<GameState>().AITileGrowth;
-          this.troopGeneration = locator<GameState>().AITileGrowth;
+          //this.troopGeneration = locator<GameState>().AITileGrowth;
         }
         break;
 
@@ -60,7 +68,7 @@ class Tile {
         this.power = 1;
         this.defense = 1;
         this.moneyGeneration = locator<GameState>().tileGrowthPercent;
-        this.troopGeneration = locator<GameState>().initArmyNum;
+        //this.troopGeneration = locator<GameState>().initArmyNum;
     }
   }
   factory Tile.fromJson(Map<String, dynamic> json) => _$TileFromJson(json);
@@ -93,6 +101,14 @@ class Tile {
    */
   void updateModifiers() {
     switch (this.ownership) {
+      case -3:
+        {
+          this.power = 0;
+          this.defense = 0;
+          this.moneyGeneration = 0;
+          this.troopGeneration = 0;
+        }
+        break;
       case -2:
         {
           this.power = 0;
@@ -107,7 +123,7 @@ class Tile {
           this.power = 1;
           this.defense = 1;
           this.moneyGeneration = locator<GameState>().AITileGrowth;
-          this.troopGeneration = locator<GameState>().AITileGrowth;
+          //this.troopGeneration = locator<GameState>().AITileGrowth;
         }
         break;
 
@@ -115,7 +131,7 @@ class Tile {
         this.power = 1;
         this.defense = 1;
         this.moneyGeneration = locator<GameState>().tileGrowthPercent;
-        this.troopGeneration = locator<GameState>().initArmyNum;
+        //this.troopGeneration = locator<GameState>().initArmyNum;
     }
     for (int i = 0; i < this.activesList.length; i++) {
       this.defense += this.activesList.elementAt(i).defense;

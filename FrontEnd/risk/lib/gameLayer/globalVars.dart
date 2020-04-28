@@ -114,13 +114,13 @@ String tileImage(int owner, int army){
   if (owner == -3) return ("assets/tileTypes/l"+ (rnd.nextInt(1)+1).toString() +".png");
   if (owner > -2){
     if(army == 0 || army == 1){
-      return ("assets/tileTypes/h1.png");
+      return ("assets/tileTypes/h"+(rnd.nextInt(2)+1).toString() +".png");
     }else if(army == 2){
-      return ("assets/tileTypes/h2.png");
+      return ("assets/tileTypes/h"+(rnd.nextInt(3)+4).toString() +".png");
     }else if(army == 3){
-      return ("assets/tileTypes/v3.png");
+      return ("assets/tileTypes/h"+(rnd.nextInt(1)+8).toString() +".png");
     }else if(army > 3){
-      return ("assets/tileTypes/v"+(rnd.nextInt(1)+1).toString() +".png");
+      return ("assets/tileTypes/v"+(rnd.nextInt(2)+1).toString() +".png");
     }else{
       return ("assets/tileTypes/default.png");
     }
