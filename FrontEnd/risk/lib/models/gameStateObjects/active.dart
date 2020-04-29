@@ -54,8 +54,8 @@ class Active {
 
   String toString() {
     String s = "Cost: $cost, \t";
-    s += "Power + $power% \t";
-    s += "Defense + $defense% \t";
+    s += "Power + $power, \t";
+    s += "Defense + $defense, \t";
     s += "Duration: $duration";
     return s;
   }
