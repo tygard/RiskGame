@@ -1,12 +1,8 @@
 package com.anthonyOleinik.myApp.entities.GameState;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.*;
 
 public class GameState {
-    Logger gameStatelog = LoggerFactory.getLogger(GameState.class);
     private List<InGameUser> users = new ArrayList<>();
     private GameBoard board;
     private String gameID;
@@ -68,10 +64,10 @@ public class GameState {
             if(playerTiles.get(user) > board.getTiles().size()*.35){
                 winner = users.indexOf(user);
                 gameOver = true;
-                gameStatelog.info(user.getUsername() + " has won the game controlling ["
+                System.out.println(user.getUsername() + " has won the game controlling ["
                 + playerTiles.get(user) +"] tiles");
             }
-            gameStatelog.info(user.getUsername() +" controls ["+ playerTiles.get(user) + "/"
+            System.out.println(user.getUsername() +" controls ["+ playerTiles.get(user) + "/"
                     + board.getTiles().size() + "] tiles.");
         });
     }
