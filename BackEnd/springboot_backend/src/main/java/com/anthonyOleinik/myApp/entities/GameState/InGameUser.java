@@ -1,7 +1,5 @@
 package com.anthonyOleinik.myApp.entities.GameState;
 
-import com.anthonyOleinik.myApp.entities.FactionEntity;
-import com.anthonyOleinik.myApp.entities.RolesEntity;
 import com.anthonyOleinik.myApp.entities.UserEntity;
 
 import java.util.ArrayList;
@@ -14,7 +12,6 @@ public class InGameUser {
     private int turnID;
 
     private ArrayList<Passive> ownedPassives = new ArrayList<Passive>();
-    private ArrayList<Tile> ownedTiles = new ArrayList<Tile>();
 
     private int money = 0;
     private int genTroops = 0;
@@ -42,8 +39,16 @@ public class InGameUser {
         return "\n" + username;
     }
 
+    public String getUsername(){return this.username;}
+
     public int getTurnID() {
         return this.turnID;
+    }
+
+    public ArrayList<Passive> getPassives(){ return this.ownedPassives; }
+
+    public void removePassive(Passive passive){
+        ownedPassives.remove(passive);
     }
 
     public int getMoney(){
@@ -57,4 +62,6 @@ public class InGameUser {
     public void addMoney(int m){
         this.money += m;
     }
+
+    public void setTurnID(int id){this.turnID = id;}
 }

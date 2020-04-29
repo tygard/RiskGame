@@ -28,7 +28,7 @@ class RouteGenerator {
         return NoAnimationMaterialPageRoute(builder: (_) => HomeScreen());
       case "/queue":
         return NoAnimationMaterialPageRoute(builder: (_) => QueueScreen());
-      case "/onboard/selectTeam/": //UNUSED
+      case "/register": //UNUSED
         return NoAnimationMaterialPageRoute(builder: (_) => SelectTeam());
       case "/game": //returns a SocketProvider -> RiskOverlay
         return NoAnimationMaterialPageRoute(

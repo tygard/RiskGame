@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -12,6 +14,7 @@ class GameState {
   GameBoard board;
   String gameID;
 
+  int mapSeed;
   int turn;
   int currPlayer;
 
@@ -26,6 +29,9 @@ class GameState {
   final int AITileGrowth = 5; //percent out of 100
   final int initAINum = 10;
 
+  bool gameOver = false;
+  int winner;
+
   GameState.empty();
   GameState(this.users, this.board, this.gameID);
 
@@ -35,6 +41,9 @@ class GameState {
     gameID = state.gameID;
     turn = state.turn;
     currPlayer = state.currPlayer;
+    mapSeed = state.mapSeed;
+    gameOver = state.gameOver;
+    winner = state.winner;
     gameStateDidChange.notifyListeners(); //looool imagine
   }
 

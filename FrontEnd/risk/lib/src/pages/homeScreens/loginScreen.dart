@@ -15,7 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: HomeScreenBoiler(
         child: Column(
                   children: <Widget>[
-                    _buildLoginButton(
+                    /*_buildLoginButton(
                         image: Image.asset("assets/logos/facebookLogo.png"),
                         function: (){Navigator.of(context).pushReplacementNamed("/game");},
                         text: Text(
@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: TextStyle(color: Colors.white, fontSize: 20),
                           textAlign: TextAlign.center,
                         ),
-                        background: Color(0xFF3B5998)),
+                        background: Color(0xFF3B5998)),*/
                     _buildLoginButton(
                         image: Image.asset("assets/logos/google.png"),
                         function: doLogin,

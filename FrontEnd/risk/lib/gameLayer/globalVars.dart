@@ -9,14 +9,11 @@ import 'package:risk/src/utils/serviceProviders.dart';
 import 'package:risk/src/utils/socketManager.dart';
 import 'package:risk/src/utils/toaster.dart';
 import 'Tile.dart';
+import 'dart:math';
 
-
-/*
 List<Passive> passivesList = new List<Passive>();
 List<Active> activesList = new List<Active>();
-Tile selectedTile;
-Tile prevtWidget;
-Tile tWidget;
+Offset tOffset;
 int pTurn = -1;
 
 var selected1;
@@ -89,8 +86,7 @@ int ColorToNum(Color turn) {
   }
 }
 
-String ColorToString(Color turn)
-{
+String ColorToString(Color turn) {
   if (turn == Colors.red) {
     return "Red";
   }
@@ -111,4 +107,23 @@ Color NumToColor(int num) {
   if (num == 2) return Colors.green;
   if (num == 3) return Colors.blue;
 }
-*/
+
+String tileImage(int owner, int army, int displaySeed){
+  Random rnd = new Random(displaySeed);
+  if (owner == -2) return ("assets/tileTypes/m"+ (rnd.nextInt(2)+1).toString() +".png");
+  if (owner == -3) return ("assets/tileTypes/l"+ (rnd.nextInt(1)+1).toString() +".png");
+  if (owner > -2){
+    if(army == 0 || army == 1){
+      return ("assets/tileTypes/h"+(rnd.nextInt(2)+1).toString() +".png");
+    }else if(army == 2){
+      return ("assets/tileTypes/h"+(rnd.nextInt(3)+4).toString() +".png");
+    }else if(army == 3){
+      return ("assets/tileTypes/h"+(rnd.nextInt(1)+8).toString() +".png");
+    }else if(army > 3){
+      return ("assets/tileTypes/v"+(rnd.nextInt(2)+1).toString() +".png");
+    }else{
+      return ("assets/tileTypes/default.png");
+    }
+  }
+  return ("assets/tileTypes/default.png");
+}

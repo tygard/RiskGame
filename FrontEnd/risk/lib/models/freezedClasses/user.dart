@@ -25,6 +25,7 @@ class User{
     email = user.email;
     uuid = user.uuid;
     googleID = user.googleID;
+    encode(this);
   }
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

@@ -97,7 +97,7 @@ class SelectTeam extends StatelessWidget {
       Response response =
           await RiskHttp.makePostRequest("users", params: package);
       Toaster.successToast(response.data.toString());
-      Navigator.of(context).pushReplacementNamed("/game");
+      Navigator.of(context).pushReplacementNamed("/home");
     } else {
       Toaster.errorToast(
           "Listen here, smart guy. You have to put a name in the box.");

@@ -12,7 +12,6 @@ part 'active.g.dart';
 @JsonSerializable(explicitToJson: true)
 class Active {
   // the tile this active belongs to
-  Tile tile;
   int cost;
   // duration is the number of turns the active is applied for
   int duration;
@@ -53,22 +52,6 @@ class Active {
   factory Active.fromJson(Map<String, dynamic> json) => _$ActiveFromJson(json);
   Map<String, dynamic> toJson() => _$ActiveToJson(this);
 
-  /**
-   * assigns a tile to an active
-   */
-  void pruchase(Tile tile) {
-    this.tile = tile;
-  }
-
-/**
- * remove reference to the active return the cost
- */
-  int sell() {
-    this.tile = null;
-    this.duration = -1;
-    return this.cost;
-  }
-
   String toString() {
     String s = "Cost: $cost, \t";
     s += "Power + $power% \t";
@@ -78,7 +61,7 @@ class Active {
   }
 
   bool isActive() {
-    return (this.tile != null && duration > 0);
+    return (duration > 0);
   }
 
   int getCost() {

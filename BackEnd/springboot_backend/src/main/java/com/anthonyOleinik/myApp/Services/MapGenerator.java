@@ -2,100 +2,133 @@ package com.anthonyOleinik.myApp.Services;
 
 import com.anthonyOleinik.myApp.entities.GameState.GameBoard;
 import com.anthonyOleinik.myApp.entities.GameState.GameState;
+import com.anthonyOleinik.myApp.entities.GameState.InGameUser;
 import com.anthonyOleinik.myApp.entities.GameState.Tile;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 @Service
 public class MapGenerator{
+    FastNoise fNoise = new FastNoise();
+    public int dimensions;
+    public int playerSize;
 
-    public float dimensions;
+    public MapGenerator(){super();}
+    public MapGenerator(int playerSize, int seed){
+        this.playerSize = playerSize;
+        this.dimensions = playerSize + (new Random(seed).nextInt(3) * 2 + 1);
+        fNoise.SetSeed(seed);
+        fNoise.SetFrequency(0.15f);
+    }
+    //TODO: finish splitting up initialize board into separate functions
 
-    /*
-    List<Float> makeCircle(){
+    List<Float> makeCircleNoise(){
         List<Float> tmp = new ArrayList<>();
         int center = (int)dimensions/2;
-
         //Since we are using a square board, we can get O(n) by using modulo here.
         for (int i = 0; i < dimensions * dimensions; i++) {
+            int x = Math.abs(i % dimensions);
+            int y = Math.abs(i / dimensions);
                 //Simple squaring
-                float distanceX = (center - (i % dimensions)) * (center - (i % dimensions));
-                float distanceY = (center - (i / dimensions)) * (center - (i / dimensions));
-
+                float distanceX = (center - x) * (center - x);
+                float distanceY = (center - y) * (center - y);
+                DecimalFormat df = new DecimalFormat("0.00");
                 float distanceToCenter = (float)Math.sqrt(distanceX + distanceY);
-
                 //Divide by dimensions again to keep it in bounds ie. 0 < distance < 1
-                distanceToCenter = distanceToCenter / dimensions;
-
-                tmp.add(distanceToCenter);
+                distanceToCenter *= (1-fNoise.GetSimplex(x, y));
+                distanceToCenter = distanceToCenter / (dimensions*.9f);
+                System.out.println("[X:"+x+" Y:"+y+"]Noise value: " +df.format(distanceToCenter) );
+                tmp.add(Float.parseFloat(df.format(distanceToCenter)));
             }
         return tmp;
     }
 
-    GameBoard InitializeBoard(GameState tmp) {
-        int numPlayers = tmp.getUsers().size();
-        GameBoard board = new GameBoard();
-        board.setDimensions((numPlayers + (new Random().nextInt(3) * 2 + 1)));
-        final int mod = board.getDimensions();
-        final int tmpArea = board.getDimensions() * board.getDimensions();
-        final int mid = board.getDimensions() / 2;
-        int tmpPlayer = 0;
+    List<Tile> PlayerSpawns(){
+        int mod = dimensions;
+        int mid = dimensions /2;
 
-        final List<Tile> corners = new ArrayList<>();
-        corners.add(new Tile(0,0));
-        corners.add(new Tile(0, mod-1));
-        corners.add(new Tile(mod-1, 0));
-        corners.add(new Tile(mod-1,mod-1));
+        final List<Tile> Spawns = new ArrayList<>();
+        Spawns.add(new Tile(0,0, 20));
+        Spawns.add(new Tile(0, mod-1, 20));
+        Spawns.add(new Tile(mod-1, 0, 20));
+        Spawns.add(new Tile(mod-1,mod-1, 20));
 
-        final List<Tile> midSidePoints = new ArrayList<>();
-        midSidePoints.add(new Tile(0, mid));
-        midSidePoints.add(new Tile(mod-1, mid));
+        //6 players
+        Spawns.add(new Tile(0, mid, 20));
+        Spawns.add(new Tile(mod-1, mid, 20));
 
-        final List<Tile> midTopPoints = new ArrayList<>();
-        midTopPoints.add(new Tile(mid,0));
-        midTopPoints.add(new Tile(mid, mod-1));
+        //8 players
+        Spawns.add(new Tile(mid,0, 20));
+        Spawns.add(new Tile(mid, mod-1, 20));
+        return Spawns;
+    }
 
+    public List<Tile> CreateBoard() {
+        List<Tile> tiles = new ArrayList<>();
+        List<Float> randomized = makeCircleNoise();
+        final int mod = dimensions;
+        final int tmpArea = dimensions * dimensions;
+        List<Tile> spawn = PlayerSpawns();
+
+        //create tiles
         for (int i = 0; i < tmpArea; ++i) {
             int x = Math.abs(i % mod);
             int y = Math.abs(i / mod);
-            Tile tmpTile = new Tile(x,y);
-            //not quite finished. need to check edges to set player ownership.
-            tmpTile.setTroops(5);
-            if(tmpTile.x == mid && tmpTile.y == mid){
-                tmpTile.setTroops(100);
+            Tile tmpTile = new Tile(x,y, 0);
+            //using the random noise in a circle around center
+            if(randomized.get(i) > 0.15){
+                tmpTile.setOwner(-1);
+                tmpTile.setTroops(2);
+                tmpTile.setTroopGeneration(0);
             }
-            if(numPlayers == 8) {
-                if (corners.contains(tmpTile) || midTopPoints.contains(tmpTile) || midSidePoints.contains(tmpTile)) {
-                    tmpTile.setOwner(tmp.getUsers().get(tmpPlayer));
-                    tmpTile.setTroops(tmp.getInitTroop());
-                    tmpTile.setTroopGeneration(tmp.getInitTroopGen());
-                    tmpTile.setMoneyGeneration(tmp.getInitMoneyGen());
-                    ++tmpPlayer;
-                }
-            }else if(numPlayers == 6){
-                if(corners.contains(tmpTile) || midTopPoints.contains(tmpTile)){
-                    tmpTile.setOwner(tmp.getUsers().get(tmpPlayer));
-                    tmpTile.setTroops(tmp.getInitTroop());
-                    tmpTile.setTroopGeneration(tmp.getInitTroopGen());
-                    tmpTile.setMoneyGeneration(tmp.getInitMoneyGen());
-                    ++tmpPlayer;
-                }
-            }else {
-                if (corners.contains(tmpTile)) {
-                    tmpTile.setOwner(tmp.getUsers().get(tmpPlayer));
-                    tmpTile.setTroops(tmp.getInitTroop());
-                    tmpTile.setTroopGeneration(tmp.getInitTroopGen());
-                    tmpTile.setMoneyGeneration(tmp.getInitMoneyGen());
-                    ++tmpPlayer;
-                }
+            if(randomized.get(i) > 0.35){
+                tmpTile.setOwner(-1);
+                tmpTile.setTroops(3);
+                tmpTile.setTroopGeneration(1);
             }
-            board.AddTile(tmpTile);
+            if(randomized.get(i) > .7){
+                tmpTile.setOwner(-1);
+                tmpTile.setTroops(5);
+                tmpTile.setTroopGeneration(2);
+            }
+            //if the noise is great than .8
+            //set terrain to impassable
+            if(randomized.get(i) >= .80){
+                tmpTile.setOwner(-2);
+                tmpTile.setTroops(0);
+                tmpTile.setTroopGeneration(0);
+            }
+            if(randomized.get(i) <= 0.15){
+                tmpTile.setOwner(-3);
+                tmpTile.setTroops(0);
+                tmpTile.setTroopGeneration(0);
+            }
+            if(x == dimensions/2 && y == dimensions/2){
+                tmpTile.setOwner(-1);
+                tmpTile.setTroops(25);
+                tmpTile.setTroopGeneration(4);
+                tmpTile.setMoneyGeneration(50);
+            }
+            tiles.add(tmpTile);
         }
-        return board;
+
+
+        //set player starting tiles, I think this works.
+        for(int i = 0; i < playerSize; i++){
+            Tile tmp = spawn.get(i);
+            int tileIndex = tiles.indexOf(tmp);
+            tiles.set(tileIndex, tmp);
+            tiles.get(tileIndex).setOwner(i);
+            tiles.get(tileIndex).setTroopGeneration(5);
+            tiles.get(tileIndex).setMoneyGeneration(10);
+        }
+
+        return tiles;
     }
 
-     */
+
 }
