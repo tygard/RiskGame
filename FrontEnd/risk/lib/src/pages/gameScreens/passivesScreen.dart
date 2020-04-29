@@ -81,9 +81,14 @@ class _PassivesScreenState extends State<PassivesScreen> {
         }
       }
     } else {
-      // new turn, reset state
-      s += "new turn: reset state";
-      _resetState();
+      if (curTurn != pTurn && pTurn != -1) {
+        s += "new player";
+        sTile = null;
+      } else {
+        // new turn, reset state
+        s += "new turn: reset state";
+        _resetState();
+      }
     }
     pTurn = curTurn;
     print(
@@ -174,10 +179,8 @@ class _PassivesScreenState extends State<PassivesScreen> {
    */
   void _purchasePassive(Passive p) {
     setState(() {
-      locator<GameState>()
-          .users
-          .elementAt(locator<GameState>().currPlayer)
-          .purchasePassive(p, locator<GameState>().currPlayer);
+      curUser.purchasePassive(p, locator<GameState>().currPlayer);
+      curUser.updateModifiers();
     });
   }
 
@@ -189,6 +192,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
       for (int i = 0; i < locator<GameState>().board.tiles.length; i++) {
         if (locator<GameState>().board.tiles.elementAt(i) == selTile) {
           locator<GameState>().board.tiles.elementAt(i).purchaseActive(a);
+          sTile.updateModifiers();
         }
       }
     });
@@ -368,7 +372,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
     return "Error";
   }
 
-    String _activeButtonString(Active listItem) {
+  String _activeButtonString(Active listItem) {
     if (!sTile.activesList.contains(listItem)) {
       return "Buy";
     } else if (sTile.activesList.contains(listItem)) {
@@ -385,9 +389,11 @@ class _PassivesScreenState extends State<PassivesScreen> {
       return Colors.grey;
     }
   }
+
   Color _activeButtonColor(Active listItem) {
     // if the active isnt active and the current user has more money than the cost of the passive
-    if (!sTile.activesList.contains(listItem) && listItem.getCost() < curUser.money) {
+    if (!sTile.activesList.contains(listItem) &&
+        listItem.getCost() < curUser.money) {
       return Colors.green;
     } else {
       return Colors.grey;
