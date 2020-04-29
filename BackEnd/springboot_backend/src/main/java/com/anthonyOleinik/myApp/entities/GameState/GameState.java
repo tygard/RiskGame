@@ -1,8 +1,12 @@
 package com.anthonyOleinik.myApp.entities.GameState;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 
 public class GameState {
+    Logger gameStatelog = LoggerFactory.getLogger(GameState.class);
     private List<InGameUser> users = new ArrayList<>();
     private GameBoard board;
     private String gameID;
@@ -19,7 +23,7 @@ public class GameState {
     private final int initAITroopGen = 1;
     private final int initAIMoneyGen = 0;
 
-    private boolean gameFinished = false;
+    private boolean gameOver = false;
     private int winner;
 
     /*public GameState(ArrayList<Integer> playerIds){
@@ -63,8 +67,12 @@ public class GameState {
         playerTiles.keySet().forEach((user) -> {
             if(playerTiles.get(user) > board.getTiles().size()*.35){
                 winner = users.indexOf(user);
-                gameFinished = true;
+                gameOver = true;
+                gameStatelog.info(user.getUsername() + " has won the game controlling ["
+                + playerTiles.get(user) +"] tiles");
             }
+            gameStatelog.info(user.getUsername() +" controls ["+ playerTiles.get(user) + "/"
+                    + board.getTiles().size() + "] tiles.");
         });
     }
 
@@ -177,12 +185,12 @@ public class GameState {
         this.winner = winner;
     }
 
-    public boolean isGameFinished() {
-        return gameFinished;
+    public boolean isGameOver() {
+        return gameOver;
     }
 
-    public void setGameFinished(boolean gameFinished) {
-        this.gameFinished = gameFinished;
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
     }
 }
 

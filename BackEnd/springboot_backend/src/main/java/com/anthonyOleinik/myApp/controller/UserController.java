@@ -104,6 +104,7 @@ public class UserController {
         try{
             userRepo.save(user);
             connectionsRepo.save(conns);
+            logger.info(user.getUsername() +" successfully created an account.");
             return "users/"+ user.getUsername()+"/details";
         }catch (Throwable e){
             logger.error("Failed to create user", e);
@@ -118,12 +119,13 @@ public class UserController {
     //Probably a better way to get google/fb token, unsure at the moment.
     //Queries the connections repo for the gogole id, uses that to query user repo for
     //the user, other wise return null
-    @GetMapping(path = "/users/goog/{token}")
+    @GetMapping(path = "/users/goog/{token}/")
     public UserEntity queryGoogleId(@PathVariable("token") String id) {
         try{
             UserEntity user = userRepo.findById(connectionsRepo.FindByGID(id).
                     orElseThrow(() -> new IllegalArgumentException()).getUserId()).get();
             if(user != null){
+                logger.info("User: "+ user.getUsername() + " logged in.");
                 return user;
             }else{
                 return null;
