@@ -25,7 +25,7 @@ class _QueueScreenState extends State<QueueScreen> {
   @override
   void initState() {
     sm = SocketManager(
-        channelUrl: "ws://${locator<Config>().getEndpoint()}/lobby", headers: {"user": locator<User>().email});
+        channelUrl: "ws://${locator<Config>().getEndpoint()}/lobby", headers: {"user": locator<User>().username});
     locator<User>().inGamePlayerNumber = null;
     _beginListeningToLobby();
     super.initState();

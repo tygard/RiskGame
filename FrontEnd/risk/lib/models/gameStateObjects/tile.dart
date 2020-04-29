@@ -78,7 +78,6 @@ class Tile {
    * adds the Active a to this tiles activesList, assigns the actives tile property to this tile
    */
   void purchaseActive(Active a) {
-    a.pruchase(this);
     this.activesList.add(a);
   }
 
@@ -89,8 +88,8 @@ class Tile {
    */
   int sellActive(Active a) {
     if (activesList.contains(a)) {
+      a.duration = -1;
       activesList.remove(a);
-      return a.sell();
     }
     return -1;
   }

@@ -155,6 +155,11 @@ class _GameBoard extends State<GameBoard> {
       setState(() {
         this.gameState = locator<GameState>();
       });
+      if(gameState.gameOver){
+        Toaster.successToast(gameState.users.elementAt(gameState.winner).userName + " won the game, controlling 70% of the board!");
+        Navigator.of(context).pushReplacementNamed("/home");
+      }
+
       //TODO: maybe fix this, supposed to scroll to current player tile
       for (Tile t in this.gameState.board.tiles) {
         if (t.ownership == gameState.currPlayer) {
@@ -170,7 +175,9 @@ class _GameBoard extends State<GameBoard> {
     locator<AttackService>().attackDidHappen.addListener(() {
       //pass if we dont have two clciked. if we do, we can attack.
       if (clickedTiles.length != 2) {
+        print("[ asasd] ${clickedTiles.length}");
         Toaster.warningToast("Two tiles not clicked. turn passed.");
+        return;
       } else {
           _attack();
       }

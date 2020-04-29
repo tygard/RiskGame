@@ -20,14 +20,19 @@ GameState _$GameStateFromJson(Map<String, dynamic> json) {
     ..mapSeed = json['mapSeed'] as int
     ..turn = json['turn'] as int
     ..currPlayer = json['currPlayer'] as int
-    ..type = json['type'] as String;
+    ..type = json['type'] as String
+    ..gameOver = json['gameOver'] as bool
+    ..winner = json['winner'] as int;
 }
 
 Map<String, dynamic> _$GameStateToJson(GameState instance) => <String, dynamic>{
       'users': instance.users?.map((e) => e?.toJson())?.toList(),
       'board': instance.board?.toJson(),
       'gameID': instance.gameID,
+      'mapSeed': instance.mapSeed,
       'turn': instance.turn,
       'currPlayer': instance.currPlayer,
       'type': instance.type,
+      'gameOver': instance.gameOver,
+      'winner': instance.winner,
     };

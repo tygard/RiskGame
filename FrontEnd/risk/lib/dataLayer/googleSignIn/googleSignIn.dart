@@ -17,6 +17,7 @@ GoogleSignIn _googleSignIn = new GoogleSignIn(
 signOut() async {
   _googleSignIn.disconnect();
   deleteFile("user.json");
+  locator<RouteGenerator>().generateRouteNamed("/login");
 }
 
 initLogin() {
@@ -24,7 +25,10 @@ initLogin() {
       .listen((GoogleSignInAccount account) async {
     if (account != null) {
       locator<User>().googleID = account.id;
-      locator<RouteGenerator>().generateRouteNamed("/home");
+      Response sign_in_response = await RiskHttp.makePostRequest("/users/goog/${account.id}/");
+      print("sing in response: $sign_in_response");
+        locator<User>().fromRiskSignIn(sign_in_response);
+        locator<RouteGenerator>().generateRouteNamed("/home");
       return true;
     } else {
       locator<RouteGenerator>().generateRouteNamed("/login");
@@ -39,9 +43,13 @@ doLogin() async {
   Response sign_in_response = await RiskHttp.makePostRequest("/users/goog/${account.id}/");
   print(account.id);
   print(sign_in_response.headers);
-  //Map<String, dynamic> user_model = sign_in_response.data as Map<String, dynamic>;
-  //locator<User>().uuid = user_model["id"];
-  //locator<User>().name = user_model["username"];
-  locator<User>().fromGoogleSignIn(account);
-  locator<RouteGenerator>().generateRouteNamed("/home");
+  locator<User>().googleID = account.id;
+  if(sign_in_response.data.toString().length>0){
+    locator<User>().fromUser(User.fromJson(sign_in_response.data));
+    locator<RouteGenerator>().generateRouteNamed("/home");
+  }else{
+    locator<RouteGenerator>().generateRouteNamed("/register");
+  }
+  //locator<User>().fromGoogleSignIn(account);
+  //locator<RouteGenerator>().generateRouteNamed("/home");
 }

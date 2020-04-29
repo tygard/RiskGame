@@ -20,7 +20,6 @@ void main() {
       test('purchase actives', () {
         verifyZeroInteractions(mockActive);
         t.purchaseActive(mockActive);
-        verify(mockActive.pruchase(t)).called(1);
       });
 
       test('add actives to activesList', () {
@@ -28,8 +27,6 @@ void main() {
         expect(t.activesList.length == 0, true);
 
         t.purchaseActive(mockActive);
-        verify(mockActive.pruchase(t)).called(1);
-
         expect(t.activesList.length == 1, true);
       });
     });
@@ -41,14 +38,12 @@ void main() {
       });
       test('sell actives', () {
         t.sellActive(mockActive);
-        verify(mockActive.sell()).called(1);
       });
 
       test('remove actives from activesList', () {
         expect(t.activesList.length == 1, true);
 
         t.sellActive(mockActive);
-        verify(mockActive.sell()).called(1);
         expect(t.activesList.length == 0, true);
       });
     });

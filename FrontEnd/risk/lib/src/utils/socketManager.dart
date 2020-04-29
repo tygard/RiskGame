@@ -85,6 +85,7 @@ class SocketManager {
   void sendChat(Chat chat) {
     String message = json.encode(
         {"username": chat.name, "message": chat.message, "type": "chat"});
+        print("chat message: $message");
     channel.sink.add(message);
   }
 
