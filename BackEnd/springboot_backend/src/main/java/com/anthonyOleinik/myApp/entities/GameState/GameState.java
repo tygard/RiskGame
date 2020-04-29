@@ -43,31 +43,32 @@ public class GameState {
             playerIds.add(i);
             this.users.add(tmp);
         }
-
         this.board = new GameBoard(playerIds, initTroop, initAITroop, mapSeed);
     }
 
     public void checkWinner(){
         HashMap<InGameUser, Integer> playerTiles = new HashMap<>();
-        users.forEach((user) -> playerTiles.put(user, 0));
+        for(InGameUser user : this.getUsers()){
+            playerTiles.replace(user, 0);
+        }
         for(Tile tile : board.getTiles()) {
             if(tile.getOwner() > -1) {
                 //TODO: make this more elegant
                 //right now im using a hashmap of the players and increasing
                 //an int by 1 per tile they own
-                int currValue = playerTiles.get(users.get(tile.getOwner()));
-                playerTiles.replace(users.get(tile.getOwner()), currValue + 1);
+                int currValue = playerTiles.get(this.getUsers().get(tile.getOwner()));
+                playerTiles.replace(this.getUsers().get(tile.getOwner()), currValue + 1);
             }
         }
         //check if players own 35% of the board
         playerTiles.keySet().forEach((user) -> {
-            if(playerTiles.get(user) > board.getTiles().size()*.35){
+            if(playerTiles.get(user) > board.getTiles().size()*.1){
                 winner = users.indexOf(user);
                 gameOver = true;
-                System.out.println(user.getUsername() + " has won the game controlling ["
+                System.out.println(user.getUserName() + " has won the game controlling ["
                 + playerTiles.get(user) +"] tiles");
             }
-            System.out.println(user.getUsername() +" controls ["+ playerTiles.get(user) + "/"
+            System.out.println(user.getUserName() +" controls ["+ playerTiles.get(user) + "/"
                     + board.getTiles().size() + "] tiles.");
         });
     }

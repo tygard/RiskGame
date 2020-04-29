@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class InGameUser {
-    private String username = "Anonymous" + String.format("%04d", new Random().nextInt(10000));
+    private String userName = "Anonymous" + String.format("%04d", new Random().nextInt(10000));
     private String role = "Anonymous";
     private String faction = "Red";
     private int turnID;
@@ -25,21 +25,21 @@ public class InGameUser {
     }
 
     public InGameUser(String username) {
-        this.username = username;
+        this.userName = username;
     }
 
     public InGameUser(UserEntity _user) {
-        this.username = _user.getUsername();
+        this.userName = _user.getUsername();
         this.role = _user.getRole().getRoleName();
-        this.faction = _user.getFaction().getFactionName();
+        //this.faction = _user.getFaction().getFactionName();
     }
 
     @Override
     public String toString() {
-        return "\n" + username;
+        return "\n" + userName;
     }
 
-    public String getUsername(){return this.username;}
+    public String getUserName(){return this.userName;}
 
     public int getTurnID() {
         return this.turnID;
@@ -54,6 +54,8 @@ public class InGameUser {
     public int getMoney(){
         return this.money;
     }
+
+    public void setUserName(String userName){this.userName = userName;}
 
     public void setMoney(int m){
         this.money = m;
