@@ -40,7 +40,7 @@ public class MapGenerator{
                 float distanceToCenter = (float)Math.sqrt(distanceX + distanceY);
                 //Divide by dimensions again to keep it in bounds ie. 0 < distance < 1
                 distanceToCenter *= (1-fNoise.GetSimplex(x, y));
-                distanceToCenter = distanceToCenter / (dimensions*.85f);
+                distanceToCenter = distanceToCenter / (dimensions*.9f);
                 System.out.println("[X:"+x+" Y:"+y+"]Noise value: " +df.format(distanceToCenter) );
                 tmp.add(Float.parseFloat(df.format(distanceToCenter)));
             }
@@ -83,17 +83,17 @@ public class MapGenerator{
             if(randomized.get(i) > 0.15){
                 tmpTile.setOwner(-1);
                 tmpTile.setTroops(2);
-                tmpTile.setTroopGeneration(1);
+                tmpTile.setTroopGeneration(0);
             }
             if(randomized.get(i) > 0.35){
                 tmpTile.setOwner(-1);
                 tmpTile.setTroops(3);
-                tmpTile.setTroopGeneration(2);
+                tmpTile.setTroopGeneration(1);
             }
             if(randomized.get(i) > .7){
                 tmpTile.setOwner(-1);
                 tmpTile.setTroops(5);
-                tmpTile.setTroopGeneration(3);
+                tmpTile.setTroopGeneration(2);
             }
             //if the noise is great than .8
             //set terrain to impassable

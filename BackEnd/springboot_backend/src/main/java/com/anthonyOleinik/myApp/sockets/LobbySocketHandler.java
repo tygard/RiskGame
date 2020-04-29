@@ -67,12 +67,14 @@ public class LobbySocketHandler extends TextWebSocketHandler {
 
     private void sendGameState() throws IOException {
         ArrayList<Integer> playerIds = new ArrayList<>();
-
+        ArrayList<String> userNames = new ArrayList<>();
         for (int i = 0; i < 4; i++){
             playerIds.add(sessionToLobbyNum.get(i));
+            userNames.add(sessions.get(i).getHandshakeHeaders().get("user").get(0));
         }
-
-        GameState newGameState = new GameState(playerIds);
+        //this could be changed to instead use their googIDs so we can get their account info
+        //from the database
+        GameState newGameState = new GameState(userNames);
 
         //adds "type" property
         JsonElement gameStateMessage = gson.toJsonTree(newGameState);
