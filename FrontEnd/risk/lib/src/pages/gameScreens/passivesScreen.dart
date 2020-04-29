@@ -57,8 +57,6 @@ class _PassivesScreenState extends State<PassivesScreen> {
         "before:\ns: \"$s\", pTurn: $pTurn, cTurn: $curTurn, tOffset: $tOffset, sTile: $sTile, \npList: $passivesList\naList: $activesList\nownedPassives: ${curUser.ownedPassives}----------------------------------->>>>>");
     curUser.money +=
         100; //JUST TO TEST PURCHASING------------------------------
-    //TODO: need to account for players having multiple tiles, only display the owned actives from the current tile, but maintain the 5 random tiles throughout
-    //(the randoms probably have to be stored in globalVars.dart for this)
 
     if (pTurn == curTurn) {
       // same turn, check tile properties, not passives
@@ -96,7 +94,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
   }
 
   /**
-   * sets sTile to the widget represented by tOffset
+   * sets sTile to the widget represented by tOffset, null if it does not exist
    */
   void _setSTile() {
     GameBoard b = locator<GameState>().board;
@@ -114,7 +112,9 @@ class _PassivesScreenState extends State<PassivesScreen> {
       sTile = null;
     }
   }
-
+/**
+ * adds all actives that this tile owns to the local activesList, as well as 5 randoms the user can then purchase
+ */
   void _setActives() {
     // if the sTile is null there will be nothing to base the actives tab around
     if (sTile != null) {
@@ -129,7 +129,9 @@ class _PassivesScreenState extends State<PassivesScreen> {
       }
     }
   }
-
+/**
+ * adds the passives that the current user owns to the local passivesList, also adds 5 randoms the user can purchase
+ */
   void _setPassives() {
     // if the number of users is 0 there will be nothing to base the passives tab around
     // otherwise we can create the passivesList
@@ -162,8 +164,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
   }
 
 /**
- * I think this doesnt find the right user
- * that or the ownedPassives gets set to null somewhere
+ * finds the current user and returns a reference
  */
   InGameUser _findCurUser() {
     for (int i = 0; i < locator<GameState>().users.length; i++) {
