@@ -18,10 +18,10 @@ public class MapGenerator{
     public int playerSize;
 
     public MapGenerator(){super();}
-    public MapGenerator(int playerSize){
+    public MapGenerator(int playerSize, int seed){
         this.playerSize = playerSize;
-        this.dimensions = playerSize + (new Random().nextInt(3) * 2 + 1);
-        fNoise.SetSeed(new Random().nextInt(9999));
+        this.dimensions = playerSize + (new Random(seed).nextInt(3) * 2 + 1);
+        fNoise.SetSeed(seed);
         fNoise.SetFrequency(0.15f);
     }
     //TODO: finish splitting up initialize board into separate functions
@@ -40,7 +40,7 @@ public class MapGenerator{
                 float distanceToCenter = (float)Math.sqrt(distanceX + distanceY);
                 //Divide by dimensions again to keep it in bounds ie. 0 < distance < 1
                 distanceToCenter *= (1-fNoise.GetSimplex(x, y));
-                distanceToCenter = distanceToCenter / dimensions;
+                distanceToCenter = distanceToCenter / (dimensions*.9f);
                 System.out.println("[X:"+x+" Y:"+y+"]Noise value: " +df.format(distanceToCenter) );
                 tmp.add(Float.parseFloat(df.format(distanceToCenter)));
             }
@@ -78,32 +78,32 @@ public class MapGenerator{
         for (int i = 0; i < tmpArea; ++i) {
             int x = Math.abs(i % mod);
             int y = Math.abs(i / mod);
-            Tile tmpTile = new Tile(x,y, 5);
+            Tile tmpTile = new Tile(x,y, 0);
             //using the random noise in a circle around center
-            if(randomized.get(i) > 0){
-                tmpTile.setOwner(-3);
-                tmpTile.setTroops(0);
-                tmpTile.setTroopGeneration(0);
-            }
             if(randomized.get(i) > 0.15){
                 tmpTile.setOwner(-1);
                 tmpTile.setTroops(2);
-                tmpTile.setTroopGeneration(1);
+                tmpTile.setTroopGeneration(0);
             }
             if(randomized.get(i) > 0.35){
                 tmpTile.setOwner(-1);
                 tmpTile.setTroops(3);
-                tmpTile.setTroopGeneration(2);
+                tmpTile.setTroopGeneration(1);
             }
             if(randomized.get(i) > .7){
                 tmpTile.setOwner(-1);
                 tmpTile.setTroops(5);
-                tmpTile.setTroopGeneration(3);
+                tmpTile.setTroopGeneration(2);
             }
-            //if the noise is great than .9
+            //if the noise is great than .8
             //set terrain to impassable
-            if(randomized.get(i) > .85){
+            if(randomized.get(i) >= .80){
                 tmpTile.setOwner(-2);
+                tmpTile.setTroops(0);
+                tmpTile.setTroopGeneration(0);
+            }
+            if(randomized.get(i) <= 0.15){
+                tmpTile.setOwner(-3);
                 tmpTile.setTroops(0);
                 tmpTile.setTroopGeneration(0);
             }

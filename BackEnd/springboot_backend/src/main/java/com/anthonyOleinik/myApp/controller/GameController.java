@@ -32,11 +32,11 @@ public class GameController {
 
     @GetMapping("/game/placeholder/")
     public GameState DefaultGame(){
-        ArrayList<Integer> tmp = new ArrayList<>();
-        tmp.add(0);
-        tmp.add(1);
-        tmp.add(2);
-        tmp.add(3);
+        ArrayList<String> tmp = new ArrayList<>();
+        tmp.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        tmp.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        tmp.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
+        tmp.add("Anonymous" + String.format("%04d", new Random().nextInt(10000)));
         return new GameState(tmp);
     }
 

@@ -10,8 +10,8 @@ public class GameBoard {
     private int dimensions;
     private List<Tile> tiles = new ArrayList<Tile>();
     MapGenerator mapGenerator;
-    public GameBoard(ArrayList<Integer> playerIds, int initPlayerTroops, int initAiTroops){
-        mapGenerator = new MapGenerator(playerIds.size());
+    public GameBoard(ArrayList<Integer> playerIds, int initPlayerTroops, int initAiTroops, int mapSeed){
+        mapGenerator = new MapGenerator(playerIds.size(), mapSeed);
         this.tiles = mapGenerator.CreateBoard();
         this.dimensions = mapGenerator.dimensions;
     }
