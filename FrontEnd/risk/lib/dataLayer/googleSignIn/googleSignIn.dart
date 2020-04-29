@@ -26,7 +26,8 @@ initLogin() {
     if (account != null) {
       locator<User>().googleID = account.id;
       Response sign_in_response = await RiskHttp.makePostRequest("/users/goog/${account.id}/");
-        locator<User>().fromUser(User.fromJson(sign_in_response.data));
+      print("sing in response: $sign_in_response");
+        locator<User>().fromRiskSignIn(sign_in_response);
         locator<RouteGenerator>().generateRouteNamed("/home");
       return true;
     } else {

@@ -128,5 +128,4 @@ public class Tile {
     public void addTroops(int initTroopGen) {
         this.troops += initTroopGen;
     }
-
 }

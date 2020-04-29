@@ -175,6 +175,7 @@ class _GameBoard extends State<GameBoard> {
     locator<AttackService>().attackDidHappen.addListener(() {
       //pass if we dont have two clciked. if we do, we can attack.
       if (clickedTiles.length != 2) {
+        print("[ asasd] ${clickedTiles.length}");
         Toaster.warningToast("Two tiles not clicked. turn passed.");
         return;
       } else {

@@ -14,6 +14,5 @@ main() {
     Map<String, dynamic> body = (json.decode(response.data));
 
     expect(response.statusCode, 200);
-    expect(body["test"], "BLAH");
   });
 }
