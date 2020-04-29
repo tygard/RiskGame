@@ -20,6 +20,7 @@ class GameState {
 
   String type = "gamestate";
 
+ @JsonKey(ignore: true)
   ChangeNotifier gameStateDidChange = new ChangeNotifier();
 
   final int tileGrowthPercent = 5; //percent out of 100

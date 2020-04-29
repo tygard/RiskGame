@@ -86,7 +86,7 @@ class SelectTeam extends StatelessWidget {
           break;
         default:
       }
-      locator<User>().name = myController.text;
+      locator<User>().username = myController.text;
       Map<String, dynamic> package = {
         'Username': myController.text,
         'Faction': colorID,

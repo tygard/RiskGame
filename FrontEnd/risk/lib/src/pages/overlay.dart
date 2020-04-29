@@ -144,7 +144,7 @@ class _RiskOverlayState extends State<RiskOverlay>
 
   void _sendChat(String message) {
     _textController.clear();
-    Chat chat = Chat(GlobalsProvider.of(context).user.name, message,
+    Chat chat = Chat(GlobalsProvider.of(context).user.username, message,
         DateFormat('EEE, h:mm a').format(DateTime.now()));
     sm.sendChat(chat);
   }
@@ -167,7 +167,9 @@ class _RiskOverlayState extends State<RiskOverlay>
 
   void _beginListeningToChat() {
     sm.chatDelegator().listen((chat) {
-      if (chat.name == locator<User>().name) {
+      if (chat.name == locator<User>().username) {
+        debugPrint("{name: ${chat.name}, chat: ${chat.message}");
+        debugPrint("your name: ${locator<User>().username}");
         chat.name = "You";
         _addItem(chat);
       } else {

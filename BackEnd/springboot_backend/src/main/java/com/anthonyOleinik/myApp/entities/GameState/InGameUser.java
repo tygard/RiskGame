@@ -15,7 +15,7 @@ public class InGameUser {
 
     private int money = 0;
     private int genTroops = 0;
-    private int genMoney = 0;
+    private int genMoney = 25;
 
     private Float troopMultiplier = 1.0f;
     private Float moneyMultiplier = 1.0f;

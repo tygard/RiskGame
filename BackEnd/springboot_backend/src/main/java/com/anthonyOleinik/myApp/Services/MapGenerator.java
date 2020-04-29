@@ -40,7 +40,7 @@ public class MapGenerator{
                 float distanceToCenter = (float)Math.sqrt(distanceX + distanceY);
                 //Divide by dimensions again to keep it in bounds ie. 0 < distance < 1
                 distanceToCenter *= (1-fNoise.GetSimplex(x, y));
-                distanceToCenter = distanceToCenter / (dimensions*.9f);
+                distanceToCenter = distanceToCenter / (dimensions*.95f);
                 System.out.println("[X:"+x+" Y:"+y+"]Noise value: " +df.format(distanceToCenter) );
                 tmp.add(Float.parseFloat(df.format(distanceToCenter)));
             }
