@@ -105,11 +105,13 @@ public class MapGenerator{
             if(randomized.get(i) > .85){
                 tmpTile.setOwner(-2);
                 tmpTile.setTroops(0);
+                tmpTile.setTroopGeneration(0);
             }
             if(x == dimensions/2 && y == dimensions/2){
                 tmpTile.setOwner(-1);
-                tmpTile.setTroops(50);
+                tmpTile.setTroops(25);
                 tmpTile.setTroopGeneration(4);
+                tmpTile.setMoneyGeneration(50);
             }
             tiles.add(tmpTile);
         }
@@ -121,6 +123,8 @@ public class MapGenerator{
             int tileIndex = tiles.indexOf(tmp);
             tiles.set(tileIndex, tmp);
             tiles.get(tileIndex).setOwner(i);
+            tiles.get(tileIndex).setTroopGeneration(5);
+            tiles.get(tileIndex).setMoneyGeneration(10);
         }
 
         return tiles;
