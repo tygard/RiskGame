@@ -110,7 +110,6 @@ Color NumToColor(int num) {
 
 String tileImage(int owner, int army, int displaySeed){
   Random rnd = new Random(displaySeed);
-  print(displaySeed);
   if (owner == -2) return ("assets/tileTypes/m"+ (rnd.nextInt(2)+1).toString() +".png");
   if (owner == -3) return ("assets/tileTypes/l"+ (rnd.nextInt(1)+1).toString() +".png");
   if (owner > -2){
