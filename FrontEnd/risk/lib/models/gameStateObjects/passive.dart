@@ -44,7 +44,7 @@ class Passive {
       this.passiveValue = passiveValue;
     }
     if (modifiedValue == null) {
-      this.modifiedValue = _determineModifier(new Random().nextInt(4));
+      this.modifiedValue = _determineModifier(new Random().nextInt(2));
     } else {
       this.modifiedValue = modifiedValue;
     }
@@ -110,23 +110,11 @@ class Passive {
     switch (mVal) {
       case 0:
         {
-          return modifiedValue = PassiveModifiers.defense;
-        }
-        break;
-
-      case 1:
-        {
-          return modifiedValue = PassiveModifiers.attack;
-        }
-        break;
-
-      case 2:
-        {
           return modifiedValue = PassiveModifiers.troopGeneration;
         }
         break;
 
-      case 3:
+      case 1:
         {
           return modifiedValue = PassiveModifiers.moneyGeneration;
         }

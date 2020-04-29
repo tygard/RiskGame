@@ -84,10 +84,10 @@ class InGameUser {
         // this applies to tiles not users, do nothing
       } else if (ownedPassives.elementAt(i).modifiedValue ==
           PassiveModifiers.moneyGeneration) {
-        this.moneyMultiplier += ownedPassives.elementAt(i).passiveValue;
+        this.moneyMultiplier += (.01 * ownedPassives.elementAt(i).passiveValue);
       } else if (ownedPassives.elementAt(i).modifiedValue ==
           PassiveModifiers.troopGeneration) {
-        this.troopMultiplier += ownedPassives.elementAt(i).passiveValue;
+        this.troopMultiplier += (.01 * ownedPassives.elementAt(i).passiveValue);
       }
     }
   }

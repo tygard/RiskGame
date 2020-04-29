@@ -55,7 +55,10 @@ class _PassivesScreenState extends State<PassivesScreen> {
      */
     print(
         "before:\ns: \"$s\", pTurn: $pTurn, cTurn: $curTurn, tOffset: $tOffset, sTile: $sTile, \npList: $passivesList\naList: $activesList\nownedPassives: ${curUser.ownedPassives}----------------------------------->>>>>");
-    curUser.money += 100; //JUST TO TEST PURCHASING
+    curUser.money +=
+        100; //JUST TO TEST PURCHASING------------------------------
+    //TODO: need to account for players having multiple tiles, only display the owned actives from the current tile, but maintain the 5 random tiles throughout
+    //(the randoms probably have to be stored in globalVars.dart for this)
 
     if (pTurn == curTurn) {
       // same turn, check tile properties, not passives
@@ -78,9 +81,14 @@ class _PassivesScreenState extends State<PassivesScreen> {
         }
       }
     } else {
-      // new turn, reset state
-      s += "new turn: reset state";
-      _resetState();
+      if (curTurn != pTurn && pTurn != -1) {
+        s += "new player";
+        sTile = null;
+      } else {
+        // new turn, reset state
+        s += "new turn: reset state";
+        _resetState();
+      }
     }
     pTurn = curTurn;
     print(
@@ -108,8 +116,6 @@ class _PassivesScreenState extends State<PassivesScreen> {
   }
 
   void _setActives() {
-    activesList = new List<Active>();
-
     // if the sTile is null there will be nothing to base the actives tab around
     if (sTile != null) {
       if (sTile.activesList != null) {
@@ -125,8 +131,6 @@ class _PassivesScreenState extends State<PassivesScreen> {
   }
 
   void _setPassives() {
-    passivesList = new List<Passive>();
-
     // if the number of users is 0 there will be nothing to base the passives tab around
     // otherwise we can create the passivesList
     if (curUser != null) {
@@ -151,9 +155,12 @@ class _PassivesScreenState extends State<PassivesScreen> {
    */
   void _resetState() {
     _setSTile();
+    activesList = new List<Active>();
     _setActives();
+    passivesList = new List<Passive>();
     _setPassives();
   }
+
 /**
  * I think this doesnt find the right user
  * that or the ownedPassives gets set to null somewhere
@@ -172,10 +179,8 @@ class _PassivesScreenState extends State<PassivesScreen> {
    */
   void _purchasePassive(Passive p) {
     setState(() {
-      locator<GameState>()
-          .users
-          .elementAt(locator<GameState>().currPlayer)
-          .purchasePassive(p, locator<GameState>().currPlayer);
+      curUser.purchasePassive(p, locator<GameState>().currPlayer);
+      curUser.updateModifiers();
     });
   }
 
@@ -187,6 +192,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
       for (int i = 0; i < locator<GameState>().board.tiles.length; i++) {
         if (locator<GameState>().board.tiles.elementAt(i) == selTile) {
           locator<GameState>().board.tiles.elementAt(i).purchaseActive(a);
+          sTile.updateModifiers();
         }
       }
     });
@@ -366,7 +372,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
     return "Error";
   }
 
-    String _activeButtonString(Active listItem) {
+  String _activeButtonString(Active listItem) {
     if (!sTile.activesList.contains(listItem)) {
       return "Buy";
     } else if (sTile.activesList.contains(listItem)) {
@@ -383,9 +389,11 @@ class _PassivesScreenState extends State<PassivesScreen> {
       return Colors.grey;
     }
   }
+
   Color _activeButtonColor(Active listItem) {
     // if the active isnt active and the current user has more money than the cost of the passive
-    if (!sTile.activesList.contains(listItem) && listItem.getCost() < curUser.money) {
+    if (!sTile.activesList.contains(listItem) &&
+        listItem.getCost() < curUser.money) {
       return Colors.green;
     } else {
       return Colors.grey;
