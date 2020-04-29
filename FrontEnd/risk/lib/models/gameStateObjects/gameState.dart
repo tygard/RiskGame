@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -12,6 +14,7 @@ class GameState {
   GameBoard board;
   String gameID;
 
+  int mapSeed;
   int turn;
   int currPlayer;
 
@@ -35,6 +38,7 @@ class GameState {
     gameID = state.gameID;
     turn = state.turn;
     currPlayer = state.currPlayer;
+    mapSeed = state.mapSeed;
     gameStateDidChange.notifyListeners(); //looool imagine
   }
 

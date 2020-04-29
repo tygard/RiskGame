@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -9,6 +11,7 @@ class TileDisplay extends StatefulWidget {
   bool isSelected;
   Color color;
   int troopGen;
+  int tileDisplay; //used as a random seed so the picture is always the same
   Offset position;
   int owner;
   void Function(Offset, int) onClick;
@@ -16,7 +19,7 @@ class TileDisplay extends StatefulWidget {
   static const TILE_DIMENSION = 5+ 125; //(padding * 2) + heightwidth + (border * 2) + some tweaking for some reason.
 
   TileDisplay(
-      {this.armyNum, this.isSelected = false, this.color, this.position, this.onClick, this.owner, this.troopGen});
+      {this.armyNum, this.isSelected = false, this.color, this.position, this.onClick, this.owner, this.troopGen, this.tileDisplay});
 
   _TileDisplay createState() => _TileDisplay();
 }
@@ -41,7 +44,7 @@ class _TileDisplay extends State<TileDisplay> {
             child: new Container(
               decoration:new BoxDecoration(
                 image:new DecorationImage(
-                    image: new AssetImage(tileImage(widget.owner, widget.troopGen)),
+                    image: new AssetImage(tileImage(widget.owner, widget.troopGen, widget.tileDisplay)),
                     fit: BoxFit.fill),
                 border: Border.all(color: widget.isSelected ? Colors.white : widget.color, width: 5),
               ),

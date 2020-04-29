@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:diagonal_scrollview/diagonal_scrollview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +63,6 @@ class _GameBoard extends State<GameBoard> {
     for (int i = 0; i < gameState.board.dimensions; i++) {
       sortedList.add([]);
     }
-
     //add tiles to list with the sorted x.
     for (final tile in gameState.board.tiles) {
       Offset tile_position = Offset(tile.x.toDouble(), tile.y.toDouble());
@@ -73,6 +74,7 @@ class _GameBoard extends State<GameBoard> {
         owner: tile.ownership,
         isSelected: clickedTiles.contains(tile_position),
         troopGen: tile.troopGeneration,
+        tileDisplay: gameState.mapSeed + (tile.y+gameState.board.dimensions)*(tile.x+gameState.board.dimensions),//assign a random int for the display seed
       ));
     }
 
