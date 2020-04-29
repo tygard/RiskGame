@@ -31,7 +31,7 @@ class Tile {
    * ownership defaults to -1 (uncaptured tile)
    */
   Tile(@required this.x, @required this.y,
-      {this.ownership = -1,
+      {this.ownership,
       this.troops,
       this.power,
       this.defense,

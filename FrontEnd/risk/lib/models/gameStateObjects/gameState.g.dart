@@ -17,6 +17,7 @@ GameState _$GameStateFromJson(Map<String, dynamic> json) {
         : GameBoard.fromJson(json['board'] as Map<String, dynamic>),
     json['gameID'] as String,
   )
+    ..mapSeed = json['mapSeed'] as int
     ..turn = json['turn'] as int
     ..currPlayer = json['currPlayer'] as int
     ..type = json['type'] as String;
