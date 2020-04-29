@@ -2,12 +2,14 @@ package com.anthonyOleinik.myApp.entities.GameState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class GameState {
     private List<InGameUser> users = new ArrayList<>();
     private GameBoard board;
     private String gameID;
 
+    private int mapSeed = new Random().nextInt(9999);
     private int turn = 0;
     private int currPlayer;
 
@@ -25,7 +27,7 @@ public class GameState {
             this.users.add(new InGameUser(playerId));
         }
 
-        this.board = new GameBoard(playerIds, initTroop, initAITroop);
+        this.board = new GameBoard(playerIds, initTroop, initAITroop, mapSeed);
     }
 
     public void increment(){
@@ -50,8 +52,10 @@ public class GameState {
                     }
                 });*/
                 tile.addTroops(initTroopGen + tile.getTroopGeneration());
-            } else {
+            } else if(tile.getOwner() == -1) {
                 tile.addTroops(initAITroopGen + tile.getTroopGeneration());
+            }else{
+                //do nothing for now, this is impassable terrain
             }
         }
 
@@ -137,5 +141,8 @@ public class GameState {
         this.currPlayer = currPlayer;
     }
 
+    public int getMapSeed() {
+        return mapSeed;
+    }
 }
 
