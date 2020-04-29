@@ -47,29 +47,29 @@ public class GameState {
     }
 
     public void checkWinner(){
-        HashMap<InGameUser, Integer> playerTiles = new HashMap<>();
-        for(InGameUser user : this.getUsers()){
-            playerTiles.replace(user, 0);
+        HashMap<Integer, Integer> playerTiles = new HashMap<>();
+        for(int i = 0; i < this.getUsers().size(); i++){
+            playerTiles.put(i, 0);
         }
         for(Tile tile : board.getTiles()) {
             if(tile.getOwner() > -1) {
                 //TODO: make this more elegant
                 //right now im using a hashmap of the players and increasing
                 //an int by 1 per tile they own
-                int currValue = playerTiles.get(this.getUsers().get(tile.getOwner()));
-                playerTiles.replace(this.getUsers().get(tile.getOwner()), currValue + 1);
+                int currValue = playerTiles.get(tile.getOwner());
+                playerTiles.replace(tile.getOwner(), currValue + 1);
             }
         }
         //check if players own 35% of the board
-        playerTiles.keySet().forEach((user) -> {
-            if(playerTiles.get(user) > board.getTiles().size()*.1){
-                winner = users.indexOf(user);
+        playerTiles.keySet().forEach((userid) -> {
+            if(playerTiles.get(userid) > board.getTiles().size()*.35){
+                winner = userid;
                 gameOver = true;
-                System.out.println(user.getUserName() + " has won the game controlling ["
-                + playerTiles.get(user) +"] tiles");
+               // System.out.println(user.getUserName() + " has won the game controlling ["
+               // + playerTiles.get(user) +"] tiles");
             }
-            System.out.println(user.getUserName() +" controls ["+ playerTiles.get(user) + "/"
-                    + board.getTiles().size() + "] tiles.");
+           // System.out.println(user.getUserName() +" controls ["+ playerTiles.get(user) + "/"
+            //        + board.getTiles().size() + "] tiles.");
         });
     }
 
