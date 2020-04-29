@@ -149,6 +149,7 @@ class _GameBoard extends State<GameBoard> {
       //pass if we dont have two clciked. if we do, we can attack.
       if (clickedTiles.length != 2) {
         Toaster.warningToast("Two tiles not clicked. turn passed.");
+        return;
       } else {
           _attack();
       }
