@@ -31,13 +31,21 @@ class Tile {
    * ownership defaults to -1 (uncaptured tile)
    */
   Tile(@required this.x, @required this.y,
-      {this.ownership = -1,
+      {this.ownership,
       this.troops,
       this.power,
       this.defense,
       this.moneyGeneration,
       this.troopGeneration}) {
     switch (this.ownership) {
+      case -3:
+        {
+          this.power = 0;
+          this.defense = 0;
+          this.moneyGeneration = 0;
+          this.troopGeneration = 0;
+        }
+        break;
       case -2:
         {
           this.power = 0;
@@ -52,7 +60,7 @@ class Tile {
           this.power = 1;
           this.defense = 1;
           this.moneyGeneration = locator<GameState>().AITileGrowth;
-          this.troopGeneration = locator<GameState>().AITileGrowth;
+          //this.troopGeneration = locator<GameState>().AITileGrowth;
         }
         break;
 
@@ -60,7 +68,7 @@ class Tile {
         this.power = 1;
         this.defense = 1;
         this.moneyGeneration = locator<GameState>().tileGrowthPercent;
-        this.troopGeneration = locator<GameState>().initArmyNum;
+        //this.troopGeneration = locator<GameState>().initArmyNum;
     }
   }
   factory Tile.fromJson(Map<String, dynamic> json) => _$TileFromJson(json);
@@ -70,7 +78,6 @@ class Tile {
    * adds the Active a to this tiles activesList, assigns the actives tile property to this tile
    */
   void purchaseActive(Active a) {
-    a.pruchase(this);
     this.activesList.add(a);
   }
 
@@ -81,8 +88,8 @@ class Tile {
    */
   int sellActive(Active a) {
     if (activesList.contains(a)) {
+      a.duration = -1;
       activesList.remove(a);
-      return a.sell();
     }
     return -1;
   }
@@ -93,6 +100,14 @@ class Tile {
    */
   void updateModifiers() {
     switch (this.ownership) {
+      case -3:
+        {
+          this.power = 0;
+          this.defense = 0;
+          this.moneyGeneration = 0;
+          this.troopGeneration = 0;
+        }
+        break;
       case -2:
         {
           this.power = 0;
@@ -107,7 +122,7 @@ class Tile {
           this.power = 1;
           this.defense = 1;
           this.moneyGeneration = locator<GameState>().AITileGrowth;
-          this.troopGeneration = locator<GameState>().AITileGrowth;
+          //this.troopGeneration = locator<GameState>().AITileGrowth;
         }
         break;
 
@@ -115,7 +130,7 @@ class Tile {
         this.power = 1;
         this.defense = 1;
         this.moneyGeneration = locator<GameState>().tileGrowthPercent;
-        this.troopGeneration = locator<GameState>().initArmyNum;
+        //this.troopGeneration = locator<GameState>().initArmyNum;
     }
     for (int i = 0; i < this.activesList.length; i++) {
       this.defense += this.activesList.elementAt(i).defense;

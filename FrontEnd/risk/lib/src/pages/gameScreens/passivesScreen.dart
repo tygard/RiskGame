@@ -293,10 +293,10 @@ class _PassivesScreenState extends State<PassivesScreen> {
             title: Text("Passive $index"),
             subtitle: Text(mList[index].toString()),
             trailing: FlatButton(
-              child: Text(_buttonString(mList[index])),
+              child: Text(_passiveButtonString(mList[index])),
               clipBehavior: Clip.antiAlias,
               autofocus: false,
-              color: _modifierButtonColor(mList[index]),
+              color: _passiveButtonColor(mList[index]),
               onPressed: () => _purchasePassive(mList[index]),
               shape: RoundedRectangleBorder(),
             ),
@@ -342,14 +342,14 @@ class _PassivesScreenState extends State<PassivesScreen> {
           index -= 1;
           return ListTile(
             leading: Icon(Icons.description),
-            enabled: !mList[index].isActive(),
+            enabled: !sTile.activesList.contains(mList[index]),
             title: Text("Active $index"),
             subtitle: Text(mList[index].toString()),
             trailing: FlatButton(
-              child: Text(_buttonString(mList[index])),
+              child: Text(_activeButtonString(mList[index])),
               clipBehavior: Clip.antiAlias,
               autofocus: false,
-              color: _modifierButtonColor(mList[index]),
+              color: _activeButtonColor(mList[index]),
               onPressed: () => _purchaseActive(mList[index], sTile),
               shape: RoundedRectangleBorder(),
             ),
@@ -359,7 +359,7 @@ class _PassivesScreenState extends State<PassivesScreen> {
     );
   }
 
-  String _buttonString(dynamic listItem) {
+  String _passiveButtonString(Passive listItem) {
     if (!listItem.isActive()) {
       return "Buy";
     } else if (listItem.isActive()) {
@@ -368,9 +368,26 @@ class _PassivesScreenState extends State<PassivesScreen> {
     return "Error";
   }
 
-  Color _modifierButtonColor(dynamic listItem) {
+    String _activeButtonString(Active listItem) {
+    if (!sTile.activesList.contains(listItem)) {
+      return "Buy";
+    } else if (sTile.activesList.contains(listItem)) {
+      return "Owned";
+    }
+    return "Error";
+  }
+
+  Color _passiveButtonColor(Passive listItem) {
     // if the passive isnt active and the current user has more money than the cost of the passive
     if (!listItem.isActive() && listItem.getCost() < curUser.money) {
+      return Colors.green;
+    } else {
+      return Colors.grey;
+    }
+  }
+  Color _activeButtonColor(Active listItem) {
+    // if the active isnt active and the current user has more money than the cost of the passive
+    if (!sTile.activesList.contains(listItem) && listItem.getCost() < curUser.money) {
       return Colors.green;
     } else {
       return Colors.grey;

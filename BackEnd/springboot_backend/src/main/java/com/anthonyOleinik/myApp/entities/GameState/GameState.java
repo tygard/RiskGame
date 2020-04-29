@@ -1,13 +1,13 @@
 package com.anthonyOleinik.myApp.entities.GameState;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class GameState {
     private List<InGameUser> users = new ArrayList<>();
     private GameBoard board;
     private String gameID;
 
+    private int mapSeed = new Random().nextInt(9999);
     private int turn = 0;
     private int currPlayer;
 
@@ -19,25 +19,56 @@ public class GameState {
     private final int initAITroopGen = 1;
     private final int initAIMoneyGen = 0;
 
-    public GameState(ArrayList<Integer> playerIds){
+    private boolean gameFinished = false;
+    private int winner;
+
+    /*public GameState(ArrayList<Integer> playerIds){
         this.currPlayer = playerIds.get(0);
         for (int playerId : playerIds){
             this.users.add(new InGameUser(playerId));
         }
 
-        this.board = new GameBoard(playerIds, initTroop, initAITroop);
+        this.board = new GameBoard(playerIds, initTroop, initAITroop, mapSeed);
+    }*/
+
+    //TODO: if we want to re-integrate account creation
+    //we can pass the goog id in handhake headers and find their account
+    //from that, then we can pass a user account into InGameUser instead.
+    public GameState(ArrayList<String> playerNames){
+        ArrayList<Integer> playerIds = new ArrayList<>();
+        this.currPlayer = 0;
+        for (int i = 0; i < playerNames.size(); i++){
+            InGameUser tmp = new InGameUser(playerNames.get(i));
+            tmp.setTurnID(i);
+            playerIds.add(i);
+            this.users.add(tmp);
+        }
+
+        this.board = new GameBoard(playerIds, initTroop, initAITroop, mapSeed);
+    }
+
+    public void checkWinner(){
+        HashMap<InGameUser, Integer> playerTiles = new HashMap<>();
+        users.forEach((user) -> playerTiles.put(user, 0));
+        for(Tile tile : board.getTiles()) {
+            if(tile.getOwner() > -1) {
+                //TODO: make this more elegant
+                //right now im using a hashmap of the players and increasing
+                //an int by 1 per tile they own
+                int currValue = playerTiles.get(users.get(tile.getOwner()));
+                playerTiles.replace(users.get(tile.getOwner()), currValue + 1);
+            }
+        }
+        //check if players own 35% of the board
+        playerTiles.keySet().forEach((user) -> {
+            if(playerTiles.get(user) > board.getTiles().size()*.35){
+                winner = users.indexOf(user);
+                gameFinished = true;
+            }
+        });
     }
 
     public void increment(){
-        //grow all troops
-        for (Tile tile : this.board.getTiles()){
-            if (tile.getOwner() != -1){
-                tile.addTroops(initTroopGen);
-            } else {
-                tile.addTroops(initAITroopGen);
-            }
-        }
-
         //increment current turn
         boolean foundSelf = false;
         boolean updatedSelf = false;
@@ -54,6 +85,20 @@ public class GameState {
 
         if (!updatedSelf){
             currPlayer = this.users.get(0).getTurnID();
+            //grow all troops
+            for (Tile tile : this.board.getTiles()){
+                if (tile.getOwner() > -1){
+                    tile.addTroops(initTroopGen + tile.getTroopGeneration());
+                } else if(tile.getOwner() == -1) {
+                    tile.addTroops(initAITroopGen + tile.getTroopGeneration());
+                }else{
+                    //do nothing for now, this is impassable terrain
+                }
+                for(Active active : tile.getActivesList()){
+                    active.duration--;
+                }
+            }
+            checkWinner();
         }
 
         System.out.println("new current player: " + currPlayer);
@@ -120,5 +165,24 @@ public class GameState {
         this.currPlayer = currPlayer;
     }
 
+    public int getMapSeed() {
+        return mapSeed;
+    }
+
+    public Integer getWinner() {
+        return winner;
+    }
+
+    public void setWinner(Integer winner) {
+        this.winner = winner;
+    }
+
+    public boolean isGameFinished() {
+        return gameFinished;
+    }
+
+    public void setGameFinished(boolean gameFinished) {
+        this.gameFinished = gameFinished;
+    }
 }
 

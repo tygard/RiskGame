@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:diagonal_scrollview/diagonal_scrollview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +30,7 @@ class GameBoard extends StatefulWidget {
 }
 
 class _GameBoard extends State<GameBoard> {
+  DiagonalScrollViewController _scrollController;
   List<Offset> clickedTiles =
       []; //TODO create a class that is an "attack", that bundles offset1, offset2, power1, power2
   static const MAX_TILES_CLICKED = 2;
@@ -43,6 +46,8 @@ class _GameBoard extends State<GameBoard> {
 
   Widget build(BuildContext context) {
     return DiagonalScrollView(
+      onCreated: (DiagonalScrollViewController controller) {
+          _scrollController = controller;},
       maxWidth: widget.maxDimension.toDouble(),
       maxHeight: widget.maxDimension.toDouble(),
       child: Container(
@@ -58,7 +63,6 @@ class _GameBoard extends State<GameBoard> {
     for (int i = 0; i < gameState.board.dimensions; i++) {
       sortedList.add([]);
     }
-
     //add tiles to list with the sorted x.
     for (final tile in gameState.board.tiles) {
       Offset tile_position = Offset(tile.x.toDouble(), tile.y.toDouble());
@@ -69,6 +73,8 @@ class _GameBoard extends State<GameBoard> {
         position: tile_position,
         owner: tile.ownership,
         isSelected: clickedTiles.contains(tile_position),
+        troopGen: tile.troopGeneration,
+        tileDisplay: gameState.mapSeed + (tile.y+gameState.board.dimensions)*(tile.x+gameState.board.dimensions),//assign a random int for the display seed
       ));
     }
 
@@ -94,6 +100,12 @@ class _GameBoard extends State<GameBoard> {
     if (gameState.currPlayer != locator<User>().inGamePlayerNumber) {
       Toaster.warningToast(
           "please wait for your turn. it is currently ${mapPlayerNumToColorName(getPlayerIndex(gameState.currPlayer))}'s turn.");
+      return;
+    }
+
+    if (ownership < -1) {
+      Toaster.warningToast(
+          "This is an unselectable tile");
       return;
     }
 
@@ -143,6 +155,18 @@ class _GameBoard extends State<GameBoard> {
       setState(() {
         this.gameState = locator<GameState>();
       });
+      if(gameState.gameOver){
+        Toaster.successToast(gameState.users.elementAt(gameState.winner).userName + " won the game, controlling 70% of the board!");
+        Navigator.of(context).pushReplacementNamed("/home");
+      }
+
+      //TODO: maybe fix this, supposed to scroll to current player tile
+      for (Tile t in this.gameState.board.tiles) {
+        if (t.ownership == gameState.currPlayer) {
+          _scrollController.moveTo(location: Offset(t.x.toDouble() *125, t.y.toDouble()*125));
+          break;
+        }
+      }
       print("${gameState.currPlayer}");
     });
   }

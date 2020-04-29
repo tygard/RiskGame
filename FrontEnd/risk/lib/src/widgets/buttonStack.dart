@@ -4,14 +4,28 @@ import 'package:risk/gameLayer/utils.dart';
 import 'package:risk/models/freezedClasses/user.dart';
 import 'package:risk/models/gameStateObjects/gameState.dart';
 import 'package:risk/src/pages/gameScreens/passivesScreen.dart';
-import 'package:risk/gameLayer/globalVars.dart';
 import 'package:risk/src/utils/attackService.dart';
-import 'package:risk/src/utils/providers/socketProvider.dart';
 import 'package:risk/src/utils/serviceProviders.dart';
-import 'package:risk/src/utils/toaster.dart';
 import 'package:risk/src/utils/turnManager.dart';
+import 'package:risk/models/gameStateObjects/gameState.dart';
 
-class ButtonStack extends StatelessWidget {
+class ButtonStack extends StatefulWidget {
+  _ButtonStack createState() => _ButtonStack();
+}
+
+class _ButtonStack extends State<ButtonStack> {
+  void initState() {
+    _beginListeningToTurnChange();
+    super.initState();
+  }
+
+  void _beginListeningToTurnChange() {
+    locator<GameState>().gameStateDidChange.addListener(() {
+      setState(() {
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -19,11 +33,10 @@ class ButtonStack extends StatelessWidget {
         Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
             child: new Container(
-                color: mapPlayerNumToColor(locator<GameState>().currPlayer),
+                color: mapPlayerNumToColor(getPlayerIndex(locator<GameState>().currPlayer)),
                 child: Text(
                   "Current turn is: " +
-                      mapPlayerNumToColorName(
-                          locator<GameState>().currPlayer),
+                      mapPlayerNumToColorName(getPlayerIndex(locator<GameState>().currPlayer)),
                   style: TextStyle(fontSize: 20),
                 ))),
         Padding(

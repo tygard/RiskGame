@@ -1,16 +1,16 @@
 package com.anthonyOleinik.myApp.entities.GameState;
 
-public class Passive {
+public class Active {
     private int cost;
     public int duration;
     public boolean active;
 
     public int passiveValue;
-    PassiveModifiers modifiedValue;
+    ActiveModifiers modifiedValue;
 
 }
 
-enum PassiveModifiers{
+enum ActiveModifiers{
     defense,
     attack,
     troopGeneration,

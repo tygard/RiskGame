@@ -1,5 +1,7 @@
 package com.anthonyOleinik.myApp.entities.GameState;
 
+import java.util.ArrayList;
+
 public class Tile {
     public int x;
     public int y;
@@ -11,6 +13,9 @@ public class Tile {
     private int troops;
     private int power = 0;
     private int defense = 0;
+
+    // actives that are applied to this tile
+    private ArrayList<Active> activesList = new ArrayList<>();
 
     //per turn generation of money or troop
     int moneyGeneration = 0;
@@ -53,6 +58,8 @@ public class Tile {
     public int getTroopGeneration() {
         return troopGeneration;
     }
+
+    public ArrayList<Active> getActivesList(){return activesList;}
 
     public int getTroops() {
         return troops;
@@ -115,6 +122,8 @@ public class Tile {
         return this.x == c.x
                 && this.y == c.y;
     }
+
+    public void setActivesList(ArrayList<Active> actives){this.activesList = actives;}
 
     public void addTroops(int initTroopGen) {
         this.troops += initTroopGen;

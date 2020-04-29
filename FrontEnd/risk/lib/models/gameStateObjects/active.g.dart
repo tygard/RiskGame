@@ -12,13 +12,10 @@ Active _$ActiveFromJson(Map<String, dynamic> json) {
     power: json['power'] as int,
     defense: json['defense'] as int,
     duration: json['duration'] as int,
-  )..tile = json['tile'] == null
-      ? null
-      : Tile.fromJson(json['tile'] as Map<String, dynamic>);
+  );
 }
 
 Map<String, dynamic> _$ActiveToJson(Active instance) => <String, dynamic>{
-      'tile': instance.tile?.toJson(),
       'cost': instance.cost,
       'duration': instance.duration,
       'power': instance.power,

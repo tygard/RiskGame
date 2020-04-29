@@ -41,7 +41,6 @@ public class GameSocketHandler extends TextWebSocketHandler {
                 } else if (map.get("type").equals("gamestate")) {
                     GameState state = gson.fromJson(message.getPayload(), GameState.class);
                     state.increment();
-
                     //adds "type" property
                     JsonElement gameStateMessage = gson.toJsonTree(state);
                     gameStateMessage.getAsJsonObject().addProperty("type", "gamestate");

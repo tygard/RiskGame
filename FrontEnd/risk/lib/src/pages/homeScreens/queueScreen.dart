@@ -25,7 +25,7 @@ class _QueueScreenState extends State<QueueScreen> {
   @override
   void initState() {
     sm = SocketManager(
-        channelUrl: "ws://${locator<Config>().getEndpoint()}/lobby", headers: {"user": locator<User>().email});
+        channelUrl: "ws://${locator<Config>().getEndpoint()}/lobby", headers: {"user": locator<User>().name});
     locator<User>().inGamePlayerNumber = null;
     _beginListeningToLobby();
     super.initState();
@@ -116,7 +116,7 @@ class _QueueScreenState extends State<QueueScreen> {
   }
 
   void _toGameWithState() async  {
-   Response response = await RiskHttp.makePostRequest("/game/template/");
+   Response response = await RiskHttp.makePostRequest("/game/placeholder/");
    locator<GameState>().fromGameState(GameState.fromJson(response.data));
    print(response.data);
    Navigator.of(context).pushReplacementNamed("/game");
